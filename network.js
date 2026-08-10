@@ -30,7 +30,7 @@ function makePeer(id){
  return peerConnection
 }
 function handlePeerError(error){
- const messages={unavailable-id:'Esse código já possui uma sala. Use Entrar na sala.',peer-unavailable:'Sala não encontrada. Confirme o código e tente novamente.',network:'Não foi possível alcançar o serviço de salas.',server-error:'O serviço de salas está temporariamente indisponível.',browser-incompatible:'Este navegador não suporta a conexão online.'};
+ const messages={'unavailable-id':'Esse código já possui uma sala. Use Entrar na sala.','peer-unavailable':'Sala não encontrada. Confirme o código e tente novamente.',network:'Não foi possível alcançar o serviço de salas.','server-error':'O serviço de salas está temporariamente indisponível.','browser-incompatible':'Este navegador não suporta a conexão online.'};
  networkStatus(messages[error?.type]||'Não foi possível estabelecer a conexão','error');setLobbyBusy(false)
 }
 function setLobbyBusy(busy){document.querySelector('#host-online').disabled=busy;document.querySelector('#join-online').disabled=busy;document.querySelector('#generate-code').disabled=busy;document.querySelector('#room-code').disabled=busy}
