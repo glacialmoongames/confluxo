@@ -1,0 +1,10 @@
+# Arquivos gerados pelo Windows e editores
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.tmp
+*.log
+
+# Configurações pessoais de editores
+.vscode/
+.idea/
