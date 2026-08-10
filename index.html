@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Véu — Jogo de Cartas Tático</title>
-  <link rel="stylesheet" href="styles.css?v=18">
+  <link rel="stylesheet" href="styles.css?v=19">
 </head>
 <body>
   <div id="setup" class="setup">
@@ -148,7 +148,7 @@
         <div id="effect-hand" class="hand"></div>
       </div>
       <div class="reserve-block">
-        <div class="reserve-head"><small>MÃO DE PEÕES · COMUNS E FUSÃO</small></div>
+        <div class="reserve-head"><small>MÃO DE PEÕES · COMUNS E COMBINADOS</small></div>
         <div id="pawn-hand" class="pawn-hand"></div>
       </div>
     </section>
@@ -158,11 +158,11 @@
     <button class="dialog-close" aria-label="Fechar">×</button>
     <h2>Regras do Duelo</h2>
     <div class="rules-grid">
-      <section><h3>Objetivo</h3><p>Destrua peões para alcançar 10 pontos. Uma fusão vale o número de peões usados para criá-la.</p></section>
+      <section><h3>Objetivo</h3><p>Destrua peões para alcançar 10 pontos. Um Peão Combinado vale o número de materiais usados para criá-lo.</p></section>
       <section><h3>Turno</h3><p>Na rodada 1, nenhum jogador compra. A partir da rodada 2, comece escolhendo obrigatoriamente entre Peões e Efeitos.</p></section>
       <section><h3>Peões</h3><p>Clique em um peão no campo para mover. Clique em um peão comum na mão para abrir imediatamente suas casas de entrada.</p></section>
       <section><h3>Combate</h3><p>Maior ATK vence. Em um empate, todos os atacantes que somaram ATK e o defensor são destruídos. Peão oculto é revelado e cancela o combate.</p></section>
-      <section><h3>Fusão</h3><p>Com a Carta Fusão na mão, clique nela e depois selecione no campo os materiais exigidos que estejam em contato.</p></section>
+      <section><h3>Combinar</h3><p>Com o Peão Combinado na mão, clique nele e depois selecione no campo os materiais exigidos que estejam em contato.</p></section>
       <section><h3>Efeitos e Arena</h3><p>Clique em uma carta ou no Slot de Arena para ler seu efeito no painel de detalhes. A Arena vale para ambos os lados.</p></section>
     </div>
   </dialog>
@@ -172,7 +172,7 @@
   </dialog>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="network.js?v=18"></script>
-  <script src="game.js?v=18"></script>
+  <script src="network.js?v=19"></script>
+  <script src="game.js?v=19"></script>
 </body>
 </html>
