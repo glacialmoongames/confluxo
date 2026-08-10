@@ -12,6 +12,8 @@ Abra `index.html` em um navegador moderno. O duelo local continua funcionando se
 
 Cada navegador mostra somente a mão do seu jogador e libera comandos apenas no turno correspondente. O anfitrião cria o estado inicial; depois, cada jogada é sincronizada pelo canal WebRTC ordenado. O PeerJS Cloud é usado para os navegadores se encontrarem pelo código; os dados da partida continuam sendo enviados diretamente entre eles. Algumas redes com CGNAT ou firewall restritivo ainda podem impedir uma conexão direta.
 
+Oscilações do serviço de salas não interrompem um duelo cujo canal direto ainda esteja funcionando. Em uma queda real, o jogo conserva o código e o estado, tenta reconectar automaticamente e sincroniza novamente a partida quando o adversário volta.
+
 O tabuleiro é apresentado pela perspectiva de cada duelista: o próprio polo e a própria faixa ficam sempre embaixo. No modo local, a perspectiva muda depois da tela de passagem de turno. O botão de bandeira no topo permite desistir; no modo online, o resultado é enviado imediatamente ao adversário.
 
 ## Como jogar
