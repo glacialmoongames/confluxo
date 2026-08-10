@@ -5,13 +5,12 @@ Abra `index.html` em um navegador moderno. O duelo local continua funcionando se
 ## Partida online entre dois jogadores
 
 1. Os dois jogadores abrem a mesma versão do site e escolhem **Online · WebRTC**.
-2. O Duelista 1 escolhe **Criar partida**, seleciona seu deck e gera a oferta.
-3. Ele envia o código ao Duelista 2 por qualquer aplicativo de mensagens.
-4. O Duelista 2 escolhe **Entrar na partida**, cola a oferta e gera uma resposta.
-5. O Duelista 2 devolve a resposta; o Duelista 1 substitui o código antigo por ela e confirma.
-6. Quando o indicador ficar verde, o anfitrião inicia a partida.
+2. Um dos jogadores escolhe ou gera um código de exatamente 10 letras e envia somente esse código ao adversário.
+3. O Duelista 1 digita o código e escolhe **Criar sala**.
+4. O Duelista 2 digita o mesmo código e escolhe **Entrar na sala**.
+5. Quando o indicador ficar verde, o anfitrião inicia a partida.
 
-Cada navegador mostra somente a mão do seu jogador e libera comandos apenas no turno correspondente. O anfitrião cria o estado inicial; depois, cada jogada é sincronizada pelo canal WebRTC ordenado. Esta primeira versão usa sinalização manual e um servidor STUN público, portanto não exige servidor de salas. Algumas redes com CGNAT ou firewall restritivo ainda podem precisar de um servidor TURN.
+Cada navegador mostra somente a mão do seu jogador e libera comandos apenas no turno correspondente. O anfitrião cria o estado inicial; depois, cada jogada é sincronizada pelo canal WebRTC ordenado. O PeerJS Cloud é usado para os navegadores se encontrarem pelo código; os dados da partida continuam sendo enviados diretamente entre eles. Algumas redes com CGNAT ou firewall restritivo ainda podem impedir uma conexão direta.
 
 O tabuleiro é apresentado pela perspectiva de cada duelista: o próprio polo e a própria faixa ficam sempre embaixo. No modo local, a perspectiva muda depois da tela de passagem de turno. O botão de bandeira no topo permite desistir; no modo online, o resultado é enviado imediatamente ao adversário.
 

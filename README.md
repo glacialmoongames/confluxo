@@ -7,7 +7,7 @@ Protótipo web de um jogo tático para dois duelistas, com tabuleiro 7 × 10, tu
 Abra `index.html` ou acesse o endereço do projeto no GitHub Pages.
 
 - **Local:** os dois jogadores utilizam o mesmo dispositivo, com passagem protegida de turno.
-- **Online:** cada jogador abre o site em seu dispositivo e realiza a conexão direta trocando os códigos WebRTC mostrados pelo jogo.
+- **Online:** os jogadores digitam o mesmo código de 10 letras; o PeerJS aproxima os navegadores e a partida segue por uma conexão WebRTC.
 
 As instruções completas e as regras implementadas estão em [`LEIA-ME.md`](LEIA-ME.md).
 

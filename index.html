@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Véu — Jogo de Cartas Tático</title>
-  <link rel="stylesheet" href="styles.css?v=13">
+  <link rel="stylesheet" href="styles.css?v=15">
 </head>
 <body>
   <div id="setup" class="setup">
@@ -17,19 +17,17 @@
         <button id="mode-online" class="mode-choice"><span>⌁</span><b>ONLINE · WEBRTC</b><small>Um dispositivo para cada jogador</small></button>
       </div>
       <div id="online-lobby" class="online-lobby hidden">
+        <label class="room-label" for="room-code">CÓDIGO DA PARTIDA</label>
+        <div class="room-code-row">
+          <input id="room-code" type="text" maxlength="10" inputmode="text" autocomplete="off" spellcheck="false" placeholder="DEZLETRAS" aria-describedby="room-help">
+          <button id="generate-code" type="button">GERAR</button>
+        </div>
+        <p id="room-help" class="room-help">Os dois jogadores digitam exatamente o mesmo código de 10 letras.</p>
         <div class="lobby-roles">
-          <button id="host-online" class="lobby-role"><span>Ⅰ</span><b>CRIAR PARTIDA</b><small>Você será o Duelista 1</small></button>
-          <button id="join-online" class="lobby-role"><span>Ⅱ</span><b>ENTRAR NA PARTIDA</b><small>Você será o Duelista 2</small></button>
+          <button id="host-online" class="lobby-role"><span>Ⅰ</span><b>CRIAR SALA</b><small>Você será o Duelista 1</small></button>
+          <button id="join-online" class="lobby-role"><span>Ⅱ</span><b>ENTRAR NA SALA</b><small>Você será o Duelista 2</small></button>
         </div>
-        <div id="signal-panel" class="signal-panel hidden">
-          <div class="signal-status"><i id="connection-light"></i><b id="connection-status">Escolha como conectar</b></div>
-          <p id="signal-instruction"></p>
-          <textarea id="signal-code" spellcheck="false" placeholder="O código de conexão aparecerá aqui"></textarea>
-          <div class="signal-actions">
-            <button id="copy-signal">COPIAR CÓDIGO</button>
-            <button id="apply-signal" class="primary">CONTINUAR</button>
-          </div>
-        </div>
+        <div class="signal-status"><i id="connection-light"></i><b id="connection-status">Digite um código e escolha uma opção</b></div>
       </div>
       <div class="deck-choices">
         <section>
@@ -174,7 +172,8 @@
     <div class="winner-crest">♛</div><small>A SOBERANIA É DE</small><h2 id="winner-name"></h2><p id="winner-score"></p><button id="winner-restart" class="primary">Jogar novamente</button>
   </dialog>
 
-  <script src="network.js?v=13"></script>
-  <script src="game.js?v=14"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="network.js?v=15"></script>
+  <script src="game.js?v=15"></script>
 </body>
 </html>
