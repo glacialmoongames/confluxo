@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Véu — Jogo de Cartas Tático</title>
-  <link rel="stylesheet" href="styles.css?v=15">
+  <link rel="stylesheet" href="styles.css?v=16">
 </head>
 <body>
   <div id="setup" class="setup">
@@ -114,7 +114,6 @@
         <div class="panel-title controls-title">AÇÕES ESPECIAIS</div>
         <button id="flip" class="action"><span>◐</span><div><b>Virar peão</b><small>uma vez por peão/turno</small></div></button>
         <button id="attack" class="action"><span>⚔</span><div><b>Combater</b><small>ataque inimigo adjacente</small></div></button>
-        <button id="fusion" class="action"><span>◆</span><div><b>Realizar fusão</b><small>carta na mão + materiais</small></div></button>
         <button id="ability" class="action"><span>✥</span><div><b>Habilidade</b><small>use o efeito do selecionado</small></div></button>
         <button id="end-turn" class="primary end-turn">ENCERRAR TURNO <span>→</span></button>
       </aside>
@@ -163,7 +162,7 @@
       <section><h3>Turno</h3><p>Na rodada 1, nenhum jogador compra. A partir da rodada 2, comece escolhendo obrigatoriamente entre Peões e Efeitos.</p></section>
       <section><h3>Peões</h3><p>Clique em um peão no campo para mover. Clique em um peão comum na mão para abrir imediatamente suas casas de entrada.</p></section>
       <section><h3>Combate</h3><p>Maior ATK vence; empate destrói ambos. Aliados adjacentes ao alvo somam ATK. Peão oculto é revelado e cancela o combate.</p></section>
-      <section><h3>Fusão</h3><p>Compre a Carta Fusão na pilha de Peões. Com ela na mão, coloque os materiais exigidos em contato e use Fusão.</p></section>
+      <section><h3>Fusão</h3><p>Com a Carta Fusão na mão, clique nela e depois selecione no campo os materiais exigidos que estejam em contato.</p></section>
       <section><h3>Efeitos e Arena</h3><p>Clique em uma carta ou no Slot de Arena para ler seu efeito no painel de detalhes. A Arena vale para ambos os lados.</p></section>
     </div>
   </dialog>
@@ -173,7 +172,7 @@
   </dialog>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="network.js?v=17"></script>
-  <script src="game.js?v=15"></script>
+  <script src="network.js?v=18"></script>
+  <script src="game.js?v=16"></script>
 </body>
 </html>

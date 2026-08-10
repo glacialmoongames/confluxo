@@ -101,7 +101,7 @@ function receivePacket(raw){
  if(packet.type==='restart-request'&&onlineRole==='host'){if(confirm('O outro jogador quer reiniciar a partida. Aceitar?')){newGame();sendGameState(true)}return}
  if(packet.type!=='state'||!packet.state)return;
  if(!packet.force&&state){let expected=state.swordQueue?.[0]??(state.placementPhase?state.placementPlayer:state.current);if(packet.actor!==expected)return}
- applyingRemote=true;if(packet.started)document.querySelector('#setup').classList.add('hidden');state=packet.state;selectedDecks=packet.selectedDecks||selectedDecks;selected=null;selectedEffect=null;mode=null;targets=[];pendingCard=null;castleFirst=null;
+ applyingRemote=true;if(packet.started)document.querySelector('#setup').classList.add('hidden');state=packet.state;selectedDecks=packet.selectedDecks||selectedDecks;selected=null;selectedEffect=null;mode=null;targets=[];pendingCard=null;castleFirst=null;fusionMaterials=[];
  document.querySelectorAll('#turn-draw,#pass,#sword-transfer').forEach(element=>element.classList.add('hidden'));render();applyingRemote=false;checkWin();if(!state.forfeitWinner)resumeOnlinePhase()
 }
 function resumeOnlinePhase(){
