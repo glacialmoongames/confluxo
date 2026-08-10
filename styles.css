@@ -94,3 +94,7 @@ body{height:100vh;overflow:hidden}.topbar{height:56px;padding:0 20px;position:re
  .topbar{grid-template-columns:42px minmax(0,1fr) auto}.brand b{font-size:12px}.icon-btn{width:31px;height:31px}.header-actions{gap:3px}
  .mini-stats{display:none}.player-strip{height:48px}.global-arena,.hint,.board{width:100%}.left-panel>.action b,.left-panel>.end-turn{font-size:7px}
 }
+
+/* Arena 6 × 8 */
+.board{aspect-ratio:6/8;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(8,1fr)}
+@media(max-width:760px){.board{aspect-ratio:6/8}}

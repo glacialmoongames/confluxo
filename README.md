@@ -1,6 +1,6 @@
 # Véu — jogo de cartas tático
 
-Protótipo web de um jogo tático para dois duelistas, com tabuleiro 7 × 10, turnos, combate, efeitos, arenas, fusões e modo online via WebRTC.
+Protótipo web de um jogo tático para dois duelistas, com tabuleiro 6 × 8, turnos, combate, efeitos, arenas, fusões e modo online via WebRTC.
 
 ## Jogar
 
