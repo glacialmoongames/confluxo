@@ -103,7 +103,7 @@ function doAttack(attacker,defender){
  if(cursedOwners.length){destroy(defender,attacker.owner,'maldição');destroy(attacker,defender.owner,'maldição');log('A Espada Maldita destruiu ambos os combatentes.');cursedOwners.forEach(queueSwordTransfer)}
  else if(atk>defAtk){destroy(defender,attacker.owner);log(`${attacker.name} venceu (${atk} × ${defAtk}).`)}
  else if(atk<defAtk){destroy(attacker,defender.owner);log(`${defender.name} resistiu e venceu (${defAtk} × ${atk}).`)}
- else{destroy(attacker,defender.owner);destroy(defender,attacker.owner);log(`Empate em ${atk}: ambos foram destruídos.`)}
+ else{allies.forEach(u=>destroy(u,defender.owner));destroy(defender,attacker.owner);log(`Empate em ${atk}: todos os ${allies.length} atacantes participantes e o defensor foram atingidos.`)}
  clearAction();render();checkWin()
 }
 function queueSwordTransfer(owner){state.swordQueue.push(owner);openSwordTransfer()}
