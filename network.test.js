@@ -68,6 +68,7 @@ function makeClient(player, initialState) {
   context.onlineMode = true;
   context.localPlayer = player;
   context.onlineRole = player === 1 ? 'host' : 'guest';
+  context.updateOnlineStart = () => {};
   return context;
 }
 
@@ -90,6 +91,23 @@ function link(a, b, shouldDrop = () => false) {
   a.dataChannel = channelA;
   b.dataChannel = channelB;
   return { stopDropping() { drop = () => false } };
+}
+
+{
+  const host = makeClient(1, playerState(1, 'sala-host'));
+  const guest = makeClient(2, playerState(1, 'sala-guest'));
+  let dropped = false;
+  const connection = link(host, guest, (packet, side) => side === 'a' && packet.type === 'deck' && !dropped && (dropped = true));
+
+  host.sendDeckChoice();
+  assert.equal(guest.remoteDeck, null, 'o primeiro deck deveria ser perdido no teste');
+  guest.sendDeckChoice();
+  assert.equal(host.remoteDeck, 'selvagem', 'o host deve receber o deck do convidado');
+  assert.equal(guest.remoteDeck, 'xadria', 'a confirmacao deve levar o deck do host ao convidado');
+
+  connection.stopDropping();
+  host.sendDeckChoice();
+  assert.equal(guest.remoteDeck, 'xadria', 'o reenvio do deck deve manter a sala sincronizada');
 }
 
 {
