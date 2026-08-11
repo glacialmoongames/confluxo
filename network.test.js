@@ -95,6 +95,16 @@ function link(a, b, shouldDrop = () => false) {
 }
 
 {
+  const largeMarker = `estado-grande-${'x'.repeat(30000)}`;
+  const host = makeClient(1, playerState(1, largeMarker));
+  const guest = makeClient(2, playerState(1, 'estado-antigo'));
+  link(host, guest);
+  host.sendGameState();
+  assert.equal(guest.state.marker, largeMarker, 'estados grandes devem chegar completos em partes menores');
+  assert.equal(host.pendingStatePacket, null, 'o estado dividido deve receber confirmacao normalmente');
+}
+
+{
   const lobby = makeClient(1, playerState(1, 'estado-provisorio'));
   lobby.gameStarted = () => false;
   lobby.dataChannel = { open: true, send() { throw new Error('o lobby nao deveria enviar estado de jogo'); } };
