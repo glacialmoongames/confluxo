@@ -35,7 +35,7 @@ O tabuleiro é apresentado pela perspectiva de cada duelista: o próprio polo e 
 - Peões Combinados Babel, Justiça Alva, Serpente Selvagem e Golem Selvagem.
 - Cartas Fusão são compradas na mesma pilha dos peões comuns e permanecem na mão de Peões.
 - Para fundir, é obrigatório possuir a Carta Fusão correspondente e manter todos os materiais exigidos em contato.
-- Infantaria, Torre, Bobo, Arqueiro, Ave Eterna, Cavalo, Coelho, Montador e Gavião com suas habilidades.
+- Infantaria, Torre, Bobo, Arqueiro, Ave Eterna, Cavalo, Coelho, Montador e Gavião com seus alcances e habilidades; o Gavião não cria obstáculos como a Serpente.
 - Recuar, Rocar Torre, Espada Maldita, Queimar Pertences, Poço sem Fundo, Campo das Rosas Pálidas, Selva Selvagem, Camuflar-se e Arco Selvagem.
 - Obstáculos NATURAL e passagem por peões do mesmo tipo.
 - Seleção independente dos decks Xadria e Selvagem para cada duelista.
@@ -55,6 +55,6 @@ O tabuleiro é apresentado pela perspectiva de cada duelista: o próprio polo e 
 - Cada duelista possui uma zona inicial de duas linhas em seu polo.
 - A habilidade da Justiça Alva foi interpretada como +100 ATK por aliado perdido no último turno.
 - Peões devem estar conectados por adjacência ortogonal para realizar fusão.
-- O Bobo escolhe qualquer peão em campo e mantém o efeito copiado até o fim da partida.
+- O Bobo escolhe qualquer peão em campo, mantém o efeito copiado até o fim da partida e recebe um marcador visível com a habilidade ativa.
 
 Esses valores ficam concentrados no início de `game.js` para facilitar ajustes futuros.

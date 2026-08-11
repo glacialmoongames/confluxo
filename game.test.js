@@ -11,6 +11,7 @@ vm.runInContext(`${definitions}\nthis.defs=defs;this.effects=effects;this.archet
 assert.equal(context.defs.horse.atk, 250);
 assert.equal(context.defs.horse.movement.length, 8);
 assert.equal(context.defs.hawk.atk, 250);
+assert.doesNotMatch(context.defs.hawk.text, /cria um obstáculo/i);
 assert.equal(context.defs.golem.fusion, 2);
 assert.equal(context.defs.golem.atk, 400);
 assert.equal(context.defs.duck.name, 'Ave Eterna do Reino Xadria');
@@ -21,6 +22,9 @@ assert.ok(context.archetypes.wild.pawns.includes('hawk'));
 assert.ok(context.archetypes.wild.fusions.includes('golem'));
 assert.match(source, /até o fim da partida/);
 assert.doesNotMatch(source, /delete u\.copiedKind/);
+assert.doesNotMatch(source, /hasEffect\(selected,'hawk'\)/);
+assert.match(source, /HABILIDADE COPIADA E ATIVA/);
+assert.match(source, /copy-mark/);
 assert.match(source, /spawnJungleFeature\(\)/);
 assert.match(source, /u\.bonusAtk=\(u\.bonusAtk\|\|0\)\+200/);
 
