@@ -1,4 +1,4 @@
-# Véu — Jogo de Cartas Tático
+# Confluxo — Jogo de Cartas Tático
 
 Abra `index.html` em um navegador moderno. O duelo local continua funcionando sem instalação nem internet. O modo online usa uma conexão direta WebRTC entre dois navegadores.
 

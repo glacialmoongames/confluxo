@@ -16,7 +16,7 @@ function generateRoomCode(){
  const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ',values=new Uint32Array(10);crypto.getRandomValues(values);
  document.querySelector('#room-code').value=[...values].map(value=>alphabet[value%alphabet.length]).join('');networkStatus('Código pronto — use o mesmo nos dois dispositivos','')
 }
-function roomPeerId(code){return `veu-${code.toLowerCase()}`}
+function roomPeerId(code){return `confluxo-${code.toLowerCase()}`}
 function clearConnectionTimers(){clearTimeout(reconnectTimer);clearInterval(heartbeatTimer);reconnectTimer=null;heartbeatTimer=null}
 function closePeer(){
  clearConnectionTimers();reconnectAttempts=0;

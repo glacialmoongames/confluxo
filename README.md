@@ -1,4 +1,4 @@
-# Véu — jogo de cartas tático
+# Confluxo — jogo de cartas tático
 
 Protótipo web de um jogo tático para dois duelistas, com tabuleiro 6 × 8, turnos, combate, efeitos, arenas, Peões Combinados e modo online via WebRTC.
 
