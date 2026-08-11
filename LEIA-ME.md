@@ -32,15 +32,15 @@ O tabuleiro é apresentado pela perspectiva de cada duelista: o próprio polo e 
 - Tabuleiro com 7 colunas × 10 linhas, duelistas nos polos, limite de 5 peões e preparação com 3 peões/3 efeitos.
 - Antes do primeiro turno, cada jogador escolhe individualmente as casas dos seus três peões iniciais.
 - Movimento, virar cartas, revelação que cancela combate, ataque conjunto, empate e pontuação.
-- Fusões Babel, Justiça Alva e Serpente Selvagem.
+- Peões Combinados Babel, Justiça Alva, Serpente Selvagem e Golem Selvagem.
 - Cartas Fusão são compradas na mesma pilha dos peões comuns e permanecem na mão de Peões.
 - Para fundir, é obrigatório possuir a Carta Fusão correspondente e manter todos os materiais exigidos em contato.
-- Infantaria, Torre, Bobo, Arqueiro, Pato, Coelho e Montador com suas habilidades.
-- Recuar, Rocar Torre, Espada Maldita, Queimar Pertences e Campo das Rosas Pálidas.
+- Infantaria, Torre, Bobo, Arqueiro, Ave Eterna, Cavalo, Coelho, Montador e Gavião com suas habilidades.
+- Recuar, Rocar Torre, Espada Maldita, Queimar Pertences, Poço sem Fundo, Campo das Rosas Pálidas, Selva Selvagem, Camuflar-se e Arco Selvagem.
 - Obstáculos NATURAL e passagem por peões do mesmo tipo.
 - Seleção independente dos decks Xadria e Selvagem para cada duelista.
 - Xadria combina cartas Luz e Trevas; não representa um dos lados do tabuleiro.
-- Como as notas ainda não descrevem suportes Selvagens, esse deck usa apenas as utilidades genéricas **Recuar!** e **Queimar Pertences** nesta versão.
+- A Selva Selvagem cria obstáculos ou frutas no começo dos turnos; frutas concedem ATK e o Golem pode esmagar obstáculos para crescer.
 - Um único Slot de Arena afeta os dois lados e pode ser substituído por qualquer duelista.
 - Uma Arena repetida não é gasta nem retirada da mão enquanto a mesma Arena já estiver ativa.
 - Clicar no Slot de Arena mostra seu efeito no mesmo painel usado pelos Peões.
@@ -55,6 +55,6 @@ O tabuleiro é apresentado pela perspectiva de cada duelista: o próprio polo e 
 - Cada duelista possui uma zona inicial de duas linhas em seu polo.
 - A habilidade da Justiça Alva foi interpretada como +100 ATK por aliado perdido no último turno.
 - Peões devem estar conectados por adjacência ortogonal para realizar fusão.
-- O Bobo copia o efeito de um peão na mesma linha ou coluna até o fim do turno.
+- O Bobo escolhe qualquer peão em campo e mantém o efeito copiado até o fim da partida.
 
 Esses valores ficam concentrados no início de `game.js` para facilitar ajustes futuros.
