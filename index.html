@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Confluxo — Jogo de Cartas Tático</title>
-  <link rel="stylesheet" href="styles.css?v=27">
+  <link rel="stylesheet" href="styles.css?v=28">
 </head>
 <body>
   <div id="setup" class="setup">
@@ -14,6 +14,7 @@
       <h1>Preparar duelo</h1>
       <div class="game-mode" role="group" aria-label="Modo de jogo">
         <button id="mode-local" class="mode-choice selected"><span>◈</span><b>NO MESMO DISPOSITIVO</b><small>Entregue a tela a cada turno</small></button>
+        <button id="mode-bot" class="mode-choice"><span>◆</span><b>CONTRA O BOT</b><small>Enfrente um rival automático</small></button>
         <button id="mode-online" class="mode-choice"><span>⌁</span><b>ONLINE · WEBRTC</b><small>Um dispositivo para cada jogador</small></button>
       </div>
       <div id="online-lobby" class="online-lobby hidden">
@@ -38,7 +39,7 @@
           </div>
         </section>
         <section>
-          <b>DUELISTA 2</b>
+          <b id="player-two-label">DUELISTA 2</b>
           <div class="choice-row" data-player="2">
             <button class="deck-choice" data-deck="xadria"><span>◐</span><strong>Xadria</strong><small>Luz + Trevas</small></button>
             <button class="deck-choice selected" data-deck="wild"><span>✿</span><strong>Selvagem</strong><small>Domínio natural</small></button>
@@ -172,7 +173,7 @@
   </dialog>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="network.js?v=26"></script>
-  <script src="game.js?v=30"></script>
+  <script src="network.js?v=27"></script>
+  <script src="game.js?v=31"></script>
 </body>
 </html>
