@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Confluxo — Jogo de Cartas Tático</title>
-  <link rel="stylesheet" href="styles.css?v=30">
+  <link rel="stylesheet" href="styles.css?v=31">
 </head>
 <body>
   <div id="setup" class="setup">
@@ -106,17 +106,26 @@
     </section>
 
     <section class="game-layout">
-      <aside class="left-panel panel">
-        <div class="panel-title">SUAS PILHAS</div>
-        <div class="deck-shelf">
-          <button id="draw-pawn" class="action deck-stack pawn-stack" title="Comprar um peão"><span>⬢</span><div><small>PILHA</small><b>PEÕES</b><em id="pawn-deck-count">18</em></div></button>
-          <button id="draw-effect" class="action deck-stack effect-stack" title="Comprar uma carta de efeito"><span>✦</span><div><small>PILHA</small><b>EFEITOS</b><em id="effect-deck-count">17</em></div></button>
+      <aside class="left-panel details-panel panel">
+        <div class="card-details">
+          <div id="detail-title" class="panel-title">DETALHES DA CARTA</div>
+          <div id="unit-card" class="unit-card empty">
+            <div class="card-art"><span>⬢</span></div>
+            <h3>Nenhum peão</h3>
+            <p>Clique em uma peça no campo ou em sua reserva.</p>
+          </div>
         </div>
-        <div class="panel-title controls-title">AÇÕES ESPECIAIS</div>
-        <button id="flip" class="action"><span>◐</span><div><b>Virar peão</b><small>uma vez por peão/turno</small></div></button>
-        <button id="attack" class="action"><span>⚔</span><div><b>Combater</b><small>ataque inimigo adjacente</small></div></button>
-        <button id="ability" class="action"><span>✥</span><div><b>Habilidade</b><small>use o efeito do selecionado</small></div></button>
-        <button id="end-turn" class="primary end-turn">ENCERRAR TURNO <span>→</span></button>
+        <div class="side-controls">
+          <div class="panel-title controls-title">AÇÕES</div>
+          <button id="flip" class="action"><span>◐</span><div><b>Virar</b><small>uma vez por turno</small></div></button>
+          <button id="attack" class="action"><span>⚔</span><div><b>Combater</b><small>escolha o alvo</small></div></button>
+          <button id="ability" class="action"><span>✥</span><div><b>Habilidade</b><small>efeito do selecionado</small></div></button>
+          <button id="end-turn" class="primary end-turn">ENCERRAR TURNO <span>→</span></button>
+        </div>
+        <div class="deck-shelf compact-piles">
+          <button id="draw-pawn" class="action deck-stack pawn-stack" title="Comprar um peão"><span>⬢</span><div><small>PEÕES</small><em id="pawn-deck-count">18</em></div></button>
+          <button id="draw-effect" class="action deck-stack effect-stack" title="Comprar uma carta de efeito"><span>✦</span><div><small>EFEITOS</small><em id="effect-deck-count">17</em></div></button>
+        </div>
       </aside>
 
       <section class="board-wrap">
@@ -125,13 +134,7 @@
         <div id="hint" class="hint">Selecione um peão para ver seus detalhes.</div>
       </section>
 
-      <aside class="right-panel panel">
-        <div id="detail-title" class="panel-title">DETALHES DA CARTA</div>
-        <div id="unit-card" class="unit-card empty">
-          <div class="card-art"><span>⬢</span></div>
-          <h3>Nenhum peão</h3>
-          <p>Clique em uma peça no campo ou em sua reserva.</p>
-        </div>
+      <aside class="right-panel chronicle-panel panel">
         <div class="panel-title log-title">CRÔNICA DO COMBATE</div>
         <div id="log" class="log"></div>
       </aside>
@@ -174,6 +177,6 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="network.js?v=27"></script>
-  <script src="game.js?v=41"></script>
+  <script src="game.js?v=42"></script>
 </body>
 </html>
