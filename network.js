@@ -110,7 +110,7 @@ function sendPacket(packet){
   let serialized=packet?.type==='state'?JSON.stringify(packet):null;
   if(serialized&&serialized.length>STATE_CHUNK_SIZE){let total=Math.ceil(serialized.length/STATE_CHUNK_SIZE),id=`${localPlayer}-${packet.revision}-${packet.sequence}`;for(let index=0;index<total;index++)dataChannel.send({type:'state-chunk',id,index,total,data:serialized.slice(index*STATE_CHUNK_SIZE,(index+1)*STATE_CHUNK_SIZE)});return true}
   dataChannel.send(packet);return true
- }catch{handleChannelClose(dataChannel);return false}
+ }catch(error){console.error('Falha ao enviar pacote online',error);networkStatus('Falha no envio — tentando novamente…','connecting');return false}
 }
 function cloneNetworkValue(value){return typeof structuredClone==='function'?structuredClone(value):JSON.parse(JSON.stringify(value))}
 function scheduleStateRetry(){
