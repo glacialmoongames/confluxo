@@ -22,6 +22,7 @@ body{height:100vh;overflow:hidden}.topbar{height:56px;padding:0 20px;position:re
 .board[data-p1=wild] .zone1{background:linear-gradient(145deg,#48634d,#39463d);box-shadow:inset 0 -4px #88b47d}
 .board[data-p2=xadria] .zone2{background:linear-gradient(145deg,#66516f,#413948);box-shadow:inset 0 4px #d0a85e}
 .board[data-p2=wild] .zone2{background:linear-gradient(145deg,#48634d,#39463d);box-shadow:inset 0 4px #88b47d}
+.coord{position:absolute;z-index:6;pointer-events:none;color:#f5df9e;font:700 clamp(6px,.55vw,8px)/1 Arial;text-shadow:0 1px 2px #000,0 0 3px #000;opacity:.9}.coord-file{left:50%;transform:translateX(-50%)}.coord-top{top:2px}.coord-bottom{bottom:2px}.coord-rank{top:50%;transform:translateY(-50%)}.coord-left{left:2px}.coord-right{right:2px}
 .arena-row.bottom{background:#2c2730;color:#d5ccbf;border-color:#655c69}
 
 /* Etapa obrigatória de compra e Slot de Arena global */
@@ -110,3 +111,4 @@ body{height:100vh;overflow:hidden}.topbar{height:56px;padding:0 20px;position:re
 @keyframes combineBoardGlow{45%{filter:brightness(1.3);box-shadow:0 0 34px #d6a84c}}
 @keyframes combinedBirth{0%{opacity:0;transform:scale(.1) rotate(-180deg);filter:brightness(3)}55%{opacity:1;transform:scale(1.5) rotate(12deg);filter:brightness(1.8);box-shadow:0 0 28px #ffd76d}100%{transform:none;filter:none}}
 @media(prefers-reduced-motion:reduce){.board.combat-active,.board.combine-active,.piece.combat-attacker,.piece.combat-defender,.piece.combat-sacrifice,.piece.combining-material,.piece.combined-entry{animation-duration:.18s!important}}
+.online-waiting .board{pointer-events:auto}.online-waiting .board .cell{cursor:help}
