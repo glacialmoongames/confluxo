@@ -69,6 +69,7 @@ function makeClient(player, initialState) {
   context.localPlayer = player;
   context.onlineRole = player === 1 ? 'host' : 'guest';
   context.updateOnlineStart = () => {};
+  context.gameStarted = () => true;
   return context;
 }
 
@@ -91,6 +92,14 @@ function link(a, b, shouldDrop = () => false) {
   a.dataChannel = channelA;
   b.dataChannel = channelB;
   return { stopDropping() { drop = () => false } };
+}
+
+{
+  const lobby = makeClient(1, playerState(1, 'estado-provisorio'));
+  lobby.gameStarted = () => false;
+  lobby.dataChannel = { open: true, send() { throw new Error('o lobby nao deveria enviar estado de jogo'); } };
+  assert.equal(lobby.sendGameState(true, false), false, 'o lobby nao deve sincronizar jogadas antes do inicio');
+  assert.equal(lobby.pendingStatePacket, null, 'o lobby nao deve criar uma jogada pendente');
 }
 
 {
