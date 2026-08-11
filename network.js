@@ -1,4 +1,4 @@
-var onlineMode=false,localPlayer=null,onlineRole=null,peerConnection=null,dataChannel=null,applyingRemote=false,remoteDeck=null,networkSequence=0,roomCode='',reconnectTimer=null,heartbeatTimer=null,remoteVisualTimer=null,reconnectAttempts=0;
+var onlineMode=false,localPlayer=null,onlineRole=null,peerConnection=null,dataChannel=null,applyingRemote=false,remoteDeck=null,networkSequence=0,networkRevision=0,roomCode='',reconnectTimer=null,heartbeatTimer=null,stateRetryTimer=null,stateSyncTimer=null,remoteVisualTimer=null,reconnectAttempts=0,pendingStatePacket=null,lastPacketAt=0;
 
 function networkStatus(text,kind=''){
  const box=document.querySelector('.signal-status'),label=document.querySelector('#connection-status');
@@ -17,9 +17,9 @@ function generateRoomCode(){
  document.querySelector('#room-code').value=[...values].map(value=>alphabet[value%alphabet.length]).join('');networkStatus('Código pronto — use o mesmo nos dois dispositivos','')
 }
 function roomPeerId(code){return `confluxo-${code.toLowerCase()}`}
-function clearConnectionTimers(){clearTimeout(reconnectTimer);clearInterval(heartbeatTimer);reconnectTimer=null;heartbeatTimer=null}
+function clearConnectionTimers(){clearTimeout(reconnectTimer);clearInterval(heartbeatTimer);clearTimeout(stateRetryTimer);clearTimeout(stateSyncTimer);reconnectTimer=null;heartbeatTimer=null;stateRetryTimer=null;stateSyncTimer=null}
 function closePeer(){
- clearConnectionTimers();reconnectAttempts=0;
+ clearConnectionTimers();reconnectAttempts=0;networkRevision=0;pendingStatePacket=null;lastPacketAt=0;
  const channel=dataChannel,peer=peerConnection;dataChannel=null;peerConnection=null;remoteDeck=null;
  try{channel?.removeAllListeners?.();channel?.close();peer?.removeAllListeners?.();peer?.destroy()}catch{}
 }
@@ -42,12 +42,14 @@ function setLobbyBusy(busy){document.querySelector('#host-online').disabled=busy
 function attachChannel(channel){
  const previous=dataChannel;if(previous&&previous!==channel){try{previous.removeAllListeners?.();previous.close()}catch{}}
  dataChannel=channel;
- dataChannel.on('open',()=>{if(channel!==dataChannel)return;clearTimeout(reconnectTimer);reconnectTimer=null;reconnectAttempts=0;startHeartbeat();networkStatus('Conectado ao outro duelista','connected');document.querySelector('#network-badge').classList.remove('hidden');document.body.classList.remove('connection-lost');sendPacket({type:'deck',deck:selectedDecks[localPlayer]});updateOnlineStart();if(state)updateOnlineLock();if(onlineRole==='host'&&document.querySelector('#setup').classList.contains('hidden'))setTimeout(()=>sendGameState(true),80)});
- dataChannel.on('data',receivePacket);
+ dataChannel.on('open',()=>{if(channel!==dataChannel)return;clearTimeout(reconnectTimer);reconnectTimer=null;reconnectAttempts=0;lastPacketAt=Date.now();startHeartbeat();networkStatus('Conectado ao outro duelista','connected');document.querySelector('#network-badge').classList.remove('hidden');document.body.classList.remove('connection-lost');sendPacket({type:'deck',deck:selectedDecks[localPlayer]});updateOnlineStart();if(state)updateOnlineLock();flushPendingState();sendPacket({type:'sync-request',revision:networkRevision});if(onlineRole==='host'&&document.querySelector('#setup').classList.contains('hidden'))setTimeout(()=>sendGameState(true,false),80)});
+ dataChannel.on('data',raw=>{if(channel===dataChannel)receivePacket(raw)});
  dataChannel.on('close',()=>handleChannelClose(channel));
  dataChannel.on('error',()=>{if(channel===dataChannel&&!channel.open)handleChannelClose(channel)})
 }
-function startHeartbeat(){clearInterval(heartbeatTimer);heartbeatTimer=setInterval(()=>sendPacket({type:'heartbeat',at:Date.now()}),12000)}
+function startHeartbeat(){
+ clearInterval(heartbeatTimer);heartbeatTimer=setInterval(()=>{if(!dataChannel?.open)return;if(lastPacketAt&&Date.now()-lastPacketAt>20000){let stale=dataChannel;try{stale.close()}catch{}handleChannelClose(stale);return}sendPacket({type:'heartbeat',at:Date.now()})},5000)
+}
 function handleChannelClose(channel){
  if(!onlineMode||channel!==dataChannel)return;clearInterval(heartbeatTimer);heartbeatTimer=null;dataChannel=null;networkStatus('Reconectando a partida…','connecting');document.body.classList.add('online-waiting','connection-lost');scheduleReconnect()
 }
@@ -91,19 +93,46 @@ function chooseOwnDeckRow(){
  updateOnlineStart()
 }
 function sendPacket(packet){if(!dataChannel?.open)return false;try{dataChannel.send(packet);return true}catch{handleChannelClose(dataChannel);return false}}
-function sendGameState(force=false){if(!onlineMode||applyingRemote||!state||state.animating||!dataChannel?.open)return;sendPacket({type:'state',actor:localPlayer,sequence:++networkSequence,force,started:document.querySelector('#setup').classList.contains('hidden'),state,selectedDecks})}
-function syncOnlineState(){if(onlineMode)setTimeout(()=>sendGameState(),35)}
+function cloneNetworkValue(value){return typeof structuredClone==='function'?structuredClone(value):JSON.parse(JSON.stringify(value))}
+function scheduleStateRetry(){
+ clearTimeout(stateRetryTimer);stateRetryTimer=null;if(!pendingStatePacket)return;
+ stateRetryTimer=setTimeout(()=>{if(!pendingStatePacket)return;if(dataChannel?.open){sendPacket(pendingStatePacket);networkStatus('Sincronizando a jogada…','connecting')}scheduleStateRetry()},900)
+}
+function flushPendingState(){if(!pendingStatePacket||!dataChannel?.open)return false;let sent=sendPacket(pendingStatePacket);if(sent)scheduleStateRetry();return sent}
+function acknowledgeState(revision){sendPacket({type:'state-ack',revision})}
+function sendGameState(force=false,advance=!force){
+ if(!onlineMode||applyingRemote||!state||state.animating)return false;
+ if(advance)networkRevision++;
+ let packet={type:'state',actor:localPlayer,sequence:++networkSequence,revision:networkRevision,force,started:document.querySelector('#setup').classList.contains('hidden'),state:cloneNetworkValue(state),selectedDecks:cloneNetworkValue(selectedDecks)};
+ if(advance||!pendingStatePacket||pendingStatePacket.revision<=packet.revision)pendingStatePacket=packet;
+ return flushPendingState()
+}
+function syncOnlineState(urgent=false){
+ if(!onlineMode)return;clearTimeout(stateSyncTimer);stateSyncTimer=null;
+ if(urgent)return sendGameState();
+ stateSyncTimer=setTimeout(()=>{stateSyncTimer=null;sendGameState()},35)
+}
 function receivePacket(raw){
  let packet=raw;if(typeof raw==='string'){try{packet=JSON.parse(raw)}catch{return}}
  if(!packet||typeof packet!=='object')return;
+ lastPacketAt=Date.now();
  if(packet.type==='heartbeat')return;
+ if(packet.type==='state-ack'){if(pendingStatePacket&&Number(packet.revision)>=pendingStatePacket.revision){pendingStatePacket=null;clearTimeout(stateRetryTimer);stateRetryTimer=null;networkStatus('Jogada sincronizada','connected')}return}
+ if(packet.type==='sync-request'){
+  let remoteRevision=Number(packet.revision)||0;
+  if(pendingStatePacket&&pendingStatePacket.revision>=remoteRevision)flushPendingState();else if(state&&networkRevision>=remoteRevision)sendGameState(true,false);
+  return
+ }
  if(packet.type==='visual'&&state){clearTimeout(remoteVisualTimer);let units=allUnits();state.animating=true;if(packet.kind==='combat'){let defender=units.find(u=>u.id===packet.defender);(packet.attackers||[]).forEach(id=>{let u=units.find(x=>x.id===id);if(u&&defender){u.combatRole='attacker';u.combatDx=defender.col-u.col;u.combatDy=defender.row-u.row}});if(defender)defender.combatRole='defender';let tower=units.find(u=>u.id===packet.tower);if(tower)tower.combatRole='sacrifice';hint(packet.label||'Combate em andamento…')}else if(packet.kind==='combine'){(packet.materials||[]).forEach(id=>{let u=units.find(x=>x.id===id);if(u){u.combining=true;u.combineDx=packet.pos.col-u.col;u.combineDy=packet.pos.row-u.row}});hint('Combinando materiais…')}render();remoteVisualTimer=setTimeout(()=>{if(!state?.animating)return;clearAnimationMarks(allUnits());state.animating=false;render()},1200);return}
  if(packet.type==='deck'){remoteDeck=packet.deck;selectedDecks[localPlayer===1?2:1]=packet.deck;updateOnlineStart();return}
- if(packet.type==='restart-request'&&onlineRole==='host'){if(confirm('O outro jogador quer reiniciar a partida. Aceitar?')){newGame();sendGameState(true)}return}
+ if(packet.type==='restart-request'&&onlineRole==='host'){if(confirm('O outro jogador quer reiniciar a partida. Aceitar?')){newGame();sendGameState(true,true)}return}
  if(packet.type!=='state'||!packet.state)return;
- if(!packet.force&&state){let expected=state.swordQueue?.[0]??(state.placementPhase?state.placementPlayer:state.current);if(packet.actor!==expected)return}
+ let incomingRevision=Number(packet.revision);if(!Number.isFinite(incomingRevision))incomingRevision=networkRevision+1;
+ if(incomingRevision<networkRevision){acknowledgeState(incomingRevision);sendGameState(true,false);return}
+ if(incomingRevision===networkRevision&&state){acknowledgeState(incomingRevision);return}
+ networkRevision=incomingRevision;if(pendingStatePacket&&pendingStatePacket.revision<=networkRevision){pendingStatePacket=null;clearTimeout(stateRetryTimer);stateRetryTimer=null}
  clearTimeout(remoteVisualTimer);remoteVisualTimer=null;applyingRemote=true;if(packet.started)document.querySelector('#setup').classList.add('hidden');state=packet.state;selectedDecks=packet.selectedDecks||selectedDecks;selected=null;selectedEffect=null;mode=null;targets=[];pendingCard=null;castleFirst=null;fusionMaterials=[];
- document.querySelectorAll('#turn-draw,#pass,#sword-transfer').forEach(element=>element.classList.add('hidden'));render();applyingRemote=false;checkWin();if(!state.forfeitWinner)resumeOnlinePhase()
+ document.querySelectorAll('#turn-draw,#pass,#sword-transfer').forEach(element=>element.classList.add('hidden'));render();applyingRemote=false;acknowledgeState(networkRevision);networkStatus('Jogada recebida','connected');checkWin();if(!state.forfeitWinner)resumeOnlinePhase()
 }
 function resumeOnlinePhase(){
  if(!onlineMode||!state)return;updateOnlineLock();
@@ -124,7 +153,7 @@ function selectGameMode(mode){
  if(!onlineMode){closePeer();onlineRole=null;localPlayer=null;roomCode='';setLobbyBusy(false);document.querySelector('#start-game').disabled=false;document.querySelector('#start-game').textContent='INICIAR DUELO LOCAL'}else{document.querySelector('#start-game').disabled=true;document.querySelector('#start-game').textContent='DIGITE O MESMO CÓDIGO NOS DOIS DISPOSITIVOS';networkStatus('Digite um código e escolha uma opção','')}
 }
 function onlineDeckChanged(player,deck){if(onlineMode&&player===localPlayer)sendPacket({type:'deck',deck})}
-function startOnlineGame(){if(onlineRole!=='host'||!dataChannel?.open||!remoteDeck)return;document.querySelector('#setup').classList.add('hidden');newGame();sendGameState(true)}
+function startOnlineGame(){if(onlineRole!=='host'||!dataChannel?.open||!remoteDeck)return;document.querySelector('#setup').classList.add('hidden');newGame();sendGameState(true,true)}
 
 document.addEventListener('DOMContentLoaded',()=>{
  const roomInput=document.querySelector('#room-code');
@@ -134,5 +163,6 @@ document.addEventListener('DOMContentLoaded',()=>{
  document.querySelector('#mode-local').onclick=()=>selectGameMode('local');document.querySelector('#mode-online').onclick=()=>selectGameMode('online');document.querySelector('#host-online').onclick=createRoom;document.querySelector('#join-online').onclick=joinRoom;
  window.addEventListener('online',()=>{if(onlineMode&&!dataChannel?.open){networkStatus('Internet restaurada — reconectando…','connecting');scheduleReconnect(100)}});
  window.addEventListener('offline',()=>{if(onlineMode){networkStatus('Sem internet — a partida tentará voltar automaticamente','connecting');document.body.classList.add('connection-lost')}});
+ document.addEventListener('visibilitychange',()=>{if(!onlineMode||document.visibilityState!=='visible')return;if(dataChannel?.open){lastPacketAt=Date.now();sendPacket({type:'heartbeat',at:Date.now()});flushPendingState();sendPacket({type:'sync-request',revision:networkRevision})}else scheduleReconnect(100)});
  document.addEventListener('click',event=>{if(!onlineMode||applyingRemote||!state)return;if(event.target.closest('#setup,#rules-dialog'))return;let actor=state.placementPhase?state.placementPlayer:state.current;if(actor===localPlayer)syncOnlineState()},true)
 });
