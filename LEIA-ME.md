@@ -34,8 +34,9 @@ O tabuleiro é apresentado pela perspectiva de cada duelista: o próprio polo e 
 - Movimento, virar cartas, revelação que cancela combate, ataque conjunto, empate e pontuação.
 - Peões Combinados Babel, Justiça Alva, Serpente Selvagem e Golem Selvagem.
 - Cartas Fusão são compradas na mesma pilha dos peões comuns e permanecem na mão de Peões.
+- As cartas de Peões Combinados mostram os materiais necessários e destacam no campo os peões válidos para a combinação.
 - Para fundir, é obrigatório possuir a Carta Fusão correspondente e manter todos os materiais exigidos em contato.
-- Infantaria, Torre, Bobo, Arqueiro, Ave Eterna, Cavalo, Coelho, Montador e Gavião com seus alcances e habilidades; o Gavião não cria obstáculos como a Serpente.
+- Infantaria, Torre, Bobo, Arqueiro, Ave Eterna, Cavalo, Coelho, Montador e Gavião com seus alcances e habilidades; o Gavião pode se mover duas vezes por turno.
 - Recuar, Rocar Torre, Espada Maldita, Queimar Pertences, Poço sem Fundo, Campo das Rosas Pálidas, Selva Selvagem, Camuflar-se e Arco Selvagem.
 - Obstáculos NATURAL e passagem por peões do mesmo tipo.
 - Seleção independente dos decks Xadria e Selvagem para cada duelista.
