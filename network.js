@@ -1,4 +1,5 @@
-var onlineMode=false,localPlayer=null,onlineRole=null,peerConnection=null,dataChannel=null,applyingRemote=false,remoteDeck=null,networkSequence=0,networkRevision=0,roomCode='',reconnectTimer=null,heartbeatTimer=null,deckSyncTimer=null,stateRetryTimer=null,stateSyncTimer=null,remoteVisualTimer=null,reconnectAttempts=0,pendingStatePacket=null,lastPacketAt=0;
+var onlineMode=false,localPlayer=null,onlineRole=null,peerConnection=null,dataChannel=null,applyingRemote=false,remoteDeck=null,networkSequence=0,networkRevision=0,roomCode='',reconnectTimer=null,heartbeatTimer=null,deckSyncTimer=null,stateRetryTimer=null,stateSyncTimer=null,remoteVisualTimer=null,reconnectAttempts=0,pendingStatePacket=null,lastPacketAt=0,stateChunks={};
+const STATE_CHUNK_SIZE=8000;
 
 function networkStatus(text,kind=''){
  const box=document.querySelector('.signal-status'),label=document.querySelector('#connection-status');
@@ -20,7 +21,7 @@ function roomPeerId(code){return `confluxo-${code.toLowerCase()}`}
 function gameStarted(){return document.querySelector('#setup').classList.contains('hidden')}
 function clearConnectionTimers(){clearTimeout(reconnectTimer);clearInterval(heartbeatTimer);clearInterval(deckSyncTimer);clearTimeout(stateRetryTimer);clearTimeout(stateSyncTimer);reconnectTimer=null;heartbeatTimer=null;deckSyncTimer=null;stateRetryTimer=null;stateSyncTimer=null}
 function closePeer(){
- clearConnectionTimers();reconnectAttempts=0;networkRevision=0;pendingStatePacket=null;lastPacketAt=0;
+ clearConnectionTimers();reconnectAttempts=0;networkRevision=0;pendingStatePacket=null;lastPacketAt=0;stateChunks={};
  const channel=dataChannel,peer=peerConnection;dataChannel=null;peerConnection=null;remoteDeck=null;
  try{channel?.removeAllListeners?.();channel?.close();peer?.removeAllListeners?.();peer?.destroy()}catch{}
 }
@@ -103,7 +104,14 @@ function chooseOwnDeckRow(){
  document.querySelectorAll('.choice-row').forEach(row=>{let own=+row.dataset.player===localPlayer;row.classList.toggle('online-only-player',own);row.classList.toggle('remote-player',!own)});
  updateOnlineStart()
 }
-function sendPacket(packet){if(!dataChannel?.open)return false;try{dataChannel.send(packet);return true}catch{handleChannelClose(dataChannel);return false}}
+function sendPacket(packet){
+ if(!dataChannel?.open)return false;
+ try{
+  let serialized=packet?.type==='state'?JSON.stringify(packet):null;
+  if(serialized&&serialized.length>STATE_CHUNK_SIZE){let total=Math.ceil(serialized.length/STATE_CHUNK_SIZE),id=`${localPlayer}-${packet.revision}-${packet.sequence}`;for(let index=0;index<total;index++)dataChannel.send({type:'state-chunk',id,index,total,data:serialized.slice(index*STATE_CHUNK_SIZE,(index+1)*STATE_CHUNK_SIZE)});return true}
+  dataChannel.send(packet);return true
+ }catch{handleChannelClose(dataChannel);return false}
+}
 function cloneNetworkValue(value){return typeof structuredClone==='function'?structuredClone(value):JSON.parse(JSON.stringify(value))}
 function scheduleStateRetry(){
  clearTimeout(stateRetryTimer);stateRetryTimer=null;if(!pendingStatePacket)return;
@@ -128,6 +136,10 @@ function receivePacket(raw){
  if(!packet||typeof packet!=='object')return;
  lastPacketAt=Date.now();
  if(packet.type==='heartbeat')return;
+ if(packet.type==='state-chunk'){
+  let index=Number(packet.index),total=Number(packet.total);if(!packet.id||!Number.isInteger(index)||!Number.isInteger(total)||index<0||index>=total||total>100||typeof packet.data!=='string')return;
+  let transfer=stateChunks[packet.id];if(!transfer||transfer.total!==total)transfer=stateChunks[packet.id]={total,parts:Array(total),received:0};if(transfer.parts[index]===undefined){transfer.parts[index]=packet.data;transfer.received++}if(transfer.received===total){delete stateChunks[packet.id];try{receivePacket(JSON.parse(transfer.parts.join('')))}catch{sendPacket({type:'sync-request',revision:networkRevision})}}return
+ }
  if(packet.type==='state-ack'){if(pendingStatePacket&&Number(packet.revision)>=pendingStatePacket.revision){pendingStatePacket=null;clearTimeout(stateRetryTimer);stateRetryTimer=null;networkStatus('Jogada sincronizada','connected')}return}
  if(packet.type==='sync-request'){
   if(!gameStarted())return;
