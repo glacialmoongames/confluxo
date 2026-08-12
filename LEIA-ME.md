@@ -22,7 +22,7 @@ O tabuleiro é apresentado pela perspectiva de cada duelista: o próprio polo e 
 2. Na primeira rodada, nenhum dos jogadores compra. A partir da rodada 2, escolha obrigatoriamente entre comprar um Peão ou um Efeito.
 3. Clique em um peão no campo para abrir diretamente seu movimento. As casas possíveis aparecem destacadas.
 4. Clique em um peão comum da mão para abrir diretamente as casas onde ele pode entrar.
-5. Use os botões somente para ações especiais: virar, combater, fundir e ativar habilidade.
+5. Selecione um peão para mover ou atacar diretamente no tabuleiro; os botões ficam apenas para virar e ativar habilidades.
 6. Clique numa Carta de Efeito para ler seu efeito no painel e depois use **Jogar carta**.
 7. Encerre o turno e entregue o dispositivo; a tela de passagem esconde a mão do próximo jogador.
 8. O primeiro Duelista com 10 pontos vence — ou vence quando o adversário desistir.
@@ -37,7 +37,10 @@ O tabuleiro é apresentado pela perspectiva de cada duelista: o próprio polo e 
 - As cartas de Peões Combinados mostram os materiais necessários e destacam no campo os peões válidos para a combinação.
 - Para fundir, é obrigatório possuir a Carta Fusão correspondente e manter todos os materiais exigidos em contato.
 - Infantaria, Torre, Bobo, Arqueiro, Ave Eterna, Cavalo, Coelho, Montador e Gavião com seus alcances e habilidades; o Gavião pode se mover duas vezes por turno.
-- Recuar, Rocar Torre, Espada Maldita, Queimar Pertences, Poço sem Fundo, Campo das Rosas Pálidas, Selva Selvagem, Camuflar-se e Arco Selvagem.
+- Recuar, Rocar Torre, Espada Maldita, Queimar Pertences, Poço sem Fundo, Empurrão, Campo das Rosas Pálidas, Selva Selvagem, Camuflar-se e Arco Selvagem.
+- O Poço sem Fundo permanece na Arena depois de destruir um peão; Empurrão permite escolher quantas casas para trás o alvo será movido.
+- Ao selecionar um peão próprio, os adversários ao alcance recebem o ícone de ataque diretamente no tabuleiro.
+- Clicar fora da Arena cancela uma combinação ou carta que ainda esteja aguardando alvo.
 - Obstáculos NATURAL e passagem por peões do mesmo tipo.
 - Seleção independente dos decks Xadria e Selvagem para cada duelista.
 - Xadria combina cartas Luz e Trevas; não representa um dos lados do tabuleiro.

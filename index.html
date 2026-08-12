@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Confluxo — Jogo de Cartas Tático</title>
-  <link rel="stylesheet" href="styles.css?v=38">
+  <link rel="stylesheet" href="styles.css?v=39">
 </head>
 <body>
   <div id="setup" class="setup">
-    <span class="game-version">VERSÃO 52</span>
+    <span class="game-version">VERSÃO 53</span>
     <div class="setup-card">
       <span class="setup-mark">✦</span>
       <small>DUELO DO CONFLUXO</small>
@@ -111,7 +111,6 @@
         <div class="side-controls">
           <div class="panel-title controls-title">AÇÕES</div>
           <button id="flip" class="action"><span>◐</span><div><b>Virar</b><small>uma vez por turno</small></div></button>
-          <button id="attack" class="action"><span>⚔</span><div><b>Combater</b><small>escolha o alvo</small></div></button>
           <button id="ability" class="action"><span>✥</span><div><b>Habilidade</b><small>efeito do selecionado</small></div></button>
           <button id="end-turn" class="primary end-turn">ENCERRAR TURNO <span>→</span></button>
         </div>
@@ -169,7 +168,7 @@
       <section><h3>Objetivo</h3><p>Destrua peões para alcançar 10 pontos. Um Peão Combinado vale o número de materiais usados para criá-lo.</p></section>
       <section><h3>Turno</h3><p>Na rodada 1, nenhum jogador compra. A partir da rodada 2, comece escolhendo obrigatoriamente entre Peões e Efeitos.</p></section>
       <section><h3>Peões</h3><p>Cada peão possui um alcance próprio, exibido em sua carta. Clique nele para destacar no tabuleiro somente as casas permitidas.</p></section>
-      <section><h3>Combate</h3><p>Cada peão pode iniciar um ataque por turno. Peões virados para baixo não podem atacar nem participar de ataques conjuntos. Maior ATK vence. Em um empate, todos os atacantes que somaram ATK e o defensor são destruídos. Peão oculto é revelado e cancela o combate.</p></section>
+      <section><h3>Combate</h3><p>Selecione seu peão e clique no ícone ⚔ sobre um adversário ao alcance. Cada peão pode iniciar um ataque por turno. Peões virados para baixo não podem atacar nem participar de ataques conjuntos. Maior ATK vence. Em um empate, todos os atacantes que somaram ATK e o defensor são destruídos. Peão oculto é revelado e cancela o combate.</p></section>
       <section><h3>Combinar</h3><p>Com o Peão Combinado na mão, clique nele e depois selecione no campo os materiais exigidos que estejam em contato.</p></section>
       <section><h3>Efeitos e Arena</h3><p>Clique em uma carta ou no Slot de Arena para ler seu efeito no painel de detalhes. A Arena vale para ambos os lados.</p></section>
     </div>
@@ -181,6 +180,6 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="network.js?v=31"></script>
-  <script src="game.js?v=46"></script>
+  <script src="game.js?v=47"></script>
 </body>
 </html>
