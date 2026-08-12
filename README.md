@@ -30,6 +30,6 @@ O site será atualizado automaticamente sempre que novos commits forem enviados 
 
 - `index.html`: interface principal.
 - `styles.css`: identidade visual e layout responsivo.
-- `confluxo-game.js`: regras e estado da partida.
+- `confluxo-engine.js`: regras e estado da partida.
 - `network.js`: conexão WebRTC entre os jogadores.
 - `soldado.png`: arte utilizada nas cartas compatíveis.

@@ -2,7 +2,8 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 
-const source = fs.readFileSync('confluxo-game.js', 'utf8');
+const sourceRaw = fs.readFileSync('confluxo-engine.js', 'utf8');
+const source = sourceRaw.replace(/\\u([0-9a-f]{4})/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
 const page = fs.readFileSync('index.html', 'utf8');
 const styles = fs.readFileSync('styles.css', 'utf8');
 const definitions = source.slice(0, source.indexOf('let selectedDecks'));
