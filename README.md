@@ -2,6 +2,8 @@
 
 Protótipo web de um jogo tático para dois duelistas, com tabuleiro 6 × 8, turnos, combate, efeitos, arenas, Peões Combinados e modo online via WebRTC.
 
+A partida também termina automaticamente quando somente um dos duelistas fica sem nenhum Peão normal disponível no campo, na mão ou na pilha. No modo contra o bot, ele evita voluntariamente casas ocupadas pelo Poço sem Fundo.
+
 ## Jogar
 
 Abra `index.html` ou acesse o endereço do projeto no GitHub Pages.

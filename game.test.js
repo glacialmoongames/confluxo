@@ -60,5 +60,12 @@ assert.match(source, /function drawRoseReward/);
 assert.match(source, /function awardPoints/);
 assert.doesNotMatch(source, /state\.players\[scorer\]\.score\+\+/);
 assert.match(source, /u\.bonusAtk=\(u\.bonusAtk\|\|0\)\+200/);
+assert.match(source, /hideMobileDetails\(\);selectedEffect=null;pendingCard=/);
+assert.match(source, /function animateRoseReward/);
+assert.match(styles, /rose-reward-card/);
+assert.match(source, /function hasNormalPawnAvailable/);
+assert.match(source, /Vitória automática/);
+assert.match(source, /!obstacleAt\(r,c\)&&!pitAt\(r,c\)/);
+assert.match(source, /moveTargets\(u\)\.filter\(target=>!pitAt\(target\.r,target\.c\)\)/);
 
 console.log('game card tests passed');
