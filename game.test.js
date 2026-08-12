@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 
-const source = fs.readFileSync('game.js', 'utf8');
+const source = fs.readFileSync('confluxo-game.js', 'utf8');
 const page = fs.readFileSync('index.html', 'utf8');
 const styles = fs.readFileSync('styles.css', 'utf8');
 const definitions = source.slice(0, source.indexOf('let selectedDecks'));
