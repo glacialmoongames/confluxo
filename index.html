@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Confluxo — Jogo de Cartas Tático</title>
-  <link rel="stylesheet" href="styles.css?v=40">
+  <link rel="stylesheet" href="styles.css?v=41">
 </head>
 <body>
   <div id="setup" class="setup">
-    <span class="game-version">VERSÃO 54</span>
+    <span class="game-version">VERSÃO 55</span>
     <div class="setup-card">
       <span class="setup-mark">✦</span>
       <small>DUELO DO CONFLUXO</small>
@@ -121,7 +121,8 @@
       </aside>
 
       <aside class="details-panel panel">
-        <div class="card-details">
+        <div class="card-details mobile-details-hidden">
+          <button id="mobile-details-close" class="mobile-details-close" aria-label="Fechar detalhes">×</button>
           <div id="detail-title" class="panel-title">DETALHES DA CARTA</div>
           <div id="unit-card" class="unit-card empty">
             <div class="card-art"><span>⬢</span></div>
@@ -180,6 +181,6 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="network.js?v=31"></script>
-  <script src="game.js?v=48"></script>
+  <script src="game.js?v=49"></script>
 </body>
 </html>

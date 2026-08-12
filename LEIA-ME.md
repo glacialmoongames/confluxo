@@ -47,12 +47,14 @@ O tabuleiro é apresentado pela perspectiva de cada duelista: o próprio polo e 
 - A Selva Selvagem cria obstáculos ou frutas no começo dos turnos; qualquer peão que entre numa fruta a coleta com animação e recebe 100 ATK, sem sobreposição visual.
 - Obstáculos e frutas criados pela Selva desaparecem quando essa Arena é substituída, sem remover obstáculos criados por outras cartas.
 - Um único Slot de Arena afeta os dois lados e pode ser substituído por qualquer duelista.
+- No Campo das Rosas Pálidas, cada ponto conquistado compra uma carta de uma pilha escolhida aleatoriamente entre Peões e Efeitos.
 - Uma Arena repetida não é gasta nem retirada da mão enquanto a mesma Arena já estiver ativa.
 - Clicar no Slot de Arena mostra seu efeito no mesmo painel usado pelos Peões.
 - Clicar em um peão comum na mão abre imediatamente as casas válidas de colocação.
 - Quando o portador da Espada Maldita é destruído, seu dono escolhe visualmente o próximo peão equipado, seja no campo ou na mão.
 - O Montador Selvagem possui um botão de habilidade destacado; peões montados exibem marcador, bônus de ATK e regra de proteção no painel.
 - Cartas que possuem um arquivo de arte usam a própria imagem como miniatura no campo, na mão e nas telas de escolha.
+- No celular, placares, Arena, tabuleiro, ações e ambas as mãos cabem em uma única tela; detalhes de cartas abrem em um painel sobreposto que pode ser fechado.
 
 ## Decisões para regras ainda abertas
 
