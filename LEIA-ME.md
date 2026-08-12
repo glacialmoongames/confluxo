@@ -29,7 +29,7 @@ O tabuleiro é apresentado pela perspectiva de cada duelista: o próprio polo e 
 
 ## Conteúdo implementado das notas
 
-- Tabuleiro com 7 colunas × 10 linhas, duelistas nos polos, limite de 5 peões e preparação com 3 peões/3 efeitos.
+- Tabuleiro com 6 colunas × 8 linhas, duelistas nos polos, sem limite total de Peões em campo e preparação com 3 Peões/3 Efeitos.
 - Antes do primeiro turno, cada jogador escolhe individualmente as casas dos seus três peões iniciais.
 - Movimento, virar cartas, revelação que cancela combate, ataque conjunto, empate e pontuação.
 - Peões Combinados Babel, Justiça Alva, Serpente Selvagem e Golem Selvagem.

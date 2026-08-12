@@ -67,5 +67,8 @@ assert.match(source, /function hasNormalPawnAvailable/);
 assert.match(source, /Vitória automática/);
 assert.match(source, /!obstacleAt\(r,c\)&&!pitAt\(r,c\)/);
 assert.match(source, /moveTargets\(u\)\.filter\(target=>!pitAt\(target\.r,target\.c\)\)/);
+assert.doesNotMatch(source, /limite de 5 peões/i);
+assert.doesNotMatch(source, /units\.filter\(u=>u\.row!==null\)\.length>=5/);
+assert.doesNotMatch(page, /\/5<\/span>/);
 
 console.log('game card tests passed');

@@ -4,6 +4,8 @@ Protótipo web de um jogo tático para dois duelistas, com tabuleiro 6 × 8, tur
 
 A partida também termina automaticamente quando somente um dos duelistas fica sem nenhum Peão normal disponível no campo, na mão ou na pilha. No modo contra o bot, ele evita voluntariamente casas ocupadas pelo Poço sem Fundo.
 
+Não existe limite total de Peões em campo; cada duelista ainda pode colocar somente um novo Peão por turno, quando houver uma casa válida em seu polo.
+
 ## Jogar
 
 Abra `index.html` ou acesse o endereço do projeto no GitHub Pages.
