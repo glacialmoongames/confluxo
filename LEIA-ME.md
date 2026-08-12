@@ -55,6 +55,7 @@ O tabuleiro é apresentado pela perspectiva de cada duelista: o próprio polo e 
 - O Montador Selvagem possui um botão de habilidade destacado; peões montados exibem marcador, bônus de ATK e regra de proteção no painel.
 - Cartas que possuem um arquivo de arte usam a própria imagem como miniatura no campo, na mão e nas telas de escolha.
 - No celular, placares, Arena, tabuleiro, ações e ambas as mãos cabem em uma única tela; detalhes de cartas abrem em um painel sobreposto que pode ser fechado.
+- No celular, tocar novamente no ícone da carta, peão ou Arena já selecionado alterna entre mostrar e esconder seus detalhes.
 
 ## Decisões para regras ainda abertas
 

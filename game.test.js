@@ -43,6 +43,8 @@ assert.match(source, /addEventListener\('pointerdown'/);
 assert.doesNotMatch(source, /state\.pits=state\.pits\.filter/);
 assert.doesNotMatch(page, /id="attack"/);
 assert.match(source, /classList\.toggle\('viewer'/);
+assert.match(source, /function toggleMobileDetails/);
+assert.match(source, /repeated&&toggleMobileDetails\(\)/);
 assert.match(styles, /100dvh - 38px/);
 assert.match(styles, /grid-template-rows:28px 22px minmax\(0,1fr\) 28px 36px 68px/);
 assert.match(styles, /card-details\.mobile-details-hidden/);
