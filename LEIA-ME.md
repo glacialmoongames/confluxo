@@ -44,7 +44,8 @@ O tabuleiro é apresentado pela perspectiva de cada duelista: o próprio polo e 
 - Obstáculos NATURAL e passagem por peões do mesmo tipo.
 - Seleção independente dos decks Xadria e Selvagem para cada duelista.
 - Xadria combina cartas Luz e Trevas; não representa um dos lados do tabuleiro.
-- A Selva Selvagem cria obstáculos ou frutas no começo dos turnos; frutas concedem ATK e o Golem pode esmagar obstáculos para crescer.
+- A Selva Selvagem cria obstáculos ou frutas no começo dos turnos; qualquer peão que entre numa fruta a coleta com animação e recebe 100 ATK, sem sobreposição visual.
+- Obstáculos e frutas criados pela Selva desaparecem quando essa Arena é substituída, sem remover obstáculos criados por outras cartas.
 - Um único Slot de Arena afeta os dois lados e pode ser substituído por qualquer duelista.
 - Uma Arena repetida não é gasta nem retirada da mão enquanto a mesma Arena já estiver ativa.
 - Clicar no Slot de Arena mostra seu efeito no mesmo painel usado pelos Peões.

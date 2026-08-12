@@ -42,6 +42,11 @@ assert.doesNotMatch(page, /id="attack"/);
 assert.match(source, /HABILIDADE COPIADA E ATIVA/);
 assert.match(source, /copy-mark/);
 assert.match(source, /spawnJungleFeature\(\)/);
+assert.match(source, /function collectFruit/);
+assert.match(source, /fruitPickup/);
+assert.match(source, /collectFruit\(u,r,c\)/);
+assert.match(source, /source:'jungle'/);
+assert.match(source, /clearJungleFeatures/);
 assert.match(source, /u\.bonusAtk=\(u\.bonusAtk\|\|0\)\+200/);
 
 console.log('game card tests passed');
