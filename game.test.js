@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 
-const source = ['engine-core.js', 'engine-actions.js', 'engine-ui.js'].map(file => fs.readFileSync(file, 'utf8')).join('\n');
+const source = ['engine-core.js', 'engine-actions-a.js', 'engine-actions-b.js', 'engine-ui.js'].map(file => fs.readFileSync(file, 'utf8')).join('\n');
 const page = fs.readFileSync('index.html', 'utf8');
 const styles = fs.readFileSync('styles.css', 'utf8');
 const definitions = source.slice(0, source.indexOf('let selectedDecks'));
