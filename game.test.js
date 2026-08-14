@@ -4,7 +4,9 @@ const vm = require('node:vm');
 
 const source = ['engine-core.js', 'engine-actions-a.js', 'engine-actions-b.js', 'engine-ui.js'].map(file => fs.readFileSync(file, 'utf8')).join('\n');
 const page = fs.readFileSync('index.html', 'utf8');
-const styles = fs.readFileSync('styles.css', 'utf8');
+const styles = ['styles-core.css', 'styles-game.css', 'styles-responsive.css']
+  .map((file) => fs.readFileSync(file, 'utf8'))
+  .join('\n');
 const definitions = source.slice(0, source.indexOf('let selectedDecks'));
 const context = {};
 vm.createContext(context);

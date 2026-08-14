@@ -29,7 +29,7 @@ O site será atualizado automaticamente sempre que novos commits forem enviados 
 ## Estrutura
 
 - `index.html`: interface principal.
-- `styles.css`: identidade visual e layout responsivo.
+- `styles-core.css`, `styles-game.css` e `styles-responsive.css`: identidade visual e layout responsivo divididos para publicação estável.
 - `engine-core.js`, `engine-actions-a.js`, `engine-actions-b.js` e `engine-ui.js`: regras, ações e interface da partida.
 - `network.js`: conexão WebRTC entre os jogadores.
 - `soldado.png`: arte utilizada nas cartas compatíveis.
