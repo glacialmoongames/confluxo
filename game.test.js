@@ -72,7 +72,8 @@ assert.doesNotMatch(source, /units\.filter\(u=>u\.row!==null\)\.length>=5/);
 assert.doesNotMatch(page, /\/5<\/span>/);
 assert.match(source, /destroy\(u,u\.owner===1\?2:1,'poço'\)/);
 assert.match(source, /destroy\(pushed,pushed\.owner===1\?2:1,'poço'\)/);
-assert.match(source, /if\(pitAt\(row,col\)\)return hint/);
+assert.match(source, /let retreatPit=pitAt\(row,col\)/);
+assert.match(source, /if\(retreatPit\)\{destroy\(u,u\.owner===1\?2:1,'poço'\)/);
 assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 

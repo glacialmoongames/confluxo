@@ -38,7 +38,7 @@ O tabuleiro é apresentado pela perspectiva de cada duelista: o próprio polo e 
 - Para fundir, é obrigatório possuir a Carta Fusão correspondente e manter todos os materiais exigidos em contato.
 - Infantaria, Torre, Bobo, Arqueiro, Ave Eterna, Cavalo, Coelho, Montador e Gavião com seus alcances e habilidades; o Gavião pode se mover duas vezes por turno.
 - Recuar, Rocar Torre, Espada Maldita, Queimar Pertences, Poço sem Fundo, Empurrão, Campo das Rosas Pálidas, Selva Selvagem, Camuflar-se e Arco Selvagem.
-- O Poço sem Fundo permanece na Arena depois de destruir um Peão e concede os pontos ao adversário do Peão destruído; Empurrão permite escolher quantas casas para trás o alvo será movido. Recuar! não pode devolver um Peão para uma casa ocupada por Poço.
+- O Poço sem Fundo permanece na Arena depois de destruir um Peão e concede os pontos ao adversário do Peão destruído; Empurrão permite escolher quantas casas para trás o alvo será movido. Se Recuar! devolver um Peão para uma casa com Poço, o movimento acontece e o Peão é destruído.
 - Ao selecionar um peão próprio, os adversários ao alcance recebem o ícone de ataque diretamente no tabuleiro.
 - Clicar fora da Arena cancela uma combinação ou carta que ainda esteja aguardando alvo.
 - Obstáculos NATURAL e passagem por peões do mesmo tipo.
