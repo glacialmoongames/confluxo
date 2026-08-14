@@ -23,7 +23,7 @@ const effects={
  camouflage:{name:'Camuflar-se na Selva',type:'UTILIDADE',icon:'◒',text:'Vira todos os peões aliados em campo para baixo.'},
  jungle:{name:'Selva Selvagem',type:'ARENA',icon:'♣',text:'No início de cada turno cria um obstáculo NATURAL ou, com 50% de chance, uma fruta. Quem pega a fruta ganha 100 ATK. Tudo que a Selva criou desaparece quando esta Arena é substituída.'},
  bow:{name:'Arco Selvagem',type:'EQUIPAMENTO',icon:'➶',text:'O equipado pode atacar inimigos nas casas indicadas em seu próprio alcance de movimento, além do ataque adjacente normal.'},
- pit:{name:'Poço sem Fundo',type:'UTILIDADE',icon:'◉',text:'Coloque um poço em qualquer casa livre da Arena. O peão que pisar nele é destruído, mas o poço permanece.'},
+ pit:{name:'Poço sem Fundo',type:'UTILIDADE',icon:'◉',text:'Coloque um poço em qualquer casa livre da Arena. O peão que cair nele é destruído, concede seus pontos ao adversário do peão e o poço permanece.'},
  push:{name:'Empurrão',type:'UTILIDADE',icon:'»',text:'Escolha um peão em campo e depois quantas casas para trás ele será empurrado.'}
 };
 const archetypes={
