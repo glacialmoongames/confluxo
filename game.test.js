@@ -44,6 +44,11 @@ for (const planet of ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 
 }
 assert.equal(context.defs.sun.atk, 10000);
 assert.equal(context.defs.sun.fusion, 8);
+for (const body of ['mercury','venus','earth','mars','jupiter','saturn','uranus','neptune','pluto','sun']) {
+  assert.match(context.defs[body].art, /^assets\/planets\//);
+  assert.ok(context.defs[body].artCredit);
+  assert.ok(fs.existsSync(context.defs[body].art), `arte ausente para ${body}`);
+}
 assert.deepEqual(Array.from(context.defs.sun.materials.kinds), ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune']);
 assert.ok(context.effects.asteroid);
 assert.ok(context.effects.project);
@@ -116,8 +121,12 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=2/);
-assert.match(page, /VERSÃO 74/);
+assert.match(page, /VERSÃO 75/);
 assert.match(page, /engine-ui\.js\?v=7/);
+assert.match(page, /engine-core\.js\?v=5/);
+assert.match(page, /engine-actions-a\.js\?v=4/);
+assert.match(page, /styles-game\.css\?v=3/);
+assert.match(styles, /art-crop\.celestial-art img/);
 assert.match(styles, /data-arena=project/);
 assert.match(styles, /solar-victory/);
 assert.match(source, /function mercuryCanMoveAgain/);
