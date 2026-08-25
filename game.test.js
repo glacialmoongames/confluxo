@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 
-const source = ['engine-core.js', 'engine-actions-a.js', 'engine-actions-b.js', 'engine-ui.js'].map(file => fs.readFileSync(file, 'utf8')).join('\n');
+const source = ['engine-core.js', 'engine-celestial.js', 'engine-actions-a.js', 'engine-actions-b.js', 'engine-ui.js'].map(file => fs.readFileSync(file, 'utf8')).join('\n');
 const page = fs.readFileSync('index.html', 'utf8');
 const styles = ['styles-core.css', 'styles-game.css', 'styles-responsive.css']
   .map((file) => fs.readFileSync(file, 'utf8'))
@@ -14,6 +14,8 @@ vm.runInContext(`${definitions}\nthis.defs=defs;this.effects=effects;this.archet
 
 assert.equal(context.defs.horse.atk, 250);
 assert.equal(context.defs.horse.movement.length, 8);
+assert.equal(context.defs.jester.movement.length, 11);
+assert.ok(context.defs.jester.movement.some(([dr, dc]) => dr === 1 && dc === 2));
 assert.equal(context.defs.hawk.atk, 250);
 assert.doesNotMatch(context.defs.hawk.text, /cria um obstáculo/i);
 assert.match(context.defs.hawk.text, /duas vezes/i);
@@ -33,6 +35,19 @@ assert.doesNotMatch(context.effects.roses.text, /100 ATK/i);
 assert.ok(context.archetypes.xadria.pawns.includes('horse'));
 assert.ok(context.archetypes.wild.pawns.includes('hawk'));
 assert.ok(context.archetypes.wild.fusions.includes('golem'));
+assert.equal(context.archetypes.celestial.name, 'Objeto Celeste');
+assert.equal(context.archetypes.celestial.pawnComposition.length, 18);
+assert.equal(context.archetypes.celestial.pawnComposition.filter(kind => kind === 'pluto').length, 1);
+assert.equal(context.archetypes.celestial.pawnComposition.filter(kind => kind === 'sun').length, 1);
+for (const planet of ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune']) {
+  assert.equal(context.archetypes.celestial.pawnComposition.filter(kind => kind === planet).length, 2);
+}
+assert.equal(context.defs.sun.atk, 10000);
+assert.equal(context.defs.sun.fusion, 8);
+assert.deepEqual(Array.from(context.defs.sun.materials.kinds), ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune']);
+assert.ok(context.effects.asteroid);
+assert.ok(context.effects.project);
+assert.ok(context.effects.peace);
 assert.match(source, /até o fim da partida/);
 assert.doesNotMatch(source, /delete u\.copiedKind/);
 assert.match(source, /hawkMovesThisTurn/);
@@ -80,5 +95,22 @@ assert.match(source, /let retreatObstacle=obstacleAt\(row,col\),retreatPit=pitAt
 assert.match(source, /if\(retreatObstacle\)state\.obstacles=state\.obstacles\.filter\(x=>x!==retreatObstacle\)/);
 assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
+assert.match(page, /data-deck="celestial"/);
+assert.match(page, /engine-celestial\.js\?v=1/);
+assert.match(styles, /data-arena=project/);
+assert.match(styles, /solar-victory/);
+assert.match(source, /function mercuryCanMoveAgain/);
+assert.match(source, /function uranusBlocking/);
+assert.match(source, /function remainsInsideVenusRadius/);
+assert.match(source, /function activateNeptunePush/);
+assert.match(source, /function consumeAsteroidShield/);
+assert.match(source, /function playPeaceTreaty/);
+assert.match(source, /isCelestialUnit\(u\)/);
+assert.match(source, /effectContact\(earth,u\)/);
+assert.match(source, /atk\*=2/);
+assert.match(source, /hasEffect\(attacker,'mars'\)/);
+assert.match(source, /rewardPluto/);
+assert.match(source, /onUnitDeployed\(u\)/);
+assert.match(source, /triggerSolarVictory/);
 
 console.log('game card tests passed');

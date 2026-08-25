@@ -42,7 +42,11 @@ O tabuleiro é apresentado pela perspectiva de cada duelista: o próprio polo e 
 - Ao selecionar um peão próprio, os adversários ao alcance recebem o ícone de ataque diretamente no tabuleiro.
 - Clicar fora da Arena cancela uma combinação ou carta que ainda esteja aguardando alvo.
 - Obstáculos NATURAL e passagem por peões do mesmo tipo.
-- Seleção independente dos decks Xadria e Selvagem para cada duelista.
+- Seleção independente dos decks Xadria, Selvagem e Objeto Celeste para cada duelista.
+- Objeto Celeste possui duas cópias de cada planeta principal, uma de Plutão e uma do SOL. Mercúrio, Vênus, Terra, Marte, Júpiter, Saturno, Urano, Netuno e Plutão usam seus alcances e habilidades próprios.
+- O SOL exige Mercúrio, Vênus, Terra, Marte, Júpiter, Saturno, Urano e Netuno conectados; ao ser criado, produz a vitória astral imediata.
+- Saturno gera Cinturões de Asteroides, Marte usa fogo mesmo ao perder, Júpiter destrói obstáculos, Plutão compra Peão ao vencer e Netuno empurra peões ao outro polo.
+- Projetar Astros transforma raios de movimento em contato para habilidades e combinações. Tratado de Paz bloqueia o turno de ataques atual e o próximo turno de ataques do adversário.
 - Xadria combina cartas Luz e Trevas; não representa um dos lados do tabuleiro.
 - A Selva Selvagem cria obstáculos ou frutas no começo dos turnos; qualquer peão que entre numa fruta a coleta com animação e recebe 100 ATK, sem sobreposição visual.
 - Obstáculos e frutas criados pela Selva desaparecem quando essa Arena é substituída, sem remover obstáculos criados por outras cartas.
@@ -51,7 +55,7 @@ O tabuleiro é apresentado pela perspectiva de cada duelista: o próprio polo e 
 - Uma Arena repetida não é gasta nem retirada da mão enquanto a mesma Arena já estiver ativa.
 - Clicar no Slot de Arena mostra seu efeito no mesmo painel usado pelos Peões.
 - Clicar em um peão comum na mão abre imediatamente as casas válidas de colocação.
-- Quando o portador da Espada Maldita é destruído, seu dono escolhe visualmente o próximo peão equipado, seja no campo ou na mão.
+- Quando o portador da Espada Maldita é destruído, seu dono escolhe visualmente qualquer próximo peão que esteja no campo, aliado ou adversário.
 - O Montador Selvagem possui um botão de habilidade destacado; peões montados exibem marcador, bônus de ATK e regra de proteção no painel.
 - Cartas que possuem um arquivo de arte usam a própria imagem como miniatura no campo, na mão e nas telas de escolha.
 - No celular, placares, Arena, tabuleiro, ações e ambas as mãos cabem em uma única tela; detalhes de cartas abrem em um painel sobreposto que pode ser fechado.
@@ -59,10 +63,10 @@ O tabuleiro é apresentado pela perspectiva de cada duelista: o próprio polo e 
 
 ## Decisões para regras ainda abertas
 
-- Movimento é ortogonal; nesta versão de teste todos os peões movem 3 casas, o mesmo valor do Soldado.
+- Cada peão usa exatamente o alcance personalizado descrito em sua carta.
 - Cada duelista possui uma zona inicial de duas linhas em seu polo.
 - A habilidade da Justiça Alva foi interpretada como +100 ATK por aliado perdido no último turno.
-- Peões devem estar conectados por adjacência ortogonal para realizar fusão.
+- Peões devem formar um único grupo conectado por adjacência ortogonal para combinar; com Projetar Astros, conexões pelo raio de movimento também são válidas.
 - O Bobo escolhe qualquer peão em campo, mantém o efeito copiado até o fim da partida e recebe um marcador visível com a habilidade ativa.
 
-Esses valores ficam concentrados no início de `game.js` para facilitar ajustes futuros.
+Esses valores ficam concentrados nos arquivos do motor do jogo para facilitar ajustes futuros.

@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Confluxo — Jogo de Cartas Tático</title>
-  <link rel="stylesheet" href="styles-core.css?v=1">
-  <link rel="stylesheet" href="styles-game.css?v=1">
-  <link rel="stylesheet" href="styles-responsive.css?v=1">
+  <link rel="stylesheet" href="styles-core.css?v=2">
+  <link rel="stylesheet" href="styles-game.css?v=2">
+  <link rel="stylesheet" href="styles-responsive.css?v=2">
 </head>
 <body>
   <div id="setup" class="setup">
-    <span class="game-version">VERSÃO 70</span>
+    <span class="game-version">VERSÃO 71</span>
     <div class="setup-card">
       <span class="setup-mark">✦</span>
       <small>DUELO DO CONFLUXO</small>
@@ -39,6 +39,7 @@
           <div class="choice-row" data-player="1">
             <button class="deck-choice selected" data-deck="xadria"><span>◐</span><strong>Xadria</strong><small>Luz + Trevas</small></button>
             <button class="deck-choice" data-deck="wild"><span>✿</span><strong>Selvagem</strong><small>Domínio natural</small></button>
+            <button class="deck-choice" data-deck="celestial"><span>✺</span><strong>Objeto Celeste</strong><small>Convergência astral</small></button>
           </div>
         </section>
         <section>
@@ -46,6 +47,7 @@
           <div class="choice-row" data-player="2">
             <button class="deck-choice" data-deck="xadria"><span>◐</span><strong>Xadria</strong><small>Luz + Trevas</small></button>
             <button class="deck-choice selected" data-deck="wild"><span>✿</span><strong>Selvagem</strong><small>Domínio natural</small></button>
+            <button class="deck-choice" data-deck="celestial"><span>✺</span><strong>Objeto Celeste</strong><small>Convergência astral</small></button>
           </div>
         </section>
       </div>
@@ -172,7 +174,8 @@
       <section><h3>Turno</h3><p>Na rodada 1, nenhum jogador compra. A partir da rodada 2, comece escolhendo obrigatoriamente entre Peões e Efeitos.</p></section>
       <section><h3>Peões</h3><p>Cada peão possui um alcance próprio, exibido em sua carta. Clique nele para destacar no tabuleiro somente as casas permitidas.</p></section>
       <section><h3>Combate</h3><p>Selecione seu peão e clique no ícone ⚔ sobre um adversário ao alcance. Cada peão pode iniciar um ataque por turno. Peões virados para baixo não podem atacar nem participar de ataques conjuntos. Maior ATK vence. Em um empate, todos os atacantes que somaram ATK e o defensor são destruídos. Peão oculto é revelado e cancela o combate.</p></section>
-      <section><h3>Combinar</h3><p>Com o Peão Combinado na mão, clique nele e depois selecione no campo os materiais exigidos que estejam em contato.</p></section>
+      <section><h3>Combinar</h3><p>Com o Peão Combinado na mão, clique nele e depois selecione no campo os materiais exigidos que estejam em contato. Com Projetar Astros, materiais no raio também se conectam.</p></section>
+      <section><h3>Objeto Celeste</h3><p>Reúna Mercúrio, Vênus, Terra, Marte, Júpiter, Saturno, Urano e Netuno para criar o SOL e vencer imediatamente.</p></section>
       <section><h3>Efeitos e Arena</h3><p>Clique em uma carta ou no Slot de Arena para ler seu efeito no painel de detalhes. A Arena vale para ambos os lados.</p></section>
     </div>
   </dialog>
@@ -183,9 +186,10 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="network.js?v=31"></script>
-  <script src="engine-core.js?v=2"></script>
-  <script src="engine-actions-a.js?v=2"></script>
-  <script src="engine-actions-b.js?v=2"></script>
-  <script src="engine-ui.js?v=4"></script>
+  <script src="engine-core.js?v=3"></script>
+  <script src="engine-celestial.js?v=1"></script>
+  <script src="engine-actions-a.js?v=3"></script>
+  <script src="engine-actions-b.js?v=3"></script>
+  <script src="engine-ui.js?v=5"></script>
 </body>
 </html>
