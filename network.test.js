@@ -43,6 +43,7 @@ function makeClient(player, initialState) {
       querySelectorAll() { return [] }
     },
     state: structuredClone(initialState),
+    pointGoal: 10,
     selectedDecks: { 1: 'xadria', 2: 'selvagem' },
     selected: null,
     selectedEffect: null,
@@ -63,6 +64,8 @@ function makeClient(player, initialState) {
     allUnits() { return [] },
     confirm() { return false }
   };
+  context.selectedPointGoal = () => context.pointGoal;
+  context.setPointGoal = value => context.pointGoal = Math.max(1, Math.min(99, Math.round(Number(value)) || 10));
   vm.createContext(context);
   vm.runInContext(source, context);
   context.onlineMode = true;
@@ -127,6 +130,7 @@ function link(a, b, shouldDrop = () => false) {
 {
   const host = makeClient(1, playerState(1, 'sala-host'));
   const guest = makeClient(2, playerState(1, 'sala-guest'));
+  host.pointGoal = 18;
   let dropped = false;
   const connection = link(host, guest, (packet, side) => side === 'a' && packet.type === 'deck' && !dropped && (dropped = true));
 
@@ -135,6 +139,7 @@ function link(a, b, shouldDrop = () => false) {
   guest.sendDeckChoice();
   assert.equal(host.remoteDeck, 'selvagem', 'o host deve receber o deck do convidado');
   assert.equal(guest.remoteDeck, 'xadria', 'a confirmacao deve levar o deck do host ao convidado');
+  assert.equal(guest.pointGoal, 18, 'o convidado deve receber a meta de pontos escolhida pelo anfitrião');
 
   connection.stopDropping();
   host.sendDeckChoice();

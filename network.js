@@ -41,14 +41,14 @@ function handlePeerError(error){
  clearTimeout(reconnectTimer);reconnectTimer=null;networkStatus(messages[error?.type]||'Não foi possível estabelecer a conexão','error');setLobbyBusy(false)
 }
 function setLobbyBusy(busy){document.querySelector('#host-online').disabled=busy;document.querySelector('#join-online').disabled=busy;document.querySelector('#generate-code').disabled=busy;document.querySelector('#room-code').disabled=busy}
-function sendDeckChoice(type='deck'){if(!localPlayer)return false;return sendPacket({type,deck:selectedDecks[localPlayer],player:localPlayer})}
+function sendDeckChoice(type='deck'){if(!localPlayer)return false;return sendPacket({type,deck:selectedDecks[localPlayer],player:localPlayer,pointGoal:onlineRole==='host'?selectedPointGoal():pointGoal})}
 function stopDeckSync(){clearInterval(deckSyncTimer);deckSyncTimer=null}
 function startDeckSync(){
  stopDeckSync();sendDeckChoice();sendPacket({type:'deck-request'});
  deckSyncTimer=setInterval(()=>{if(!onlineMode||!dataChannel?.open)return stopDeckSync();if(remoteDeck)return stopDeckSync();sendDeckChoice();sendPacket({type:'deck-request'});networkStatus('Conectado - confirmando os decks...','connecting')},800)
 }
 function acceptRemoteDeck(packet){
- if(!packet.deck)return false;remoteDeck=packet.deck;selectedDecks[localPlayer===1?2:1]=packet.deck;stopDeckSync();updateOnlineStart();networkStatus(onlineRole==='host'?'Sala pronta — clique em Iniciar Partida Online':'Sala pronta — aguardando o anfitrião','connected');return true
+ if(!packet.deck)return false;remoteDeck=packet.deck;selectedDecks[localPlayer===1?2:1]=packet.deck;if(onlineRole==='guest')setPointGoal(packet.pointGoal);stopDeckSync();updateOnlineStart();networkStatus(onlineRole==='host'?'Sala pronta — clique em Iniciar Partida Online':'Sala pronta — aguardando o anfitrião','connected');return true
 }
 function attachChannel(channel){
  const previous=dataChannel;if(previous&&previous!==channel){try{previous.removeAllListeners?.();previous.close()}catch{}}
@@ -102,7 +102,7 @@ function joinRoom(){
 function chooseOwnDeckRow(){
  document.querySelectorAll('.lobby-role').forEach(button=>button.classList.toggle('selected',button.id===(onlineRole==='host'?'host-online':'join-online')));
  document.querySelectorAll('.choice-row').forEach(row=>{let own=+row.dataset.player===localPlayer;row.classList.toggle('online-only-player',own);row.classList.toggle('remote-player',!own)});
- updateOnlineStart()
+ document.querySelector('#point-goal').disabled=onlineRole==='guest';updateOnlineStart()
 }
 function sendPacket(packet){
  if(!dataChannel?.open)return false;
@@ -177,10 +177,10 @@ function updateOnlineStart(){
 }
 function selectGameMode(mode){
  onlineMode=mode==='online';botMode=mode==='bot';document.querySelector('#mode-local').classList.toggle('selected',mode==='local');document.querySelector('#mode-bot').classList.toggle('selected',botMode);document.querySelector('#mode-online').classList.toggle('selected',onlineMode);document.querySelector('#online-lobby').classList.toggle('hidden',!onlineMode);document.querySelector('.setup-card').classList.toggle('online-setup',onlineMode);document.querySelector('#player-two-label').textContent=botMode?'BOT · DUELISTA 2':'DUELISTA 2';document.querySelectorAll('.choice-row').forEach(row=>row.classList.remove('online-only-player','remote-player'));
- if(!onlineMode){closePeer();onlineRole=null;localPlayer=null;roomCode='';setLobbyBusy(false);document.querySelector('#start-game').disabled=false;document.querySelector('#start-game').textContent=botMode?'INICIAR CONTRA O BOT':'INICIAR DUELO LOCAL'}else{document.querySelector('#start-game').disabled=true;document.querySelector('#start-game').textContent='DIGITE O MESMO CÓDIGO NOS DOIS DISPOSITIVOS';networkStatus('Digite um código e escolha uma opção','')}
+ if(!onlineMode){closePeer();onlineRole=null;localPlayer=null;roomCode='';setLobbyBusy(false);document.querySelector('#point-goal').disabled=false;document.querySelector('#start-game').disabled=false;document.querySelector('#start-game').textContent=botMode?'INICIAR CONTRA O BOT':'INICIAR DUELO LOCAL'}else{document.querySelector('#point-goal').disabled=false;document.querySelector('#start-game').disabled=true;document.querySelector('#start-game').textContent='DIGITE O MESMO CÓDIGO NOS DOIS DISPOSITIVOS';networkStatus('Digite um código e escolha uma opção','')}
 }
 function onlineDeckChanged(player,deck){if(onlineMode&&player===localPlayer)sendDeckChoice()}
-function startOnlineGame(){if(onlineRole!=='host'||!dataChannel?.open||!remoteDeck)return;networkStatus('Iniciando a partida…','connecting');document.querySelector('#setup').classList.add('hidden');newGame();sendGameState(true,true)}
+function startOnlineGame(){if(onlineRole!=='host'||!dataChannel?.open||!remoteDeck)return;selectedPointGoal();networkStatus('Iniciando a partida…','connecting');document.querySelector('#setup').classList.add('hidden');newGame();sendGameState(true,true)}
 
 document.addEventListener('DOMContentLoaded',()=>{
  const roomInput=document.querySelector('#room-code');
