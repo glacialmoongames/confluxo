@@ -121,15 +121,27 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=3/);
-assert.match(page, /VERSÃO 78/);
+assert.match(page, /VERSÃO 79/);
 assert.match(page, /engine-ui\.js\?v=9/);
-assert.match(page, /engine-core\.js\?v=8/);
-assert.match(page, /engine-actions-a\.js\?v=6/);
+assert.match(page, /engine-core\.js\?v=9/);
+assert.match(page, /engine-actions-a\.js\?v=7/);
 assert.match(page, /engine-actions-b\.js\?v=4/);
 assert.match(page, /styles-responsive\.css\?v=3/);
 assert.match(page, /network\.js\?v=33/);
-assert.match(page, /styles-game\.css\?v=4/);
+assert.match(page, /styles-game\.css\?v=5/);
 assert.match(styles, /art-crop\.celestial-art img/);
+for (const [key, pawn] of Object.entries(context.defs)) {
+  assert.ok(pawn.art, `arte ausente para o peão ${key}`);
+  assert.ok(fs.existsSync(pawn.art), `arquivo de arte ausente para o peão ${key}`);
+}
+for (const [key, effect] of Object.entries(context.effects)) {
+  assert.ok(effect.art, `arte ausente para a carta ${key}`);
+  assert.ok(fs.existsSync(effect.art), `arquivo de arte ausente para a carta ${key}`);
+}
+assert.match(source, /effect-hand-art/);
+assert.match(source, /Imagem: \$\{e\.artCredit\}/);
+assert.match(styles, /effect-card \.effect-hand-art/);
+assert.ok(fs.existsSync('CREDITOS.md'));
 assert.match(styles, /data-arena=project/);
 assert.match(styles, /solar-victory/);
 assert.match(source, /function mercuryCanMoveAgain/);
