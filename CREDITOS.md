@@ -4,9 +4,14 @@ As novas ilustrações de cartas e peões foram obtidas do repositório oficial 
 
 | Uso no Confluxo | Ícone original | Autor |
 | --- | --- | --- |
+| Infantaria do Reino de Xadria | `guards` | Delapouite |
+| Torre Branca de Xadria | `white-tower` | Lorc |
 | Bobo | `jester-hat` | Delapouite |
 | Arqueiro | `bowman` | Lorc |
+| Ave Eterna | `duck` | Delapouite |
 | Cavalo | `horse-head` | Lorc |
+| Torre Preta: Babel | `evil-tower` | Delapouite |
+| Justiça Alva | `knight-banner` | Delapouite |
 | Coelho | `rabbit` | Delapouite |
 | Montador | `mounted-knight` | Skoll |
 | Serpente | `cobra` | Skoll |
@@ -14,6 +19,7 @@ As novas ilustrações de cartas e peões foram obtidas do repositório oficial 
 | Golem | `golem-head` | Delapouite |
 | Recuar | `backward-time` | Delapouite |
 | Rocar Torre | `castle` | Lorc |
+| Espada Maldita de Xadria | `rune-sword` | Lorc |
 | Queimar Pertences | `burning-embers` | Lorc |
 | Campo das Rosas Pálidas | `rose` | Lorc |
 | Camuflar-se na Selva | `hood` | Lorc |
@@ -25,4 +31,4 @@ As novas ilustrações de cartas e peões foram obtidas do repositório oficial 
 | Projetar Astros | `orbit` | Skoll |
 | Tratado de Paz | `peace-dove` | Delapouite |
 
-As fotografias dos objetos celestes são materiais da NASA e instituições parceiras, com os créditos individuais exibidos dentro do jogo. As artes recortadas de `cartas.png` foram fornecidas anteriormente pelo próprio projeto Confluxo e foram preservadas.
+As fotografias dos objetos celestes são materiais da NASA e instituições parceiras, com os créditos individuais exibidos dentro do jogo.
