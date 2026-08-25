@@ -92,6 +92,7 @@ assert.match(source, /botCanMoveUnit\(u,p\)/);
 const botMoveContext = {
   state: {turn: 4, players: {2: {moved: false}}},
   botPlayer: 2,
+  botActor: () => 2,
   hasEffect: (unit, kind) => unit.kind === kind,
   hawkMovesThisTurn: () => 0,
   mercuryMovesThisTurn: () => 0,
@@ -102,6 +103,40 @@ vm.runInContext(source.match(/function botCanMoveUnit\([^\n]+/)[0], botMoveConte
 assert.equal(botMoveContext.botCanMoveUnit({kind: 'duck'}), true);
 assert.equal(botMoveContext.botCanMoveUnit({kind: 'duck', movedTurn: 4}), false);
 assert.equal(botMoveContext.botCanMoveUnit({kind: 'infantry'}), true);
+const botModeContext = {botMode: true, botVsBot: true, botPlayer: 2, state: {current: 1}};
+vm.createContext(botModeContext);
+for (const name of ['botControls', 'botActor', 'botOpponent']) {
+  vm.runInContext(source.match(new RegExp(`function ${name}\\([^\\n]+`))[0], botModeContext);
+}
+assert.equal(botModeContext.botControls(1), true);
+assert.equal(botModeContext.botControls(2), true);
+assert.equal(botModeContext.botActor(), 1);
+assert.equal(botModeContext.botOpponent(), 2);
+botModeContext.state.current = 2;
+assert.equal(botModeContext.botActor(), 2);
+assert.equal(botModeContext.botOpponent(), 1);
+botModeContext.botVsBot = false;
+assert.equal(botModeContext.botControls(1), false);
+assert.equal(botModeContext.botControls(2), true);
+const botDeployState = {current: 1, players: {1: {deployed: false, reserve: [{id: 'p1'}]}, 2: {deployed: false, reserve: [{id: 'p2'}]}}};
+let botDeployment;
+const botDeployContext = {
+  state: botDeployState,
+  ROWS: 8,
+  COLS: 6,
+  botActor: () => botDeployState.current,
+  at: () => null,
+  obstacleAt: () => null,
+  pitAt: () => null,
+  doDeploy: (unit, r, c) => { botDeployment = {unit, r, c}; }
+};
+vm.createContext(botDeployContext);
+vm.runInContext(source.match(/function botDeployPawn\([^\n]+/)[0], botDeployContext);
+assert.equal(botDeployContext.botDeployPawn(), true);
+assert.deepEqual(botDeployment, {unit: botDeployContext.state.players[1].reserve[0], r: 6, c: 2});
+botDeployContext.state.current = 2;
+assert.equal(botDeployContext.botDeployPawn(), true);
+assert.deepEqual(botDeployment, {unit: botDeployContext.state.players[2].reserve[0], r: 1, c: 2});
 assert.match(source, /Vitória automática/);
 assert.match(source, /if\(\(p\.pawnDeck\|\|\[\]\)\.length\)return true/);
 assert.match(source, /reason=.*pointWinner\?'points'/);
@@ -121,15 +156,20 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=3/);
-assert.match(page, /VERSÃO 80/);
-assert.match(page, /engine-ui\.js\?v=9/);
-assert.match(page, /engine-core\.js\?v=10/);
+assert.match(page, /VERSÃO 81/);
+assert.match(page, /engine-ui\.js\?v=10/);
+assert.match(page, /engine-core\.js\?v=11/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
-assert.match(page, /engine-actions-a\.js\?v=7/);
-assert.match(page, /engine-actions-b\.js\?v=4/);
+assert.match(page, /engine-actions-a\.js\?v=8/);
+assert.match(page, /engine-actions-b\.js\?v=5/);
 assert.match(page, /styles-responsive\.css\?v=3/);
-assert.match(page, /network\.js\?v=33/);
-assert.match(page, /styles-game\.css\?v=5/);
+assert.match(page, /network\.js\?v=34/);
+assert.match(page, /styles-game\.css\?v=6/);
+assert.match(page, /id="mode-bots"/);
+assert.match(page, /BOT CONTRA BOT/);
+assert.match(source, /function botControls\(player\)/);
+assert.match(source, /botVsBot\?state\.current:botPlayer/);
+assert.match(source, /state\.players\[botOpponent\(player\)\]/);
 assert.match(styles, /art-crop\.celestial-art img/);
 for (const [key, pawn] of Object.entries(context.defs)) {
   assert.ok(pawn.art, `arte ausente para o peão ${key}`);

@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Confluxo — Jogo de Cartas Tático</title>
   <link rel="stylesheet" href="styles-core.css?v=2">
-  <link rel="stylesheet" href="styles-game.css?v=5">
+  <link rel="stylesheet" href="styles-game.css?v=6">
   <link rel="stylesheet" href="styles-responsive.css?v=3">
 </head>
 <body>
   <div id="setup" class="setup">
-    <span class="game-version">VERSÃO 80</span>
+    <span class="game-version">VERSÃO 81</span>
     <div class="setup-card">
       <span class="setup-mark">✦</span>
       <small>DUELO DO CONFLUXO</small>
@@ -18,6 +18,7 @@
       <div class="game-mode" role="group" aria-label="Modo de jogo">
         <button id="mode-local" class="mode-choice selected"><span>◈</span><b>NO MESMO DISPOSITIVO</b><small>Entregue a tela a cada turno</small></button>
         <button id="mode-bot" class="mode-choice"><span>◆</span><b>CONTRA O BOT</b><small>Enfrente um rival automático</small></button>
+        <button id="mode-bots" class="mode-choice"><span>⚔</span><b>BOT CONTRA BOT</b><small>Assista a um duelo automático</small></button>
         <button id="mode-online" class="mode-choice"><span>⌁</span><b>ONLINE · WEBRTC</b><small>Um dispositivo para cada jogador</small></button>
       </div>
       <label class="point-goal-control" for="point-goal">
@@ -40,7 +41,7 @@
       </div>
       <div class="deck-choices">
         <section>
-          <b>DUELISTA 1</b>
+          <b id="player-one-label">DUELISTA 1</b>
           <div class="choice-row" data-player="1">
             <button class="deck-choice selected" data-deck="xadria"><span>◐</span><strong>Xadria</strong><small>Luz + Trevas</small></button>
             <button class="deck-choice" data-deck="wild"><span>✿</span><strong>Selvagem</strong><small>Domínio natural</small></button>
@@ -190,11 +191,11 @@
   </dialog>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="network.js?v=33"></script>
-  <script src="engine-core.js?v=10"></script>
+  <script src="network.js?v=34"></script>
+  <script src="engine-core.js?v=11"></script>
   <script src="engine-celestial.js?v=3"></script>
-  <script src="engine-actions-a.js?v=7"></script>
-  <script src="engine-actions-b.js?v=4"></script>
-  <script src="engine-ui.js?v=9"></script>
+  <script src="engine-actions-a.js?v=8"></script>
+  <script src="engine-actions-b.js?v=5"></script>
+  <script src="engine-ui.js?v=10"></script>
 </body>
 </html>
