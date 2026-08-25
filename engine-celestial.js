@@ -5,7 +5,7 @@ function fusionSetConnected(parts){if(!parts.length)return false;let seen=new Se
 function mercuryMovesThisTurn(u){return u.mercuryMoveTurn===state.turn?(u.mercuryMoves||0):0}
 function mercuryCanMoveAgain(u){return hasEffect(u,'mercury')&&allUnits().some(v=>v.id!==u.id&&v.row!==null&&inMovementRadius(v,u))}
 function uranusBlocking(u){return allUnits().find(v=>v.owner!==u.owner&&hasEffect(v,'uranus')&&inMovementRadius(v,u))}
-function remainsInsideVenusRadius(u,r,c){return allUnits().filter(v=>v.id!==u.id&&hasEffect(v,'venus')&&inMovementRadius(v,u)).every(v=>inMovementRadius(v,{row:r,col:c}))}
+function remainsInsideVenusRadius(u,r,c){return allUnits().filter(v=>v.owner!==u.owner&&hasEffect(v,'venus')&&inMovementRadius(v,u)).every(v=>inMovementRadius(v,{row:r,col:c}))}
 function canBreakObstacle(u){return hasEffect(u,'golem')||hasEffect(u,'jupiter')}
 function onUnitDeployed(u){if(!hasEffect(u,'saturn')||u.saturnGenerated)return;u.saturnGenerated=true;state.players[u.owner].hand.push('asteroid','asteroid');log(`${u.name} gerou 2 Cinturões de Asteroides na mão.`)}
 function drawPawnReward(owner,reason){let p=state.players[owner];if(!p?.pawnDeck?.length){log(`${p?.name||'O jogador'} não tinha Peões para comprar por ${reason}.`);return false}p.reserve.push(p.pawnDeck.pop());log(`${p.name} comprou um Peão por ${reason}.`);return true}
