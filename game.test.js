@@ -81,6 +81,22 @@ assert.match(source, /hideMobileDetails\(\);selectedEffect=null;pendingCard=/);
 assert.match(source, /function animateRoseReward/);
 assert.match(styles, /rose-reward-card/);
 assert.match(source, /function hasNormalPawnAvailable/);
+assert.match(source, /function botCanMoveUnit/);
+assert.match(source, /hasEffect\(u,'duck'\)\)return u\.movedTurn!==state\.turn/);
+assert.match(source, /botCanMoveUnit\(u,p\)/);
+const botMoveContext = {
+  state: {turn: 4, players: {2: {moved: false}}},
+  botPlayer: 2,
+  hasEffect: (unit, kind) => unit.kind === kind,
+  hawkMovesThisTurn: () => 0,
+  mercuryMovesThisTurn: () => 0,
+  mercuryCanMoveAgain: () => false
+};
+vm.createContext(botMoveContext);
+vm.runInContext(source.match(/function botCanMoveUnit\([^\n]+/)[0], botMoveContext);
+assert.equal(botMoveContext.botCanMoveUnit({kind: 'duck'}), true);
+assert.equal(botMoveContext.botCanMoveUnit({kind: 'duck', movedTurn: 4}), false);
+assert.equal(botMoveContext.botCanMoveUnit({kind: 'infantry'}), true);
 assert.match(source, /Vitória automática/);
 assert.match(source, /if\(\(p\.pawnDeck\|\|\[\]\)\.length\)return true/);
 assert.match(source, /reason=.*pointWinner\?'points'/);
@@ -100,8 +116,8 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=2/);
-assert.match(page, /VERSÃO 73/);
-assert.match(page, /engine-ui\.js\?v=6/);
+assert.match(page, /VERSÃO 74/);
+assert.match(page, /engine-ui\.js\?v=7/);
 assert.match(styles, /data-arena=project/);
 assert.match(styles, /solar-victory/);
 assert.match(source, /function mercuryCanMoveAgain/);
