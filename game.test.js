@@ -137,6 +137,55 @@ assert.deepEqual(botDeployment, {unit: botDeployContext.state.players[1].reserve
 botDeployContext.state.current = 2;
 assert.equal(botDeployContext.botDeployPawn(), true);
 assert.deepEqual(botDeployment, {unit: botDeployContext.state.players[2].reserve[0], r: 1, c: 2});
+const pitPlayer = {name: 'Bot 1', hand: ['pit'], units: []};
+const pitState = {pits: [], players: {1: pitPlayer, 2: {units: [{row: 3, col: 2, faceDown: false}]}}};
+const pitContext = {
+  state: pitState,
+  ROWS: 8,
+  COLS: 6,
+  botOpponent: () => 2,
+  at: () => null,
+  featureAt: () => null,
+  pitAt: (r, c) => pitState.pits.find(pit => pit.row === r && pit.col === c),
+  moveTargets: () => [{r: 2, c: 2}],
+  pushTargets: () => [{r: 2, c: 2}],
+  boardCoordinate: (r, c) => `${r},${c}`,
+  log: () => {},
+  render: () => {}
+};
+vm.createContext(pitContext);
+vm.runInContext(source.match(/function botUsePitEffect\([^\n]+/)[0], pitContext);
+assert.equal(pitContext.botUsePitEffect(1, pitPlayer), true);
+assert.equal(JSON.stringify(pitState.pits), JSON.stringify([{row: 2, col: 2}]));
+assert.deepEqual(pitPlayer.hand, []);
+const pushedUnit = {name: 'Alvo', row: 3, col: 2, faceDown: false};
+const pushPlayer = {name: 'Bot 1', hand: ['push']};
+let pitDestruction;
+const pushContext = {
+  state: {players: {1: pushPlayer, 2: {units: [pushedUnit]}}},
+  botOpponent: () => 2,
+  pushTargets: () => [{r: 2, c: 2}],
+  pitAt: () => ({row: 2, col: 2}),
+  fruitAt: () => null,
+  place: (unit, r, c) => { unit.row = r; unit.col = c; },
+  collectFruit: () => {},
+  destroy: (unit, scorer, reason) => { pitDestruction = {unit, scorer, reason}; },
+  boardCoordinate: (r, c) => `${r},${c}`,
+  log: () => {},
+  render: () => {},
+  checkWin: () => false
+};
+vm.createContext(pushContext);
+vm.runInContext(source.match(/function botUsePushEffect\([^\n]+/)[0], pushContext);
+assert.equal(pushContext.botUsePushEffect(1, pushPlayer, true), true);
+assert.deepEqual(pitDestruction, {unit: pushedUnit, scorer: 1, reason: 'poço'});
+assert.deepEqual(pushPlayer.hand, []);
+const matchupContext = {};
+vm.createContext(matchupContext);
+vm.runInContext(source.match(/function botMatchupScore\([^\n]+/)[0], matchupContext);
+assert.ok(matchupContext.botMatchupScore(400, 200, 1, 0) > matchupContext.botMatchupScore(400, 200, 4, 0), 'bot forte deve preferir aproximação');
+assert.ok(matchupContext.botMatchupScore(150, 400, 4, 0) > matchupContext.botMatchupScore(150, 400, 1, 0), 'bot fraco deve preferir distância');
+assert.ok(matchupContext.botMatchupScore(150, 400, 2, 0) > matchupContext.botMatchupScore(150, 400, 2, 1), 'ameaça deve pesar mais contra peão forte');
 assert.match(source, /Vitória automática/);
 assert.match(source, /if\(\(p\.pawnDeck\|\|\[\]\)\.length\)return true/);
 assert.match(source, /reason=.*pointWinner\?'points'/);
@@ -156,8 +205,8 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=3/);
-assert.match(page, /VERSÃO 83/);
-assert.match(page, /engine-ui\.js\?v=10/);
+assert.match(page, /VERSÃO 84/);
+assert.match(page, /engine-ui\.js\?v=11/);
 assert.match(page, /engine-core\.js\?v=11/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
 assert.match(page, /engine-actions-a\.js\?v=10/);
@@ -175,6 +224,12 @@ assert.match(styles, /board \.piece\.p1/);
 assert.match(styles, /board \.piece\.p2/);
 assert.doesNotMatch(styles, /content:"J1"/);
 assert.doesNotMatch(styles, /content:"J2"/);
+assert.match(source, /function botUsePitEffect\(player,p\)/);
+assert.match(source, /function botUsePushEffect\(player,p,requirePit=false\)/);
+assert.match(source, /function botUseRetreatEffect\(player,p\)/);
+assert.match(source, /function botUseCamouflageEffect\(player,p\)/);
+assert.match(source, /played<2&&botPlayEffect\(\)/);
+assert.match(source, /function botMatchupScore\(/);
 assert.match(styles, /art-crop\.celestial-art img/);
 for (const [key, pawn] of Object.entries(context.defs)) {
   assert.ok(pawn.art, `arte ausente para o peão ${key}`);
