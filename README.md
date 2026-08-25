@@ -6,6 +6,8 @@ A partida também termina automaticamente quando somente um dos duelistas fica s
 
 Não existe limite total de Peões em campo; cada duelista ainda pode colocar somente um novo Peão por turno, quando houver uma casa válida em seu polo.
 
+A verificação de derrota por falta de Peões só considera a pilha esgotada depois que todas as cartas dela puderem ser compradas, incluindo o SOL do deck Objeto Celeste. Se a pontuação e o esgotamento acontecerem na mesma ação, a vitória por 10 pontos tem prioridade.
+
 ## Jogar
 
 Abra `index.html` ou acesse o endereço do projeto no GitHub Pages.
