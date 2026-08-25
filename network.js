@@ -119,8 +119,8 @@ function scheduleStateRetry(){
 }
 function flushPendingState(){if(!pendingStatePacket||!dataChannel?.open)return false;let sent=sendPacket(pendingStatePacket);if(sent)scheduleStateRetry();return sent}
 function acknowledgeState(revision){sendPacket({type:'state-ack',revision})}
-function sendGameState(force=false,advance=!force){
- if(!onlineMode||!gameStarted()||applyingRemote||!state||state.animating)return false;
+function sendGameState(force=false,advance=!force,allowAnimating=false){
+ if(!onlineMode||!gameStarted()||applyingRemote||!state||state.animating&&!allowAnimating)return false;
  if(advance)networkRevision++;
  let packet={type:'state',actor:localPlayer,sequence:++networkSequence,revision:networkRevision,force,started:document.querySelector('#setup').classList.contains('hidden'),state:cloneNetworkValue(state),selectedDecks:cloneNetworkValue(selectedDecks)};
  if(advance||!pendingStatePacket||pendingStatePacket.revision<=packet.revision)pendingStatePacket=packet;
@@ -131,6 +131,7 @@ function syncOnlineState(urgent=false){
  if(urgent)return sendGameState();
  stateSyncTimer=setTimeout(()=>{stateSyncTimer=null;sendGameState()},35)
 }
+function syncOnlineAnimationState(){if(!onlineMode)return false;clearTimeout(stateSyncTimer);stateSyncTimer=null;return sendGameState(false,true,true)}
 function receivePacket(raw){
  let packet=raw;if(typeof raw==='string'){try{packet=JSON.parse(raw)}catch{return}}
  if(!packet||typeof packet!=='object')return;

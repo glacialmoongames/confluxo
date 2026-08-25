@@ -113,6 +113,18 @@ function link(a, b, shouldDrop = () => false) {
 }
 
 {
+  const hostState = playerState(1, 'animacao-do-sol');
+  hostState.animating = true;
+  const host = makeClient(1, hostState);
+  const guest = makeClient(2, playerState(1, 'antes-da-animacao'));
+  link(host, guest);
+  assert.equal(host.sendGameState(), false, 'uma jogada normal não deve ser enviada no meio de uma animação');
+  assert.equal(host.syncOnlineAnimationState(), true, 'uma fase visual explícita deve ser sincronizada');
+  assert.equal(guest.state.marker, 'animacao-do-sol');
+  assert.equal(guest.state.animating, true);
+}
+
+{
   const host = makeClient(1, playerState(1, 'sala-host'));
   const guest = makeClient(2, playerState(1, 'sala-guest'));
   let dropped = false;

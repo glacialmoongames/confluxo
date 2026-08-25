@@ -4,7 +4,7 @@ const vm = require('node:vm');
 
 const context = {
   ROWS: 8,
-  state: {turn: 3, current: 1, arena: null, players: {1: {name: 'D1', hand: [], pawnDeck: [], units: [], attackLocked: false, attackedThisTurn: false, lastLosses: 0}, 2: {name: 'D2', hand: [], pawnDeck: [], units: [], attackLocked: false, attackedThisTurn: false, lastLosses: 0}}},
+  state: {turn: 3, current: 1, arena: null, players: {1: {name: 'D1', hand: [], pawnDeck: [], units: [], attackLocked: false, attackedThisTurn: false, neptuneAbilityTurn: 0, lastLosses: 0}, 2: {name: 'D2', hand: [], pawnDeck: [], units: [], attackLocked: false, attackedThisTurn: false, neptuneAbilityTurn: 0, lastLosses: 0}}},
   defs: {},
   units: [],
   gameVersion: 1,
@@ -71,6 +71,20 @@ context.units = [pushed];
 const landing = context.neptuneLanding(neptune, pushed);
 assert.equal(landing.r, 0);
 assert.equal(landing.c, 2);
+assert.equal(context.neptuneUsedThisTurn(1), false);
+context.state.players[1].neptuneAbilityTurn = context.state.turn;
+assert.equal(context.neptuneUsedThisTurn(1), true);
+assert.equal(context.neptuneUsedThisTurn(2), false);
+context.state.players[1].neptuneAbilityTurn = 0;
+const neptuneCopyA = {id: 'n1', name: 'Netuno A', kind: 'neptune', owner: 1, row: 6, col: 0, abilityTurn: 0};
+const neptuneCopyB = {id: 'n2', name: 'Netuno B', kind: 'neptune', owner: 1, row: 6, col: 1, abilityTurn: 0};
+const firstTarget = {id: 'nt1', name: 'Alvo 1', kind: 'earth', owner: 2, row: 5, col: 2};
+const secondTarget = {id: 'nt2', name: 'Alvo 2', kind: 'earth', owner: 2, row: 5, col: 3};
+context.units = [neptuneCopyA, neptuneCopyB, firstTarget, secondTarget];
+assert.equal(context.activateNeptunePush(neptuneCopyA, firstTarget), true);
+assert.equal(context.state.players[1].neptuneAbilityTurn, context.state.turn);
+assert.equal(context.activateNeptunePush(neptuneCopyB, secondTarget), false);
+assert.equal(secondTarget.row, 5, 'a segunda cópia não pode empurrar no mesmo turno');
 
 context.state.arena = 'project';
 const linked = [
