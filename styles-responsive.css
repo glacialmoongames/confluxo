@@ -143,3 +143,6 @@
 
 /* Identidade única para peões Xadria que unem LUZ e TREVAS. */
 .art-crop.dual-xadria-art{background:radial-gradient(circle at 35% 25%,#9d6ab3,#5a316d 58%,#2c1738)!important;box-shadow:inset 0 0 0 2px #c995dd66,inset 0 0 14px #1b0b24}.piece .dual-xadria-art{border-radius:5px}.reserve-piece:has(.dual-xadria-art){background:#4d285f;border-color:#d3a7df;box-shadow:0 0 9px #9c56b877}.unit-card:has(.dual-xadria-art){box-shadow:inset 0 0 0 4px #8d5aa277}
+
+/* Marcadores de ação sempre ficam acima das decorações das Arenas. */
+.board[data-arena] .cell.valid::before{content:"";position:absolute;display:block;width:27%;height:auto;aspect-ratio:1;right:auto;top:auto;border-radius:50%;background:#e3b85a;box-shadow:0 0 12px #e9b84e;filter:none;opacity:1;z-index:6;pointer-events:none}.board[data-arena] .cell.target::before{content:"⚔";position:absolute;display:grid;width:45%;height:auto;aspect-ratio:1;right:auto;top:auto;place-items:center;border-radius:50%;background:#792f3b;color:#fff;box-shadow:0 0 14px #8c243a;filter:none;opacity:1;z-index:7;pointer-events:none;font-size:clamp(9px,1.4vw,18px)}
