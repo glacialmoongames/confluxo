@@ -50,7 +50,8 @@ O símbolo principal e favicon do Confluxo usam o ícone `flower-twirl`, de Lorc
 | Corvo da floresta Abissal | `raven` | Lorc |
 | Amalgama Abissal | `tentacles-skull` | Lorc |
 | Ser Abissal: Repugnium | `haunting` | Lorc |
-| Símbolo de Terror Abissal e Abismo do Terror | `evil-eyes` | Skoll |
+| Símbolo de Terror Abissal | `evil-eyes` | Skoll |
+| Decoração do Abismo do Terror | `six-eyes` | Lorc |
 | Ser Abissal: Anssiedium | `sinking-trap` | Lorc |
 | Eu vejo os olhos | `all-seeing-eye` | Delapouite |
 | Revelar | `semi-closed-eye` | Lorc |
