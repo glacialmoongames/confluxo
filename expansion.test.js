@@ -23,7 +23,7 @@ assert.match(ui, /grantImpolutoPower/);
 assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
 assert.match(page, /engine-expansion\.js\?v=4/);
-assert.match(page, /VERSÃO 102/);
+assert.match(page, /VERSÃO 103/);
 assert.match(expansion, /Rosas Pálidas: quando um jogador perde um peão/);
 assert.match(expansion, /Rosas Negras: quando um jogador ganha pontos/);
 for (const exactName of ['Criatura Abissal','Devoto Abissal','Corvo da floresta Abissal','Amalgama Abissal','Ser Abissal: Repugnium','Ser Abissal: Anssiedium','Não há escapatoria','Eu vejo os olhos']) {
@@ -36,6 +36,10 @@ assert.match(expansion, /Pode incluir peões adversários que toquem um Devoto/)
 assert.match(ui, /allUnits\(\)\.filter\(u=>fusionMaterialFits\(card,u\)\)/);
 assert.match(ui, /archetypeOfUnit\(u\)!=='abyss'&&!enemyAllowed/);
 assert.match(ui, /!card\.variableFusion&&fusionMaterials\.length===card\.fusion/);
+assert.match(ui, /function equipmentTargetAllowed/);
+assert.match(ui, /function copyEquipmentForRavens/);
+assert.doesNotMatch(ui, /raven\.owner!==state\.current/);
+assert.match(ui, /equipmentTargetAllowed\(equipmentKey,u,player\)/);
 const iconMaps = [...expansion.matchAll(/const (?:card|effect)Icons=\{([^}]+)\}/g)].flatMap(match => [...match[1].matchAll(/:'([^']+)'/g)].map(icon => icon[1]));
 assert.equal(new Set(iconMaps).size, iconMaps.length, 'cada carta deve ter um ícone exclusivo');
 assert.match(actionsA, /repugnium-range/);

@@ -112,6 +112,27 @@ assert.match(source, /clearJungleFeatures/);
 assert.match(source, /function drawRoseReward/);
 assert.match(source, /function awardPoints/);
 assert.doesNotMatch(source, /state\.players\[scorer\]\.score\+\+/);
+const ownInfantry = {id: 'own-infantry', owner: 1, kind: 'infantry', row: 6, col: 2};
+const ownTower = {id: 'own-tower', owner: 1, kind: 'tower', row: 6, col: 3};
+const enemyInfantry = {id: 'enemy-infantry', owner: 2, kind: 'infantry', row: 1, col: 2};
+const ravenOne = {id: 'raven-1', name: 'Corvo 1', owner: 1, kind: 'raven', row: 5, col: 1};
+const ravenTwo = {id: 'raven-2', name: 'Corvo 2', owner: 2, kind: 'raven', row: 2, col: 4};
+const equipmentContext = {
+  state: {current: 1, players: {1: {hand: []}, 2: {hand: []}}},
+  effects: {crown: {name: 'Coroa da Herdeira', equipOnly: 'infantry'}},
+  allUnits: () => [ownInfantry, ownTower, enemyInfantry, ravenOne, ravenTwo],
+  hasEffect: (unit, kind) => unit.kind === kind,
+  log: () => {}
+};
+vm.createContext(equipmentContext);
+vm.runInContext(source.match(/function equipmentTargetAllowed\([^\n]+/)[0], equipmentContext);
+vm.runInContext(source.match(/function copyEquipmentForRavens\([^\n]+/)[0], equipmentContext);
+assert.equal(equipmentContext.equipmentTargetAllowed('crown', ownInfantry), true);
+assert.equal(equipmentContext.equipmentTargetAllowed('crown', ownTower), false, 'Coroa deve rejeitar outro tipo de peão');
+assert.equal(equipmentContext.equipmentTargetAllowed('crown', enemyInfantry), false, 'Coroa deve rejeitar até Infantaria adversária');
+equipmentContext.copyEquipmentForRavens('crown');
+assert.deepEqual(equipmentContext.state.players[1].hand, ['crown'], 'Corvo aliado também copia Equipamento usado pelo próprio jogador');
+assert.deepEqual(equipmentContext.state.players[2].hand, ['crown'], 'Corvo adversário copia Equipamento usado pelo rival');
 assert.match(source, /u\.bonusAtk=\(u\.bonusAtk\|\|0\)\+200/);
 assert.match(source, /hideMobileDetails\(\);selectedEffect=null;pendingCard=/);
 assert.match(source, /function animateRoseReward/);
@@ -348,8 +369,8 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=5/);
-assert.match(page, /VERSÃO 102/);
-assert.match(page, /engine-ui\.js\?v=20/);
+assert.match(page, /VERSÃO 103/);
+assert.match(page, /engine-ui\.js\?v=21/);
 assert.match(page, /engine-core\.js\?v=14/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
 assert.match(page, /engine-actions-a\.js\?v=14/);
