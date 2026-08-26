@@ -125,6 +125,7 @@ const botDeployContext = {
   ROWS: 8,
   COLS: 6,
   botActor: () => botDeployState.current,
+  botFusionMaterialPriority: () => 0,
   at: () => null,
   obstacleAt: () => null,
   pitAt: () => null,
@@ -143,12 +144,24 @@ botDeployContext.hasEffect = (unit, effect) => unit.kind === effect;
 assert.equal(botDeployContext.botDeployPawn(), true);
 assert.equal(botDeployment.unit.id, 'duck', 'Xadria deve colocar o Pato em campo para bloquear o rival');
 const drawPlayer = {name: 'Bot', drawn: false, pawnDeck: ['pawn'], effectDeck: ['effect'], reserve: [], hand: []};
-const drawContext = {state: {awaitingDraw: true, players: {1: drawPlayer}}, botActor: () => 1, botGameAdvantageScore: () => 1, log: () => {}};
+const drawContext = {state: {awaitingDraw: true, players: {1: drawPlayer}}, botActor: () => 1, botGameAdvantageScore: () => 1, botFusionMissingCount: () => 0, log: () => {}};
 vm.createContext(drawContext);
 vm.runInContext(source.match(/function botDraw\([^\n]+/)[0], drawContext);
 drawContext.botDraw();
 assert.deepEqual(drawPlayer.hand, ['effect'], 'bot em vantagem deve comprar uma carta de Efeito');
 assert.deepEqual(drawPlayer.pawnDeck, ['pawn']);
+Object.assign(drawPlayer, {drawn: false, pawnDeck: ['fusion-material'], effectDeck: ['second-effect'], reserve: [], hand: []});
+drawContext.botFusionMissingCount = () => 1;
+drawContext.botDraw();
+assert.deepEqual(drawPlayer.reserve, ['fusion-material'], 'material ausente para combinação deve superar a preferência por Efeitos');
+const fusionPlanningContext = {botFusionMaterials: () => [{kind: 'tower'}]};
+vm.createContext(fusionPlanningContext);
+vm.runInContext(source.match(/function botFusionCoverage\([^\n]+/)[0], fusionPlanningContext);
+vm.runInContext(source.match(/function botFusionMissingCount\([^\n]+/)[0], fusionPlanningContext);
+const babelPlan = {fusion: 2, materials: {kinds: ['tower', 'infantry']}};
+const fusionPlayer = {reserve: [babelPlan]};
+assert.equal(fusionPlanningContext.botFusionCoverage(babelPlan, fusionPlayer), 1);
+assert.equal(fusionPlanningContext.botFusionMissingCount(fusionPlayer), 1);
 const pitPlayer = {name: 'Bot 1', hand: ['pit'], units: []};
 const pitState = {pits: [], players: {1: pitPlayer, 2: {units: [{row: 3, col: 2, faceDown: false}]}}};
 const pitContext = {
@@ -238,6 +251,12 @@ assert.equal(flippable.faceDown, true);
 assert.equal(flippable.flippedTurn, 4);
 assert.equal(flipContext.botSetFaceDown({owner: 2, row: 3, faceDown: false, attackedTurn: 4, flippedTurn: 0}, true), false);
 assert.equal(flipContext.botSetFaceDown({owner: 2, row: 3, faceDown: false, attackedTurn: 0, flippedTurn: 4}, true), false);
+vm.runInContext(source.match(/function botEnemySpawnDistance\([^\n]+/)[0], defensiveContext);
+vm.runInContext(source.match(/function botFieldControlValue\([^\n]+/)[0], defensiveContext);
+assert.equal(defensiveContext.botEnemySpawnDistance(1, 1, 8), 0);
+assert.equal(defensiveContext.botEnemySpawnDistance(1, 4, 8), 3);
+assert.equal(defensiveContext.botEnemySpawnDistance(2, 6, 8), 0);
+assert.ok(defensiveContext.botFieldControlValue(1, 0, 4) > defensiveContext.botFieldControlValue(1, 0, 1), 'bot deve parar de valorizar avanço perto do polo inimigo');
 assert.match(source, /Vitória automática/);
 assert.match(source, /if\(\(p\.pawnDeck\|\|\[\]\)\.length\)return true/);
 assert.match(source, /reason=.*pointWinner\?'points'/);
@@ -257,8 +276,8 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=3/);
-assert.match(page, /VERSÃO 88/);
-assert.match(page, /engine-ui\.js\?v=15/);
+assert.match(page, /VERSÃO 89/);
+assert.match(page, /engine-ui\.js\?v=16/);
 assert.match(page, /engine-core\.js\?v=11/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
 assert.match(page, /engine-actions-a\.js\?v=10/);
@@ -292,7 +311,7 @@ assert.match(source, /defensiveJoint\.length\?defensiveJoint/);
 assert.match(source, /u\.moveHistory=\[/);
 assert.match(source, /ahead=botGameAdvantageScore\(player\)>0/);
 assert.match(source, /p\.archetype==='xadria'\?normal\.find\(card=>hasEffect\(card,'duck'\)\)/);
-assert.match(source, /fieldControl=advance\*16000\+supportGap\*5500/);
+assert.match(source, /fieldControl=botFieldControlValue\(advance,supportGap,botEnemySpawnDistance/);
 assert.match(source, /enemyApproach\.has/);
 assert.match(source, /function botChooseReveal\(\)/);
 assert.match(source, /function botChooseHide\(\)/);
@@ -300,6 +319,13 @@ assert.match(source, /scheduleBot\(botRevealPhase/);
 assert.match(source, /scheduleBot\(attacked\?botAttackPhase:botHidePhase/);
 assert.match(source, /u\.attackedTurn===state\.turn\|\|u\.flippedTurn===state\.turn/);
 assert.match(source, /allies\.forEach\(u=>u\.attackedTurn=state\.turn\)/);
+assert.match(source, /function botFusionMissingCount\(p\)/);
+assert.match(source, /function botFusionSetupScore\(p\)/);
+assert.match(source, /priority:botFusionMaterialPriority\(p,card\)/);
+assert.match(source, /fusionSetup=\(botFusionSetupScore\(p\)-fusionBefore\)\*5/);
+assert.match(source, /needsFusionMaterial=botFusionMissingCount\(p\)>0/);
+assert.match(source, /function botCombinationFollowup\(next\)/);
+assert.match(source, /botCombinationFollowup\(botAttackPhase\)/);
 assert.match(styles, /art-crop\.celestial-art img/);
 for (const [key, pawn] of Object.entries(context.defs)) {
   assert.ok(pawn.art, `arte ausente para o peão ${key}`);
