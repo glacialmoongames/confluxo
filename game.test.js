@@ -283,13 +283,32 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=4/);
-assert.match(page, /VERSÃO 94/);
+assert.match(page, /VERSÃO 96/);
 assert.match(page, /engine-ui\.js\?v=18/);
 assert.match(page, /engine-core\.js\?v=12/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
-assert.match(page, /engine-actions-a\.js\?v=12/);
+assert.match(page, /engine-actions-a\.js\?v=13/);
 assert.match(page, /engine-actions-b\.js\?v=8/);
-assert.match(page, /styles-responsive\.css\?v=8/);
+assert.match(page, /styles-responsive\.css\?v=10/);
+assert.match(page, /rel="icon"[^>]+confluxo-favicon\.svg/);
+assert.match(page, /setup-mark[^>]*><img src="assets\/icons\/flower-twirl\.svg"/);
+assert.match(source, /SUA VEZ! · Confluxo/);
+assert.match(source, /visibilitychange/);
+const noticeContext = {
+  onlineMode: true, localPlayer: 1, botMode: false, botVsBot: false,
+  state: {current: 1, placementPhase: false, swordQueue: []},
+  document: {hidden: true, title: ''},
+  $: () => ({classList: {contains: () => true}})
+};
+vm.createContext(noticeContext);
+const noticeCode = ['const BASE_TAB_TITLE[^\n]+', 'function tabHumanPlayer\(\)[^\n]+', 'function updateTurnTabNotice\(\)[^\n]+']
+  .map(pattern => source.match(new RegExp(pattern))[0]).join('\n');
+vm.runInContext(`${noticeCode}\nupdateTurnTabNotice()`, noticeContext);
+assert.equal(noticeContext.document.title, 'SUA VEZ! · Confluxo');
+noticeContext.state.current = 2;
+vm.runInContext('updateTurnTabNotice()', noticeContext);
+assert.equal(noticeContext.document.title, 'Confluxo — Jogo de Cartas Tático');
+assert.match(styles, /data-arena=abyss[^}]+evil-eyes\.svg/);
 assert.match(page, /<h3>Ataque em conjunto<\/h3>/);
 assert.match(page, /virados para cima e em contato com o alvo/);
 assert.match(page, /network\.js\?v=34/);

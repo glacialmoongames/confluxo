@@ -4,15 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Confluxo — Jogo de Cartas Tático</title>
+  <link rel="icon" type="image/svg+xml" href="assets/icons/confluxo-favicon.svg?v=1">
   <link rel="stylesheet" href="styles-core.css?v=2">
   <link rel="stylesheet" href="styles-game.css?v=8">
-  <link rel="stylesheet" href="styles-responsive.css?v=8">
+  <link rel="stylesheet" href="styles-responsive.css?v=10">
 </head>
 <body>
   <div id="setup" class="setup">
-    <span class="game-version">VERSÃO 94</span>
+    <span class="game-version">VERSÃO 96</span>
     <div class="setup-card">
-      <span class="setup-mark">✦</span>
+      <span class="setup-mark"><img src="assets/icons/flower-twirl.svg" alt="Símbolo do Confluxo"></span>
       <small>DUELO DO CONFLUXO</small>
       <h1>Preparar duelo</h1>
       <div class="game-mode" role="group" aria-label="Modo de jogo">
@@ -97,7 +98,7 @@
   </div>
 
   <header class="topbar">
-    <div class="brand"><span class="sigil">✦</span><div><b>CONFLUXO</b><small>Jogo de cartas tático</small></div></div>
+    <div class="brand"><span class="sigil"><img src="assets/icons/flower-twirl.svg" alt=""></span><div><b>CONFLUXO</b><small>Jogo de cartas tático</small></div></div>
     <div class="turn-panel">
       <span id="turn-count">TURNO 1</span>
       <strong id="turn-name">DUELISTA 1</strong>
@@ -177,7 +178,7 @@
 
   <dialog id="rules-dialog">
     <button class="dialog-close" aria-label="Fechar">×</button>
-    <div class="rules-hero"><img src="assets/icons/empty-chessboard.svg" alt=""><div><small>GUIA VISUAL</small><h2>Como jogar Confluxo</h2><p>Compre, posicione e combine seus peões para dominar a Arena.</p></div></div>
+    <div class="rules-hero"><img src="assets/icons/flower-twirl.svg" alt="Símbolo do Confluxo"><div><small>GUIA VISUAL</small><h2>Como jogar Confluxo</h2><p>Compre, posicione e combine seus peões para dominar a Arena.</p></div></div>
     <div class="rules-grid">
       <section><div class="rule-picture draw"><span>⬢</span><b>OU</b><span>✦</span></div><h3>1 · Compre</h3><p>Na primeira rodada ninguém compra. Depois, cada turno começa escolhendo uma carta de <b>Peão</b> ou de <b>Efeito</b>.</p></section>
       <section><div class="rule-picture deploy"><i></i><i class="unit"></i></div><h3>2 · Posicione</h3><p>Clique no peão em sua mão e depois numa casa destacada do seu polo. Não há limite de peões em campo.</p></section>
@@ -200,7 +201,7 @@
   <script src="engine-core.js?v=12"></script>
   <script src="engine-expansion.js?v=3"></script>
   <script src="engine-celestial.js?v=4"></script>
-  <script src="engine-actions-a.js?v=12"></script>
+  <script src="engine-actions-a.js?v=13"></script>
   <script src="engine-actions-b.js?v=8"></script>
   <script src="engine-expansion-runtime.js?v=1"></script>
   <script src="engine-ui.js?v=18"></script>

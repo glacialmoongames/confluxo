@@ -134,3 +134,9 @@
 
 /* Exemplo visual do ataque em conjunto no guia de regras. */
 .rule-picture.joint-attack{gap:5px}.rule-picture.joint-attack i{width:27px;height:27px;display:grid;place-items:center;border:2px solid #e0bd70;border-radius:4px;background:#4b3455;color:#fff;font-style:normal;font-size:9px}.rule-picture.joint-attack b{margin-left:2px;padding:3px 5px;border-radius:9px;background:#d8b45f;color:#241d29;font-size:11px}.rule-picture.joint-attack em{color:#f1c766;font-style:normal}.rule-picture.joint-attack strong{padding:3px 5px;border:1px solid #9d6670;border-radius:4px;background:#6d2839;font-size:10px}
+
+/* Olhos decorativos do Abismo do Terror, sem ocupar as camadas de ação. */
+.board[data-arena=abyss] .cell:nth-child(8),.board[data-arena=abyss] .cell:nth-child(23),.board[data-arena=abyss] .cell:nth-child(31),.board[data-arena=abyss] .cell:nth-child(44){background-image:url('assets/icons/evil-eyes.svg');background-repeat:no-repeat;background-blend-mode:soft-light}.board[data-arena=abyss] .cell:nth-child(8),.board[data-arena=abyss] .cell:nth-child(31){background-size:38%;background-position:18% 24%}.board[data-arena=abyss] .cell:nth-child(23),.board[data-arena=abyss] .cell:nth-child(44){background-size:30%;background-position:82% 72%}
+
+/* Identidade visual principal do Confluxo. */
+.setup-mark img,.brand .sigil img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 8px #d9b96f88)}.setup-mark{width:44px;height:44px;margin:0 auto 4px;padding:7px;border-radius:50%;background:#4b3455}.brand .sigil{width:34px;height:34px;padding:5px;border-radius:50%;background:#4b3455;flex:0 0 auto}.rules-hero>img{background:#4b3455;filter:drop-shadow(0 0 7px #d9b96f66)}

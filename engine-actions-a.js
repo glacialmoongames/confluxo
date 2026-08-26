@@ -1,6 +1,10 @@
 function adjacent(a,b){return Math.abs(a.row-b.row)+Math.abs(a.col-b.col)===1}
 function log(msg){state.log.unshift({turn:state.turn,msg});state.log=state.log.slice(0,40)}
 function hint(t){$('#hint').textContent=t}
+const BASE_TAB_TITLE='Confluxo — Jogo de Cartas Tático';
+function tabHumanPlayer(){if(onlineMode&&localPlayer)return localPlayer;if(botMode&&!botVsBot)return 1;return null}
+function updateTurnTabNotice(){let player=tabHumanPlayer(),active=state?.swordQueue?.[0]||(state?.placementPhase?state.placementPlayer:state?.current),playing=$('#setup')?.classList.contains('hidden'),yourTurn=!!(playing&&player&&active===player);document.title=document.hidden&&yourTurn?'SUA VEZ! · Confluxo':BASE_TAB_TITLE}
+document.addEventListener('visibilitychange',updateTurnTabNotice);
 function clearAction(){mode=null;targets=[];attackTargets=[];pendingCard=null;pendingPushTarget=null;pendingAbilityTarget=null;castleFirst=null;fusionMaterials=[];$$('.action').forEach(b=>b.classList.remove('active'))}
 function revealMobileDetails(){$('.card-details')?.classList.remove('mobile-details-hidden')}
 function hideMobileDetails(){$('.card-details')?.classList.add('mobile-details-hidden')}
@@ -8,7 +12,7 @@ function toggleMobileDetails(){if(!window.matchMedia('(max-width:760px)').matche
 function mobileDetailsOpen(){return!$('.card-details')?.classList.contains('mobile-details-hidden')}
 function select(u){let repeated=!!(u&&selected?.id===u.id);clearAction();selectedEffect=null;selected=u;if(repeated&&toggleMobileDetails()){render();hint(`${u.name} selecionado · detalhes ${mobileDetailsOpen()?'abertos':'fechados'}.`);return}if(!u||!own(u)||!canLocalAct())revealMobileDetails();else hideMobileDetails();render();hint(u?`${u.name} selecionado.`:'Seleção removida.')}
 function startMode(m,valid,msg){if(!valid){hint(msg);return}mode=m;targets=[];$$('.action').forEach(b=>b.classList.remove('active'));$('#'+m)?.classList.add('active');hint(msg);renderBoard()}
-function render(){renderHeader();renderBoard();renderHands();renderCard();renderLog();if(onlineMode)updateOnlineLock()}
+function render(){renderHeader();renderBoard();renderHands();renderCard();renderLog();if(onlineMode)updateOnlineLock();updateTurnTabNotice()}
 function updateArenaTheme(board){let arenaSlot=$('.global-arena'),arenaKey=state.arena||'none',changed=arenaKey!==lastArenaVisual;board.dataset.arena=arenaKey;arenaSlot.dataset.arena=arenaKey;if(changed&&arenaKey!=='none'){clearTimeout(arenaAnimationTimer);[board,arenaSlot].forEach(el=>{el.classList.remove('arena-changing');void el.offsetWidth;el.classList.add('arena-changing')});arenaAnimationTimer=setTimeout(()=>[board,arenaSlot].forEach(el=>el.classList.remove('arena-changing')),900)}lastArenaVisual=arenaKey}
 function renderHeader(){
  let active=state.players[state.current],view=state.players[viewPlayerNumber()],arc=archetypes[active.archetype],board=$('#board'),locked=state.placementPhase,busy=state.animating,waiting=!canLocalAct();

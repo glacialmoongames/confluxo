@@ -2,6 +2,8 @@
 
 As ilustrações de cartas e peões foram obtidas do repositório oficial [Game-icons.net](https://game-icons.net/) e são usadas sob a licença [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/). Desde a versão 91, o jogo usa os SVGs transparentes originais e aplica as cores de cada arquétipo pela interface, sem fundo incorporado à imagem.
 
+O símbolo principal e favicon do Confluxo usam o ícone `flower-twirl`, de Lorc, também sob CC BY 3.0.
+
 | Uso no Confluxo | Ícone original | Autor |
 | --- | --- | --- |
 | Infantaria do Reino de Xadria | `guards` | Delapouite |

@@ -23,7 +23,7 @@ assert.match(ui, /grantImpolutoPower/);
 assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
 assert.match(page, /engine-expansion\.js\?v=3/);
-assert.match(page, /VERSÃO 94/);
+assert.match(page, /VERSÃO 96/);
 for (const exactName of ['Criatura Abissal','Devoto Abissal','Corvo da floresta Abissal','Amalgama Abissal','Ser Abissal: Repugnium','Ser Abissal: Anssiedium','Não há escapatoria','Eu vejo os olhos']) {
   assert.ok(expansion.includes(`name:'${exactName}'`), `nome Abissal alterado: ${exactName}`);
 }
@@ -34,12 +34,13 @@ const iconMaps = [...expansion.matchAll(/const (?:card|effect)Icons=\{([^}]+)\}/
 assert.equal(new Set(iconMaps).size, iconMaps.length, 'cada carta deve ter um ícone exclusivo');
 assert.match(actionsA, /repugnium-range/);
 assert.match(styles, /\.cell\.repugnium-range::after/);
+assert.match(styles, /data-arena=abyss[^}]+evil-eyes\.svg/);
 assert.match(styles, /\.art-crop\.tone-black\{background:linear-gradient/);
 assert.match(styles, /\.peace-banner/);
 assert.match(styles, /data-arena=blackRoses/);
 assert.match(styles, /\.rules-hero/);
 
-for (const icon of ['empty-chessboard','forest','orbit','evil-eyes','haunting','rose','peace-dove']) {
+for (const icon of ['confluxo-favicon','empty-chessboard','flower-twirl','forest','orbit','evil-eyes','haunting','rose','peace-dove']) {
   assert.ok(fs.existsSync(`assets/icons/${icon}.svg`), `ícone ausente: ${icon}`);
 }
 
