@@ -74,6 +74,36 @@ assert.match(styles, /card-details\.mobile-details-hidden/);
 assert.match(source, /HABILIDADE COPIADA E ATIVA/);
 assert.match(source, /copy-mark/);
 assert.match(source, /spawnJungleFeature\(\)/);
+assert.match(source, /function jungleSpawnBlocked/);
+const jungleState = {
+  arenaOwner: 1,
+  obstacles: [{row: 0, col: 1, type: 'NATURAL'}],
+  pits: [{row: 0, col: 2}],
+  blackHoles: [{row: 1, col: 0}],
+  tunnels: [[{row: 1, col: 1}]],
+  tunnelDraft: []
+};
+const jungleContext = {
+  state: jungleState,
+  ROWS: 2,
+  COLS: 3,
+  at: (r, c) => r === 0 && c === 0 ? {id: 'occupied'} : null,
+  featureAt: (r, c) => jungleState.obstacles.find(item => item.row === r && item.col === c),
+  pitAt: (r, c) => jungleState.pits.find(item => item.row === r && item.col === c),
+  boardCoordinate: (r, c) => `${r},${c}`,
+  log: () => {},
+  Math: Object.create(Math)
+};
+jungleContext.Math.random = () => 0.9;
+vm.createContext(jungleContext);
+vm.runInContext(source.match(/function jungleSpawnBlocked\([^\n]+/)[0], jungleContext);
+vm.runInContext(source.match(/function spawnJungleFeature\([^\n]+/)[0], jungleContext);
+jungleContext.spawnJungleFeature();
+assert.deepEqual(
+  jungleState.obstacles.map(({row, col}) => [row, col]),
+  [[0, 1], [1, 2]],
+  'frutas e obstáculos da Selva só podem surgir em uma casa totalmente livre'
+);
 assert.match(source, /function collectFruit/);
 assert.match(source, /fruitPickup/);
 assert.match(source, /collectFruit\(u,r,c\)/);
@@ -283,8 +313,8 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=4/);
-assert.match(page, /VERSÃO 99/);
-assert.match(page, /engine-ui\.js\?v=18/);
+assert.match(page, /VERSÃO 100/);
+assert.match(page, /engine-ui\.js\?v=19/);
 assert.match(page, /engine-core\.js\?v=13/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
 assert.match(page, /engine-actions-a\.js\?v=13/);
