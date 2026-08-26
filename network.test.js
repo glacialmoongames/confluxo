@@ -180,4 +180,21 @@ function link(a, b, shouldDrop = () => false) {
   assert.equal(guest.pendingStatePacket, null, 'o estado deve ser confirmado após reconectar');
 }
 
+{
+  const hostState = playerState(1, 'antes-da-jogada');
+  hostState.players[1] = {units: [{id: 'carta-lida', name: 'Peão observado'}], reserve: [], initialUnits: []};
+  const guestState = structuredClone(hostState);
+  guestState.marker = 'depois-da-jogada';
+  guestState.players[1].units[0].row = 3;
+  const host = makeClient(1, hostState);
+  const guest = makeClient(2, guestState);
+  host.selected = host.state.players[1].units[0];
+  host.selectedEffect = {key: 'peace', index: 0, owner: 1, arena: false};
+  link(host, guest);
+  guest.sendGameState();
+  assert.equal(host.selected?.id, 'carta-lida', 'a carta de peão inspecionada deve continuar nos detalhes após uma jogada remota');
+  assert.equal(host.selected?.row, 3, 'a inspeção deve apontar para a versão atualizada do peão');
+  assert.equal(host.selectedEffect?.key, 'peace', 'a carta de Efeito inspecionada não deve ser trocada pela ação do oponente');
+}
+
 console.log('network synchronization tests passed');

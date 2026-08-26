@@ -113,6 +113,7 @@ function sendPacket(packet){
  }catch(error){console.error('Falha ao enviar pacote online',error);networkStatus('Falha no envio — tentando novamente…','connecting');return false}
 }
 function cloneNetworkValue(value){return typeof structuredClone==='function'?structuredClone(value):JSON.parse(JSON.stringify(value))}
+function findInspectedUnit(id){if(!id||!state?.players)return null;for(let player of [1,2]){let p=state.players[player]||{};let found=[...(p.units||[]),...(p.reserve||[]),...(p.initialUnits||[])].find(u=>u.id===id);if(found)return found}return null}
 function scheduleStateRetry(){
  clearTimeout(stateRetryTimer);stateRetryTimer=null;if(!pendingStatePacket)return;
  stateRetryTimer=setTimeout(()=>{if(!pendingStatePacket)return;if(dataChannel?.open){sendPacket(pendingStatePacket);networkStatus('Sincronizando a jogada…','connecting')}scheduleStateRetry()},900)
@@ -158,7 +159,8 @@ function receivePacket(raw){
  if(incomingRevision<networkRevision){acknowledgeState(incomingRevision);sendGameState(true,false);return}
  if(incomingRevision===networkRevision&&state){acknowledgeState(incomingRevision);return}
  networkRevision=incomingRevision;if(pendingStatePacket&&pendingStatePacket.revision<=networkRevision){pendingStatePacket=null;clearTimeout(stateRetryTimer);stateRetryTimer=null}
- clearTimeout(remoteVisualTimer);remoteVisualTimer=null;applyingRemote=true;if(packet.started)document.querySelector('#setup').classList.add('hidden');state=packet.state;selectedDecks=packet.selectedDecks||selectedDecks;selected=null;selectedEffect=null;mode=null;targets=[];pendingCard=null;castleFirst=null;fusionMaterials=[];
+ let inspectedUnitId=selected?.id,inspectedEffect=selectedEffect?{...selectedEffect}:null;
+ clearTimeout(remoteVisualTimer);remoteVisualTimer=null;applyingRemote=true;if(packet.started)document.querySelector('#setup').classList.add('hidden');state=packet.state;selectedDecks=packet.selectedDecks||selectedDecks;selected=findInspectedUnit(inspectedUnitId);selectedEffect=inspectedEffect;mode=null;targets=[];pendingCard=null;castleFirst=null;fusionMaterials=[];
  document.querySelectorAll('#turn-draw,#pass,#sword-transfer').forEach(element=>element.classList.add('hidden'));render();applyingRemote=false;acknowledgeState(networkRevision);networkStatus('Jogada recebida','connected');checkWin();if(!state.forfeitWinner)resumeOnlinePhase()
 }
 function resumeOnlinePhase(){
