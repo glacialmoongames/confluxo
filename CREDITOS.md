@@ -43,14 +43,14 @@ As ilustrações de cartas e peões foram obtidas do repositório oficial [Game-
 | Túnel | `cave-entrance` | Delapouite |
 | Buraco Negro | `black-hole-bolas` | Lorc |
 | Lua em Órbita | `moon-orbit` | Delapouite |
-| Criatura do Abismo | `monster-grasp` | Lorc |
-| Devoto do Abismo | `cultist` | Lorc |
-| Corvo do Abismo | `raven` | Lorc |
-| Amálgama | `tentacles-skull` | Lorc |
-| Repugnium e símbolo Abissal | `evil-eyes` | Skoll |
-| Anssiedium | `sinking-trap` | Lorc |
-| Eu Vejo os Olhos | `all-seeing-eye` | Delapouite |
+| Criatura Abissal | `monster-grasp` | Lorc |
+| Devoto Abissal | `cultist` | Lorc |
+| Corvo da floresta Abissal | `raven` | Lorc |
+| Amalgama Abissal | `tentacles-skull` | Lorc |
+| Ser Abissal: Repugnium e símbolo de Terror Abissal | `evil-eyes` | Skoll |
+| Ser Abissal: Anssiedium | `sinking-trap` | Lorc |
+| Eu vejo os olhos | `all-seeing-eye` | Delapouite |
 | Revelar | `semi-closed-eye` | Lorc |
-| Não Há Escapatória | `fish-escape` | Delapouite |
+| Não há escapatoria | `fish-escape` | Delapouite |
 
 As fotografias dos objetos celestes são materiais da NASA e instituições parceiras, com os créditos individuais exibidos dentro do jogo.

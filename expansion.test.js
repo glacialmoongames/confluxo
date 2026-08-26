@@ -21,8 +21,13 @@ assert.match(ui, /beginMonkeyDestination/);
 assert.match(ui, /grantImpolutoPower/);
 assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
-assert.match(page, /engine-expansion\.js\?v=1/);
-assert.match(page, /VERSÃO 91/);
+assert.match(page, /engine-expansion\.js\?v=2/);
+assert.match(page, /VERSÃO 92/);
+for (const exactName of ['Criatura Abissal','Devoto Abissal','Corvo da floresta Abissal','Amalgama Abissal','Ser Abissal: Repugnium','Ser Abissal: Anssiedium','Não há escapatoria','Eu vejo os olhos']) {
+  assert.ok(expansion.includes(`name:'${exactName}'`), `nome Abissal alterado: ${exactName}`);
+}
+assert.match(expansion, /\['archer','horse','babel','terror','atra'\]\.includes\(key\)\?'black':'white'/);
+assert.match(styles, /\.art-crop\.tone-black\{background:linear-gradient/);
 assert.match(styles, /\.peace-banner/);
 assert.match(styles, /data-arena=blackRoses/);
 assert.match(styles, /\.rules-hero/);
