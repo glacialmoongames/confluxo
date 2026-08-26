@@ -46,7 +46,7 @@ const archetypes={
  celestial:{name:'Objeto Celeste',emblem:'✺',pawns:['mercury','venus','earth','mars','jupiter','saturn','uranus','neptune','pluto'],fusions:['sun'],effects:['asteroid','project','burn','pit','push','peace'],pawnComposition:['mercury','mercury','venus','venus','earth','earth','mars','mars','jupiter','jupiter','saturn','saturn','uranus','uranus','neptune','neptune','pluto','sun']}
 };
 let selectedDecks={1:'xadria',2:'wild'};
-let state,selected=null,selectedEffect=null,mode=null,targets=[],attackTargets=[],pendingCard=null,pendingPushTarget=null,pendingAbilityTarget=null,castleFirst=null,fusionMaterials=[],initialPlacementResume=null,gameVersion=0,botMode=false,botVsBot=false,botPlayer=2,botTimer=null,lastArenaVisual='none',arenaAnimationTimer=null;
+let state,selected=null,selectedEffect=null,spectatorSelected=null,spectatorEffect=null,mode=null,targets=[],attackTargets=[],pendingCard=null,pendingPushTarget=null,pendingAbilityTarget=null,castleFirst=null,fusionMaterials=[],initialPlacementResume=null,gameVersion=0,botMode=false,botVsBot=false,botPlayer=2,botTimer=null,botWatchdogTimer=null,lastArenaVisual='none',arenaAnimationTimer=null;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function uid(){return Math.random().toString(36).slice(2,9)}
 function unit(kind,owner){let d=defs[kind];return{id:uid(),kind,owner,row:null,col:null,origin:null,faceDown:false,flippedTurn:0,movedTurn:0,attackedTurn:0,equipment:[],abilityTurn:0,mounted:null,...d}}
@@ -71,9 +71,9 @@ function makeEffectDeck(key){let pool=archetypes[key].effects;return shuffle(Arr
 function newGame(){
  let version=++gameVersion;
  if($('#winner-dialog')?.open)$('#winner-dialog').close();$('#winner-dialog')?.classList.remove('solar-victory');let winnerCrest=$('#winner-dialog .winner-crest');if(winnerCrest)winnerCrest.textContent='♛';
- selected=null;selectedEffect=null;initialPlacementResume=null;
+ selected=null;selectedEffect=null;spectatorSelected=null;spectatorEffect=null;initialPlacementResume=null;
  state={turn:1,current:1,pointGoal:selectedPointGoal(),players:{},obstacles:[],pits:[],log:[],animating:false,initialDeal:true,awaitingDraw:false,arena:null,arenaOwner:null,arenaDefeatedStart:0,swordQueue:[],defeatedCount:0,placementPhase:true,placementPlayer:1,passPurpose:null,forfeitWinner:null,celestialWinner:null};
- clearTimeout(botTimer);botTimer=null;clearTimeout(arenaAnimationTimer);arenaAnimationTimer=null;lastArenaVisual='none';
+ clearTimeout(botTimer);botTimer=null;clearTimeout(botWatchdogTimer);botWatchdogTimer=null;clearTimeout(arenaAnimationTimer);arenaAnimationTimer=null;lastArenaVisual='none';
  for(let p=1;p<=2;p++){let key=selectedDecks[p],player=state.players[p]={name:botControls(p)?`Bot ${p}`:`Duelista ${p}`,archetype:key,score:0,units:[],initialUnits:[],hand:[],reserve:[],arena:null,drawn:true,deployed:false,moved:false,attackedThisTurn:false,attackLocked:false,neptuneAbilityTurn:0,lastLosses:0,lossesThisTurn:0,pawnDeck:makePawnDeck(p,key),effectDeck:makeEffectDeck(key)};for(let i=0;i<3;i++)player.hand.push(player.effectDeck.pop());drawRandomInitialPawns(player)}
  log('Preparação: escolha onde posicionar os três peões iniciais.');clearAction();render();beginInitialPlacement(1);setTimeout(()=>{if(version!==gameVersion)return;state.initialDeal=false;renderHands()},1300);
 }

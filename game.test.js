@@ -264,6 +264,7 @@ const protectedFusionContext = {
 };
 vm.createContext(protectedFusionContext);
 vm.runInContext(source.match(/function combinationsOf\([^\n]+/)[0], protectedFusionContext);
+vm.runInContext(source.match(/function botFusionCandidateSets\([^\n]+/)[0], protectedFusionContext);
 vm.runInContext(source.match(/function botCombinePawn\([^\n]+/)[0], protectedFusionContext);
 assert.equal(protectedFusionContext.botCombinePawn(), true);
 assert.ok(botFusionParts.every(part => !part.fusion), 'o bot deve preservar peões já combinados quando houver materiais normais');
@@ -281,6 +282,7 @@ let completedAmalgamParts = null;
 const amalgamContext = {
   state: {animating: false, current: 1, players: {1: {units: [devotee, abyssAlly]}, 2: {units: [enemy]}}},
   selected: amalgamCard,
+  botVsBot: false,
   mode: 'combinar',
   fusionMaterials: [],
   targets: [],
@@ -428,9 +430,9 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=7/);
-assert.match(page, /VERSÃO 112/);
+assert.match(page, /VERSÃO 113/);
 assert.match(page, /network\.js\?v=35/);
-assert.match(page, /engine-ui\.js\?v=28/);
+assert.match(page, /engine-ui\.js\?v=29/);
 assert.match(source, /function botCombinationWinsNow/);
 assert.match(source, /usesCombined:parts\.some\(u=>u\.fusion\)/);
 assert.match(source, /normalOptions\.length\?normalOptions:winningExceptions/);
@@ -439,12 +441,17 @@ assert.match(source, /state\.arena==='kingdom'&&xadriaPair\.has\(k\)/);
 assert.match(page, /styles-core\.css\?v=3/);
 assert.match(page, /id="home-brand"/);
 assert.match(source, /\$\('#home-brand'\)\.onclick=/);
-assert.match(page, /engine-core\.js\?v=18/);
+assert.match(page, /engine-core\.js\?v=19/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
-assert.match(page, /engine-actions-a\.js\?v=17/);
+assert.match(page, /engine-actions-a\.js\?v=18/);
 assert.match(page, /engine-actions-b\.js\?v=11/);
 assert.match(source, /function recoverBotTurn/);
 assert.match(source, /catch\(error\)\{recoverBotTurn\(error\)\}/);
+assert.match(source, /function armBotWatchdog/);
+assert.match(source, /if\(state\.swordQueue\.length\)\{openSwordTransfer\(\);return\}endTurn\(\)/);
+assert.match(source, /function botFusionCandidateSets/);
+assert.match(source, /if\(!botVsBot&&\(mode==='combinar'\|\|pendingCard\)/);
+assert.match(source, /function detailSelectedUnit\(\)\{return botVsBot\?spectatorSelected:selected\}/);
 assert.match(source, /A Espada Maldita foi destruída porque não havia outro peão/);
 assert.match(source, /slice\(0,10\)/, 'o cálculo defensivo do bot deve limitar ameaças simuladas');
 assert.match(source, /slice\(0,8\)/, 'o cálculo defensivo do bot deve limitar movimentos simulados');
