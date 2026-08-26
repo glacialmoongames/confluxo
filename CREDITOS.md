@@ -47,7 +47,8 @@ As ilustrações de cartas e peões foram obtidas do repositório oficial [Game-
 | Devoto Abissal | `cultist` | Lorc |
 | Corvo da floresta Abissal | `raven` | Lorc |
 | Amalgama Abissal | `tentacles-skull` | Lorc |
-| Ser Abissal: Repugnium e símbolo de Terror Abissal | `evil-eyes` | Skoll |
+| Ser Abissal: Repugnium | `haunting` | Lorc |
+| Símbolo de Terror Abissal e Abismo do Terror | `evil-eyes` | Skoll |
 | Ser Abissal: Anssiedium | `sinking-trap` | Lorc |
 | Eu vejo os olhos | `all-seeing-eye` | Delapouite |
 | Revelar | `semi-closed-eye` | Lorc |

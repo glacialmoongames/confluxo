@@ -64,6 +64,11 @@
  .piece-equipment i{width:15px;height:15px;font-size:9px}.piece-equipment{gap:1px}
 }
 
+/* Alcance passivo do Repugnium: ameaça Abissal permanente em campo. */
+@keyframes repugnium-range-pulse{0%,100%{opacity:.68}50%{opacity:1}}
+.cell.repugnium-range::after{background:radial-gradient(circle,#761f4b2e 20%,#2b071b72 100%);box-shadow:inset 0 0 0 2px #d64d8faa,inset 0 0 14px #8f164ec7;animation:repugnium-range-pulse 1.8s ease-in-out infinite}.cell.repugnium-range .piece{filter:drop-shadow(0 0 7px #ef5ca4)}.cell.babel-range.repugnium-range::after{background:linear-gradient(135deg,#10091f8a,#64163f70);box-shadow:inset 0 0 0 2px #a74086cc,inset 0 0 14px #000c}
+@media(prefers-reduced-motion:reduce){.cell.repugnium-range::after{animation:none;opacity:.86}}
+
 /* Detalhes próximos ao tabuleiro, com ações na margem esquerda */
 .game-layout{grid-template-columns:142px 220px minmax(300px,1fr) 220px}
 .action-panel{display:flex;flex-direction:column;min-height:0;overflow:hidden}.action-panel .side-controls{grid-template-columns:1fr}.action-panel .side-controls .controls-title{grid-column:1}.action-panel .side-controls .action{min-height:48px;flex-direction:row;justify-content:flex-start;gap:7px;padding:7px 9px;text-align:left}.action-panel .side-controls .action>span{width:20px;font-size:18px}.action-panel .side-controls .action b{font-size:9px}.action-panel .side-controls .end-turn{grid-column:1;margin:5px;padding:9px 5px}.action-panel .compact-piles{grid-template-columns:1fr}.details-panel .card-details{flex:1;border-bottom:0}

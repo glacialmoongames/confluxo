@@ -5,6 +5,7 @@ process.chdir(__dirname);
 const expansion = fs.readFileSync('engine-expansion.js', 'utf8');
 const runtime = fs.readFileSync('engine-expansion-runtime.js', 'utf8');
 const ui = fs.readFileSync('engine-ui.js', 'utf8');
+const actionsA = fs.readFileSync('engine-actions-a.js', 'utf8');
 const page = fs.readFileSync('index.html', 'utf8');
 const styles = fs.readFileSync('styles-game.css', 'utf8') + fs.readFileSync('styles-responsive.css', 'utf8');
 
@@ -21,18 +22,24 @@ assert.match(ui, /beginMonkeyDestination/);
 assert.match(ui, /grantImpolutoPower/);
 assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
-assert.match(page, /engine-expansion\.js\?v=2/);
-assert.match(page, /VERSÃO 92/);
+assert.match(page, /engine-expansion\.js\?v=3/);
+assert.match(page, /VERSÃO 93/);
 for (const exactName of ['Criatura Abissal','Devoto Abissal','Corvo da floresta Abissal','Amalgama Abissal','Ser Abissal: Repugnium','Ser Abissal: Anssiedium','Não há escapatoria','Eu vejo os olhos']) {
   assert.ok(expansion.includes(`name:'${exactName}'`), `nome Abissal alterado: ${exactName}`);
 }
 assert.match(expansion, /\['archer','horse','babel','terror','atra'\]\.includes\(key\)\?'black':'white'/);
+assert.match(expansion, /repugnium:'haunting'/);
+assert.doesNotMatch(expansion, /repugnium:'evil-eyes'/);
+const iconMaps = [...expansion.matchAll(/const (?:card|effect)Icons=\{([^}]+)\}/g)].flatMap(match => [...match[1].matchAll(/:'([^']+)'/g)].map(icon => icon[1]));
+assert.equal(new Set(iconMaps).size, iconMaps.length, 'cada carta deve ter um ícone exclusivo');
+assert.match(actionsA, /repugnium-range/);
+assert.match(styles, /\.cell\.repugnium-range::after/);
 assert.match(styles, /\.art-crop\.tone-black\{background:linear-gradient/);
 assert.match(styles, /\.peace-banner/);
 assert.match(styles, /data-arena=blackRoses/);
 assert.match(styles, /\.rules-hero/);
 
-for (const icon of ['empty-chessboard','forest','orbit','evil-eyes','rose','peace-dove']) {
+for (const icon of ['empty-chessboard','forest','orbit','evil-eyes','haunting','rose','peace-dove']) {
   assert.ok(fs.existsSync(`assets/icons/${icon}.svg`), `ícone ausente: ${icon}`);
 }
 
