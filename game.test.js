@@ -347,10 +347,10 @@ assert.match(source, /if\(retreatObstacle\)state\.obstacles=state\.obstacles\.fi
 assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
-assert.match(page, /engine-celestial\.js\?v=4/);
-assert.match(page, /VERSÃO 101/);
+assert.match(page, /engine-celestial\.js\?v=5/);
+assert.match(page, /VERSÃO 102/);
 assert.match(page, /engine-ui\.js\?v=20/);
-assert.match(page, /engine-core\.js\?v=13/);
+assert.match(page, /engine-core\.js\?v=14/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
 assert.match(page, /engine-actions-a\.js\?v=14/);
 assert.match(page, /engine-actions-b\.js\?v=8/);

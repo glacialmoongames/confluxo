@@ -5,6 +5,7 @@ process.chdir(__dirname);
 
 const context = {
   ROWS: 8,
+  COLS: 6,
   state: {turn: 3, current: 1, arena: null, players: {1: {name: 'D1', hand: [], pawnDeck: [], units: [], attackLocked: false, attackedThisTurn: false, neptuneAbilityTurn: 0, lastLosses: 0}, 2: {name: 'D2', hand: [], pawnDeck: [], units: [], attackLocked: false, attackedThisTurn: false, neptuneAbilityTurn: 0, lastLosses: 0}}},
   defs: {},
   units: [],
@@ -21,6 +22,7 @@ const context = {
   inMovementRadius(unit, target) { return (unit.movement || []).some(([dr, dc]) => unit.row + dr === target.row && unit.col + dc === target.col); },
   at(r, c) { return globalThis.units.find(unit => unit.row === r && unit.col === c); },
   obstacleAt() { return null; },
+  featureAt() { return null; },
   pitAt() { return null; },
   fruitAt() { return null; },
   place(unit, r, c) { unit.row = r; unit.col = c; },
@@ -61,6 +63,13 @@ context.onUnitDeployed(saturn);
 assert.deepEqual(context.state.players[1].hand, ['asteroid', 'asteroid']);
 context.onUnitDeployed(saturn);
 assert.equal(context.state.players[1].hand.length, 2);
+const initialDevotee = {id: 'd0', kind: 'devotee', owner: 1};
+context.pendingCard = null;
+context.mode = null;
+context.onUnitDeployed(initialDevotee, true);
+assert.equal(context.pendingCard, null, 'Devoto inicial não pode abrir um Poço');
+context.onUnitDeployed(initialDevotee);
+assert.equal(context.pendingCard.key, 'devotee-pit', 'Devoto colocado da mão deve manter seu efeito');
 
 const protectedUnit = {name: 'Planeta', equipment: ['asteroid']};
 assert.equal(context.consumeAsteroidShield(protectedUnit), true);
