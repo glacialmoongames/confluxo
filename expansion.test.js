@@ -22,8 +22,8 @@ assert.match(ui, /beginMonkeyDestination/);
 assert.match(ui, /grantImpolutoPower/);
 assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
-assert.match(page, /engine-expansion\.js\?v=6/);
-assert.match(page, /VERSÃO 109/);
+assert.match(page, /engine-expansion\.js\?v=7/);
+assert.match(page, /VERSÃO 110/);
 assert.match(expansion, /Rosas Pálidas: quando um jogador perde um peão/);
 assert.match(expansion, /Rosas Negras: quando um jogador ganha pontos/);
 assert.match(expansion, /Cavaleiro da Casa Branca de Xadria: Justiça Alva/);
@@ -61,5 +61,8 @@ assert.match(styles, /\.rules-hero/);
 for (const icon of ['confluxo-favicon','empty-chessboard','flower-twirl','forest','orbit','evil-eyes','six-eyes','haunting','rose','peace-dove']) {
   assert.ok(fs.existsSync(`assets/icons/${icon}.svg`), `ícone ausente: ${icon}`);
 }
+assert.match(expansion, /rider:'caveman'/);
+assert.match(expansion, /jaguar:'feline'/);
+for (const icon of ['caveman','feline']) assert.ok(fs.existsSync(`assets/icons/${icon}.svg`), `ícone ausente: ${icon}`);
 
 console.log('Expansion tests passed.');

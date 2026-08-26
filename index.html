@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Confluxo — Jogo de Cartas Tático</title>
   <link rel="icon" type="image/svg+xml" href="assets/icons/confluxo-favicon.svg?v=1">
-  <link rel="stylesheet" href="styles-core.css?v=2">
+  <link rel="stylesheet" href="styles-core.css?v=3">
   <link rel="stylesheet" href="styles-game.css?v=8">
   <link rel="stylesheet" href="styles-responsive.css?v=14">
 </head>
 <body>
   <div id="setup" class="setup">
-    <span class="game-version">VERSÃO 109</span>
+    <span class="game-version">VERSÃO 110</span>
     <div class="setup-card">
       <span class="setup-mark"><img src="assets/icons/flower-twirl.svg" alt="Símbolo do Confluxo"></span>
       <small>DUELO DO CONFLUXO</small>
@@ -98,7 +98,7 @@
   </div>
 
   <header class="topbar">
-    <div class="brand"><span class="sigil"><img src="assets/icons/flower-twirl.svg" alt=""></span><div><b>CONFLUXO</b><small>Jogo de cartas tático</small></div></div>
+    <button id="home-brand" class="brand brand-button" type="button" aria-label="Voltar à tela inicial"><span class="sigil"><img src="assets/icons/flower-twirl.svg" alt=""></span><span><b>CONFLUXO</b><small>Jogo de cartas tático</small></span></button>
     <div class="turn-panel">
       <span id="turn-count">TURNO 1</span>
       <strong id="turn-name">DUELISTA 1</strong>
@@ -199,11 +199,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="network.js?v=35"></script>
   <script src="engine-core.js?v=18"></script>
-  <script src="engine-expansion.js?v=6"></script>
+  <script src="engine-expansion.js?v=7"></script>
   <script src="engine-celestial.js?v=7"></script>
   <script src="engine-actions-a.js?v=17"></script>
   <script src="engine-actions-b.js?v=11"></script>
   <script src="engine-expansion-runtime.js?v=1"></script>
-  <script src="engine-ui.js?v=25"></script>
+  <script src="engine-ui.js?v=26"></script>
 </body>
 </html>
