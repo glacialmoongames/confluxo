@@ -1,6 +1,7 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
+process.chdir(__dirname);
 
 const source = fs.readFileSync('network.js', 'utf8');
 

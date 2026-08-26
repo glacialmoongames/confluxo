@@ -1,6 +1,7 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
+process.chdir(__dirname);
 
 const context = {
   ROWS: 8,
@@ -49,7 +50,7 @@ assert.equal(context.remainsInsideVenusRadius(trapped, 3, 3), true);
 assert.equal(context.remainsInsideVenusRadius(trapped, 4, 2), false);
 const alliedVenus = {id: 'va', kind: 'venus', row: 2, col: 2, owner: 1, movement: [[1, 0]]};
 context.units = [alliedVenus, trapped];
-assert.equal(context.remainsInsideVenusRadius(trapped, 4, 2), true);
+assert.equal(context.remainsInsideVenusRadius(trapped, 4, 2), false, 'Vênus agora prende qualquer peão em seu raio, inclusive aliados');
 
 const uranus = {id: 'u', kind: 'uranus', row: 2, col: 2, owner: 2, movement: [[1, 0]]};
 context.units = [uranus, trapped];

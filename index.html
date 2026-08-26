@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Confluxo — Jogo de Cartas Tático</title>
   <link rel="stylesheet" href="styles-core.css?v=2">
-  <link rel="stylesheet" href="styles-game.css?v=6">
-  <link rel="stylesheet" href="styles-responsive.css?v=5">
+  <link rel="stylesheet" href="styles-game.css?v=7">
+  <link rel="stylesheet" href="styles-responsive.css?v=6">
 </head>
 <body>
   <div id="setup" class="setup">
-    <span class="game-version">VERSÃO 90</span>
+    <span class="game-version">VERSÃO 91</span>
     <div class="setup-card">
       <span class="setup-mark">✦</span>
       <small>DUELO DO CONFLUXO</small>
@@ -43,21 +43,23 @@
         <section>
           <b id="player-one-label">DUELISTA 1</b>
           <div class="choice-row" data-player="1">
-            <button class="deck-choice selected" data-deck="xadria"><span>◐</span><strong>Xadria</strong><small>Luz + Trevas</small></button>
-            <button class="deck-choice" data-deck="wild"><span>✿</span><strong>Selvagem</strong><small>Domínio natural</small></button>
-            <button class="deck-choice" data-deck="celestial"><span>✺</span><strong>Objeto Celeste</strong><small>Convergência astral</small></button>
+            <button class="deck-choice selected" data-deck="xadria"><img src="assets/icons/empty-chessboard.svg" alt=""><strong>Xadria</strong><small>Luz + Trevas</small></button>
+            <button class="deck-choice" data-deck="wild"><img src="assets/icons/forest.svg" alt=""><strong>Selvagem</strong><small>Domínio natural</small></button>
+            <button class="deck-choice" data-deck="celestial"><img src="assets/icons/orbit.svg" alt=""><strong>Objeto Celeste</strong><small>Convergência astral</small></button>
+            <button class="deck-choice" data-deck="abyss"><img src="assets/icons/evil-eyes.svg" alt=""><strong>Abissal</strong><small>Terror profundo</small></button>
           </div>
         </section>
         <section>
           <b id="player-two-label">DUELISTA 2</b>
           <div class="choice-row" data-player="2">
-            <button class="deck-choice" data-deck="xadria"><span>◐</span><strong>Xadria</strong><small>Luz + Trevas</small></button>
-            <button class="deck-choice selected" data-deck="wild"><span>✿</span><strong>Selvagem</strong><small>Domínio natural</small></button>
-            <button class="deck-choice" data-deck="celestial"><span>✺</span><strong>Objeto Celeste</strong><small>Convergência astral</small></button>
+            <button class="deck-choice" data-deck="xadria"><img src="assets/icons/empty-chessboard.svg" alt=""><strong>Xadria</strong><small>Luz + Trevas</small></button>
+            <button class="deck-choice selected" data-deck="wild"><img src="assets/icons/forest.svg" alt=""><strong>Selvagem</strong><small>Domínio natural</small></button>
+            <button class="deck-choice" data-deck="celestial"><img src="assets/icons/orbit.svg" alt=""><strong>Objeto Celeste</strong><small>Convergência astral</small></button>
+            <button class="deck-choice" data-deck="abyss"><img src="assets/icons/evil-eyes.svg" alt=""><strong>Abissal</strong><small>Terror profundo</small></button>
           </div>
         </section>
       </div>
-      <button id="start-game" class="primary">INICIAR DUELO LOCAL</button>
+      <div class="setup-actions"><button id="setup-rules-btn" class="secondary">COMO JOGAR</button><button id="start-game" class="primary">INICIAR DUELO LOCAL</button></div>
     </div>
   </div>
   <div id="turn-draw" class="turn-draw hidden">
@@ -121,7 +123,7 @@
         <div class="side-controls">
           <div class="panel-title controls-title">AÇÕES</div>
           <button id="flip" class="action"><span>◐</span><div><b>Virar</b><small>uma vez por turno</small></div></button>
-          <button id="ability" class="action"><span>✥</span><div><b>Habilidade</b><small>efeito do selecionado</small></div></button>
+          <button id="ability" class="action hidden" aria-hidden="true" tabindex="-1"><span>✥</span><div><b>Habilidade</b></div></button>
           <button id="end-turn" class="primary end-turn">ENCERRAR TURNO <span>→</span></button>
         </div>
         <div class="deck-shelf compact-piles">
@@ -143,6 +145,7 @@
       </aside>
 
       <section class="board-wrap">
+        <div id="peace-banner" class="peace-banner" aria-live="polite"><img src="assets/icons/peace-dove.svg" alt=""><span><b>TRATADO DE PAZ</b><small>Ataques temporariamente suspensos</small></span></div>
         <div id="board" class="board" aria-label="Tabuleiro 6 por 8"></div>
         <div id="hint" class="hint">Selecione um peão para ver seus detalhes.</div>
       </section>
@@ -174,15 +177,16 @@
 
   <dialog id="rules-dialog">
     <button class="dialog-close" aria-label="Fechar">×</button>
-    <h2>Regras do Duelo</h2>
+    <div class="rules-hero"><img src="assets/icons/empty-chessboard.svg" alt=""><div><small>GUIA VISUAL</small><h2>Como jogar Confluxo</h2><p>Compre, posicione e combine seus peões para dominar a Arena.</p></div></div>
     <div class="rules-grid">
-      <section><h3>Objetivo</h3><p>Destrua peões para alcançar <span id="rules-goal">10</span> pontos. Um Peão Combinado vale o número de materiais usados para criá-lo.</p></section>
-      <section><h3>Turno</h3><p>Na rodada 1, nenhum jogador compra. A partir da rodada 2, comece escolhendo obrigatoriamente entre Peões e Efeitos.</p></section>
-      <section><h3>Peões</h3><p>Cada peão possui um alcance próprio, exibido em sua carta. Clique nele para destacar no tabuleiro somente as casas permitidas.</p></section>
-      <section><h3>Combate</h3><p>Selecione seu peão e clique no ícone ⚔ sobre um adversário ao alcance. Cada peão pode iniciar um ataque por turno. Peões virados para baixo não podem atacar nem participar de ataques conjuntos. Maior ATK vence. Em um empate, todos os atacantes que somaram ATK e o defensor são destruídos. Peão oculto é revelado e cancela o combate.</p></section>
-      <section><h3>Combinar</h3><p>Com o Peão Combinado na mão, clique nele e depois selecione no campo os materiais exigidos que estejam em contato. Com Projetar Astros, materiais no raio também se conectam.</p></section>
-      <section><h3>Objeto Celeste</h3><p>Reúna Mercúrio, Vênus, Terra, Marte, Júpiter, Saturno, Urano e Netuno para criar o SOL e vencer imediatamente.</p></section>
-      <section><h3>Efeitos e Arena</h3><p>Clique em uma carta ou no Slot de Arena para ler seu efeito no painel de detalhes. A Arena vale para ambos os lados.</p></section>
+      <section><div class="rule-picture draw"><span>⬢</span><b>OU</b><span>✦</span></div><h3>1 · Compre</h3><p>Na primeira rodada ninguém compra. Depois, cada turno começa escolhendo uma carta de <b>Peão</b> ou de <b>Efeito</b>.</p></section>
+      <section><div class="rule-picture deploy"><i></i><i class="unit"></i></div><h3>2 · Posicione</h3><p>Clique no peão em sua mão e depois numa casa destacada do seu polo. Não há limite de peões em campo.</p></section>
+      <section><div class="rule-picture move"><i class="origin"></i><i class="arrow">→</i><i class="target"></i></div><h3>3 · Mova</h3><p>Cada carta mostra seu alcance. Selecione o peão e clique numa das casas iluminadas.</p></section>
+      <section><div class="rule-picture fight"><b>250</b><span>⚔</span><b>200</b></div><h3>4 · Ataque</h3><p>Clique no símbolo de ataque sobre um inimigo. Maior ATK vence; no empate, defensor e todos os atacantes participantes são destruídos.</p></section>
+      <section><div class="rule-picture combine"><span>●</span><span>＋</span><span>●</span><b>✦</b></div><h3>5 · Combine</h3><p>Tenha o Peão Combinado na mão e selecione os materiais indicados em contato. A carta mostra exatamente quais faltam.</p></section>
+      <section><div class="rule-picture hidden-piece"><img src="assets/icons/forest.svg" alt=""></div><h3>Peões virados</h3><p>Use <b>Virar</b> para esconder um peão. Ele não move, ataca nem participa de ataque conjunto; o primeiro ataque apenas o revela.</p></section>
+      <section><div class="rule-picture arena-rule"><img src="assets/icons/rose.svg" alt=""></div><h3>Efeitos e Arena</h3><p>Leia e ative habilidades nos detalhes da carta. A carta de Arena ocupa o slot global e afeta os dois lados.</p></section>
+      <section><div class="rule-picture victory"><span>♛</span><b id="rules-goal">10</b></div><h3>Vitória</h3><p>Destrua peões até atingir a meta escolhida. Um Peão Combinado vale a quantidade de materiais usados.</p></section>
     </div>
   </dialog>
 
@@ -192,10 +196,12 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="network.js?v=34"></script>
-  <script src="engine-core.js?v=11"></script>
-  <script src="engine-celestial.js?v=3"></script>
-  <script src="engine-actions-a.js?v=10"></script>
-  <script src="engine-actions-b.js?v=7"></script>
-  <script src="engine-ui.js?v=17"></script>
+  <script src="engine-core.js?v=12"></script>
+  <script src="engine-expansion.js?v=1"></script>
+  <script src="engine-celestial.js?v=4"></script>
+  <script src="engine-actions-a.js?v=11"></script>
+  <script src="engine-actions-b.js?v=8"></script>
+  <script src="engine-expansion-runtime.js?v=1"></script>
+  <script src="engine-ui.js?v=18"></script>
 </body>
 </html>

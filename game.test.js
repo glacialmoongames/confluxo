@@ -1,6 +1,7 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
+process.chdir(__dirname);
 
 const source = ['engine-core.js', 'engine-celestial.js', 'engine-actions-a.js', 'engine-actions-b.js', 'engine-ui.js'].map(file => fs.readFileSync(file, 'utf8')).join('\n');
 const page = fs.readFileSync('index.html', 'utf8');
@@ -281,16 +282,16 @@ assert.match(source, /if\(retreatObstacle\)state\.obstacles=state\.obstacles\.fi
 assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
-assert.match(page, /engine-celestial\.js\?v=3/);
-assert.match(page, /VERSÃO 90/);
-assert.match(page, /engine-ui\.js\?v=17/);
-assert.match(page, /engine-core\.js\?v=11/);
+assert.match(page, /engine-celestial\.js\?v=4/);
+assert.match(page, /VERSÃO 91/);
+assert.match(page, /engine-ui\.js\?v=18/);
+assert.match(page, /engine-core\.js\?v=12/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
-assert.match(page, /engine-actions-a\.js\?v=10/);
-assert.match(page, /engine-actions-b\.js\?v=7/);
-assert.match(page, /styles-responsive\.css\?v=5/);
+assert.match(page, /engine-actions-a\.js\?v=11/);
+assert.match(page, /engine-actions-b\.js\?v=8/);
+assert.match(page, /styles-responsive\.css\?v=6/);
 assert.match(page, /network\.js\?v=34/);
-assert.match(page, /styles-game\.css\?v=6/);
+assert.match(page, /styles-game\.css\?v=7/);
 assert.match(page, /id="mode-bots"/);
 assert.match(page, /BOT CONTRA BOT/);
 assert.match(source, /function botControls\(player\)/);
