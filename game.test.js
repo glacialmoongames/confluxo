@@ -402,9 +402,11 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=7/);
-assert.match(page, /VERSÃO 110/);
+assert.match(page, /VERSÃO 111/);
 assert.match(page, /network\.js\?v=35/);
-assert.match(page, /engine-ui\.js\?v=26/);
+assert.match(page, /engine-ui\.js\?v=27/);
+assert.match(source, /state\.arena=xadriaPair\.has\(previous\)&&xadriaPair\.has\(key\)&&previous!==key\?'kingdom':key/);
+assert.match(source, /state\.arena==='kingdom'&&xadriaPair\.has\(k\)/);
 assert.match(page, /styles-core\.css\?v=3/);
 assert.match(page, /id="home-brand"/);
 assert.match(source, /\$\('#home-brand'\)\.onclick=/);
@@ -470,6 +472,24 @@ assert.match(source, /function botUsePushEffect\(player,p,requirePit=false\)/);
 assert.match(source, /function botUseRetreatEffect\(player,p\)/);
 assert.match(source, /function botUseCamouflageEffect\(player,p\)/);
 assert.match(source, /played<2&&botPlayEffect\(\)/);
+const arenaBotContext = {
+  state: {arena: 'roses', defeatedCount: 0, players: {1: {units: []}, 2: {name: 'Bot', hand: ['blackRoses'], units: []}}},
+  effects: {roses: {name: 'Campo das Rosas Pálidas', type: 'ARENA'}, blackRoses: {name: 'Colina das Rosas Negras', type: 'ARENA'}, kingdom: {name: 'Reino de Xadria', type: 'ARENA'}},
+  botActor: () => 2, botOpponent: () => 1,
+  botUsePushEffect: () => false, botUseCastleEffect: () => false, botUsePitEffect: () => false,
+  botUseRetreatEffect: () => false, botUseCamouflageEffect: () => false,
+  clearJungleFeatures() {}, allUnits: () => [], destroy() {}, render() {}, log() {},
+  equipmentTargetAllowed: () => false, effectiveAtk: () => 0, copyEquipmentForRavens() {},
+  botAttackChoices: () => [], playerAttackedThisTurn: () => false, playPeaceTreaty: () => false
+};
+vm.createContext(arenaBotContext);
+vm.runInContext(source.match(/function botPlayEffect\(\)\{[\s\S]*?\n\}/)[0], arenaBotContext);
+assert.equal(arenaBotContext.botPlayEffect(), true);
+assert.equal(arenaBotContext.state.arena, 'kingdom', 'o bot deve convergir as duas Arenas de Xadria');
+assert.deepEqual(arenaBotContext.state.players[2].hand, []);
+arenaBotContext.state.players[2].hand = ['roses'];
+assert.equal(arenaBotContext.botPlayEffect(), false, 'o bot não deve gastar outra Arena de Xadria enquanto o Reino estiver ativo');
+assert.deepEqual(arenaBotContext.state.players[2].hand, ['roses']);
 assert.match(source, /function botMatchupScore\(/);
 assert.match(source, /function botProjectedEnemyRisk\(defender\)/);
 assert.match(source, /moveTargets\(mover\)\.filter\(target=>!pitAt/);
