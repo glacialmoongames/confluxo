@@ -32,7 +32,7 @@ Object.assign(defs.neptune,{activated:true,abilityLabel:'EMPURRAR PEÃO'});
 Object.assign(effects,{
  crown:{name:'Coroa da Herdeira',type:'EQUIPAMENTO',icon:'♛',equipOnly:'infantry',text:'Equipe somente à Infantaria. Ao chegar à última fileira inimiga, ela se transforma em Atra.'},
  blackRoses:{name:'Colina das Rosas Negras',type:'ARENA',icon:'❦',text:'Sempre que um jogador ganha pontos, compra uma carta aleatória entre as pilhas de Peões e Efeitos.'},
- kingdom:{name:'Reino de Xadria',type:'ARENA',icon:'▦',undrawable:true,text:'Surge quando Campo das Rosas Pálidas e Colina das Rosas Negras se encontram. Une os efeitos das duas Arenas.'},
+ kingdom:{name:'Reino de Xadria',type:'ARENA',icon:'▦',undrawable:true,text:'Surge quando Campo das Rosas Pálidas e Colina das Rosas Negras se encontram e mantém os dois efeitos para ambos os jogadores. Rosas Pálidas: quando um jogador perde um peão, esse jogador compra 1 carta aleatória entre Peões e Efeitos. Rosas Negras: quando um jogador ganha pontos, esse jogador compra 1 carta aleatória entre Peões e Efeitos para cada ponto recebido.'},
  tunnel:{name:'Cavar Túnel',type:'UTILIDADE',icon:'◒',text:'Coloque duas entradas em casas livres e conectadas. Um peão que pisa em uma entrada sai pela outra.'},
  blackHole:{name:'Buraco Negro',type:'UTILIDADE',icon:'●',text:'Coloque-o em uma casa livre. No começo do próximo turno, todos os peões adjacentes são destruídos.'},
  moon:{name:'Lua em Órbita',type:'EQUIPAMENTO',icon:'☾',equipOnly:'earth',text:'Equipe somente à Terra: triplica seu raio e concede 100 ATK.'},

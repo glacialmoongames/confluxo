@@ -140,3 +140,6 @@
 
 /* Identidade visual principal do Confluxo. */
 .setup-mark img,.brand .sigil img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 8px #d9b96f88)}.setup-mark{width:44px;height:44px;margin:0 auto 4px;padding:7px;border-radius:50%;background:#4b3455}.brand .sigil{width:34px;height:34px;padding:5px;border-radius:50%;background:#4b3455;flex:0 0 auto}.rules-hero>img{background:#4b3455;filter:drop-shadow(0 0 7px #d9b96f66)}
+
+/* Identidade única para peões Xadria que unem LUZ e TREVAS. */
+.art-crop.dual-xadria-art{background:radial-gradient(circle at 35% 25%,#9d6ab3,#5a316d 58%,#2c1738)!important;box-shadow:inset 0 0 0 2px #c995dd66,inset 0 0 14px #1b0b24}.piece .dual-xadria-art{border-radius:5px}.reserve-piece:has(.dual-xadria-art){background:#4d285f;border-color:#d3a7df;box-shadow:0 0 9px #9c56b877}.unit-card:has(.dual-xadria-art){box-shadow:inset 0 0 0 4px #8d5aa277}
