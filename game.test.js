@@ -247,6 +247,32 @@ const babelPlan = {fusion: 2, materials: {kinds: ['tower', 'infantry']}};
 const fusionPlayer = {reserve: [babelPlan]};
 assert.equal(fusionPlanningContext.botFusionCoverage(babelPlan, fusionPlayer), 1);
 assert.equal(fusionPlanningContext.botFusionMissingCount(fusionPlayer), 1);
+const normalA = {id: 'normal-a', fusion: 0, equipment: []}, normalB = {id: 'normal-b', fusion: 0, equipment: []}, alreadyCombined = {id: 'combined', fusion: 2, equipment: []};
+const botFusionCard = {id: 'new-fusion', fusion: 2, atk: 400};
+let botFusionParts = null, allowWinningException = false;
+const protectedFusionContext = {
+  state: {players: {1: {archetype: 'wild', reserve: [botFusionCard], units: [normalA, normalB, alreadyCombined]}}},
+  selected: null,
+  botActor: () => 1,
+  fusionMaterialFits: () => true,
+  validFusionSet: () => true,
+  effectiveAtk: unit => unit.fusion ? 800 : 100,
+  botStrategicPowerValue: attack => attack,
+  hasEffect: () => false,
+  botCombinationWinsNow: () => allowWinningException,
+  completeFusion: (_card, parts) => { botFusionParts = parts; }
+};
+vm.createContext(protectedFusionContext);
+vm.runInContext(source.match(/function combinationsOf\([^\n]+/)[0], protectedFusionContext);
+vm.runInContext(source.match(/function botCombinePawn\([^\n]+/)[0], protectedFusionContext);
+assert.equal(protectedFusionContext.botCombinePawn(), true);
+assert.ok(botFusionParts.every(part => !part.fusion), 'o bot deve preservar peões já combinados quando houver materiais normais');
+protectedFusionContext.state.players[1].units = [normalA, alreadyCombined];
+botFusionParts = null;
+assert.equal(protectedFusionContext.botCombinePawn(), false, 'o bot não deve consumir um combinado sem vitória imediata');
+allowWinningException = true;
+assert.equal(protectedFusionContext.botCombinePawn(), true, 'o bot pode consumir um combinado quando isso garante a vitória');
+assert.ok(botFusionParts.some(part => part.fusion));
 const amalgamCard = {id: 'amalgam-card', fusion: 2, variableFusion: true, materials: {archetype: 'abyss'}};
 const devotee = {id: 'devotee', kind: 'devotee', owner: 1, row: 2, col: 2, archetype: 'abyss'};
 const abyssAlly = {id: 'abyss-ally', kind: 'creature', owner: 1, row: 2, col: 1, archetype: 'abyss'};
@@ -402,9 +428,12 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=7/);
-assert.match(page, /VERSÃO 111/);
+assert.match(page, /VERSÃO 112/);
 assert.match(page, /network\.js\?v=35/);
-assert.match(page, /engine-ui\.js\?v=27/);
+assert.match(page, /engine-ui\.js\?v=28/);
+assert.match(source, /function botCombinationWinsNow/);
+assert.match(source, /usesCombined:parts\.some\(u=>u\.fusion\)/);
+assert.match(source, /normalOptions\.length\?normalOptions:winningExceptions/);
 assert.match(source, /state\.arena=xadriaPair\.has\(previous\)&&xadriaPair\.has\(key\)&&previous!==key\?'kingdom':key/);
 assert.match(source, /state\.arena==='kingdom'&&xadriaPair\.has\(k\)/);
 assert.match(page, /styles-core\.css\?v=3/);
