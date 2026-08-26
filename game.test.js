@@ -193,6 +193,41 @@ const babelPlan = {fusion: 2, materials: {kinds: ['tower', 'infantry']}};
 const fusionPlayer = {reserve: [babelPlan]};
 assert.equal(fusionPlanningContext.botFusionCoverage(babelPlan, fusionPlayer), 1);
 assert.equal(fusionPlanningContext.botFusionMissingCount(fusionPlayer), 1);
+const amalgamCard = {id: 'amalgam-card', fusion: 2, variableFusion: true, materials: {archetype: 'abyss'}};
+const devotee = {id: 'devotee', kind: 'devotee', owner: 1, row: 2, col: 2, archetype: 'abyss'};
+const abyssAlly = {id: 'abyss-ally', kind: 'creature', owner: 1, row: 2, col: 1, archetype: 'abyss'};
+const enemy = {id: 'enemy', kind: 'soldier', owner: 2, row: 2, col: 3, archetype: 'xadria'};
+let completedAmalgamParts = null;
+const amalgamContext = {
+  state: {animating: false, current: 1, players: {1: {units: [devotee, abyssAlly]}, 2: {units: [enemy]}}},
+  selected: amalgamCard,
+  mode: 'combinar',
+  fusionMaterials: [],
+  targets: [],
+  allUnits: () => [devotee, abyssAlly, enemy],
+  hasEffect: (unit, kind) => unit.kind === kind,
+  adjacent: (a, b) => Math.abs(a.row - b.row) + Math.abs(a.col - b.col) === 1,
+  fusionLinked: (a, b) => Math.abs(a.row - b.row) + Math.abs(a.col - b.col) === 1,
+  fusionSetConnected: () => true,
+  archetypeOfUnit: unit => unit.archetype,
+  renderBoard: () => {},
+  hint: () => {},
+  completeFusion: (_card, parts) => { completedAmalgamParts = parts; }
+};
+vm.createContext(amalgamContext);
+for (const name of ['fusionMaterialFits', 'fusionTargets', 'validFusionSet', 'toggleFusionMaterial']) {
+  vm.runInContext(source.match(new RegExp(`function ${name}\\([^\\n]+`))[0], amalgamContext);
+}
+assert.equal(amalgamContext.fusionMaterialFits(amalgamCard, enemy), true, 'inimigo de qualquer arquétipo tocando o Devoto deve ser material válido');
+assert.ok(amalgamContext.fusionTargets(amalgamCard).some(target => target.r === enemy.row && target.c === enemy.col));
+amalgamContext.toggleFusionMaterial(devotee);
+amalgamContext.toggleFusionMaterial(abyssAlly);
+assert.equal(completedAmalgamParts, null, 'a Amálgama não deve combinar automaticamente ao selecionar o mínimo de dois materiais');
+amalgamContext.toggleFusionMaterial(enemy);
+assert.equal(completedAmalgamParts, null, 'materiais adicionais devem continuar selecionáveis antes da confirmação');
+vm.runInContext(source.match(/function selectPawnFromHand\([^\n]+/)[0], amalgamContext);
+amalgamContext.selectPawnFromHand(amalgamCard);
+assert.equal(JSON.stringify(completedAmalgamParts.map(part => part.id)), JSON.stringify(['devotee', 'abyss-ally', 'enemy']));
 const pitPlayer = {name: 'Bot 1', hand: ['pit'], units: []};
 const pitState = {pits: [], players: {1: pitPlayer, 2: {units: [{row: 3, col: 2, faceDown: false}]}}};
 const pitContext = {
@@ -313,11 +348,11 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=4/);
-assert.match(page, /VERSÃO 100/);
-assert.match(page, /engine-ui\.js\?v=19/);
+assert.match(page, /VERSÃO 101/);
+assert.match(page, /engine-ui\.js\?v=20/);
 assert.match(page, /engine-core\.js\?v=13/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
-assert.match(page, /engine-actions-a\.js\?v=13/);
+assert.match(page, /engine-actions-a\.js\?v=14/);
 assert.match(page, /engine-actions-b\.js\?v=8/);
 assert.match(page, /styles-responsive\.css\?v=13/);
 assert.match(styles, /\.board\[data-arena\] \.cell\.valid::before/);
