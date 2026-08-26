@@ -90,7 +90,7 @@
 @media(max-width:760px){.game-version{right:8px;bottom:6px;font-size:7px}}
 
 /* Bordas de propriedade em todas as partidas */
-.board .piece.p1{border:3px solid #ffd66f!important;box-shadow:inset 0 0 0 1px #6a4900,0 0 10px #ffc94f99}.board .piece.p2{border:3px dashed #c0a3ff!important;box-shadow:inset 0 0 0 1px #3d2276,0 0 10px #9f79ff99}
+.board .piece.p1{border:3px solid #ffd66f!important;box-shadow:inset 0 0 0 1px #6a4900,0 0 10px #ffc94f99}.board .piece.p2{border:3px solid #c0a3ff!important;box-shadow:inset 0 0 0 1px #3d2276,0 0 10px #9f79ff99}
 @media(max-width:760px){.board .piece.p1,.board .piece.p2{border-width:2px!important}}
 
 /* Ataque contextual e controles sem botão redundante */
