@@ -29,6 +29,10 @@ assert.match(context.artVisual({...context.defs.horse, kind: 'horse', iconTone: 
 assert.match(context.artVisual({...context.defs.infantry, kind: 'infantry', iconTone: 'white'}), /dual-xadria-art/);
 assert.deepEqual(Array.from(context.defs.babel.materials.kinds), ['tower', 'infantry']);
 assert.equal(context.defs.justice.materials.type, 'LUZ');
+assert.equal(context.defs.justice.name, 'Cavaleiro da Casa Branca de Xadria: Justiça Alva');
+assert.equal(context.defs.justice.atk, 350);
+assert.equal(context.defs.justice.movement.length, 14);
+assert.match(context.defs.justice.text, /1 ataque por turno e ganha mais 1 ataque para cada peão aliado derrotado/i);
 assert.equal(context.defs.serpent.materials.type, 'NATURAL');
 assert.equal(context.defs.golem.materials.type, 'NATURAL');
 assert.equal(context.defs.duck.name, 'Ave Eterna do Reino Xadria');
@@ -160,6 +164,30 @@ vm.runInContext(source.match(/function botCanMoveUnit\([^\n]+/)[0], botMoveConte
 assert.equal(botMoveContext.botCanMoveUnit({kind: 'duck'}), true);
 assert.equal(botMoveContext.botCanMoveUnit({kind: 'duck', movedTurn: 4}), false);
 assert.equal(botMoveContext.botCanMoveUnit({kind: 'infantry'}), true);
+const justiceAttackContext = {
+  state: {turn: 7, players: {1: {lastLosses: 2}}},
+  hasEffect: (unit, kind) => unit.kind === kind
+};
+vm.createContext(justiceAttackContext);
+for (const name of ['attackLimit', 'attacksUsedThisTurn', 'canUnitAttack', 'recordAttack']) {
+  vm.runInContext(source.match(new RegExp(`function ${name}\\([^\\n]+`))[0], justiceAttackContext);
+}
+const justiceUnit = {kind: 'justice', owner: 1};
+assert.equal(justiceAttackContext.attackLimit(justiceUnit), 3);
+assert.equal(justiceAttackContext.canUnitAttack(justiceUnit), true);
+justiceAttackContext.recordAttack(justiceUnit);
+assert.equal(justiceAttackContext.canUnitAttack(justiceUnit), true, 'Justiça deve poder atacar novamente após a primeira perda aliada');
+justiceAttackContext.recordAttack(justiceUnit);
+assert.equal(justiceAttackContext.canUnitAttack(justiceUnit), true, 'o ataque base continua somado aos ataques ganhos');
+justiceAttackContext.recordAttack(justiceUnit);
+assert.equal(justiceAttackContext.canUnitAttack(justiceUnit), false, 'Justiça deve parar após o ataque base e um extra por aliado derrotado');
+justiceAttackContext.state.players[1].lastLosses = 0;
+justiceAttackContext.state.turn = 8;
+assert.equal(justiceAttackContext.attackLimit(justiceUnit), 1, 'sem aliados derrotados, Justiça mantém um ataque');
+assert.equal(justiceAttackContext.canUnitAttack(justiceUnit), true);
+justiceAttackContext.recordAttack(justiceUnit);
+assert.equal(justiceAttackContext.canUnitAttack(justiceUnit), false);
+assert.equal(justiceAttackContext.attackLimit({kind: 'infantry', owner: 1}), 1, 'outros peões mantêm um ataque por turno');
 const botModeContext = {botMode: true, botVsBot: true, botPlayer: 2, state: {current: 1}};
 vm.createContext(botModeContext);
 for (const name of ['botControls', 'botActor', 'botOpponent']) {
@@ -374,12 +402,12 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=6/);
-assert.match(page, /VERSÃO 105/);
-assert.match(page, /engine-ui\.js\?v=22/);
-assert.match(page, /engine-core\.js\?v=16/);
+assert.match(page, /VERSÃO 106/);
+assert.match(page, /engine-ui\.js\?v=23/);
+assert.match(page, /engine-core\.js\?v=17/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
-assert.match(page, /engine-actions-a\.js\?v=15/);
-assert.match(page, /engine-actions-b\.js\?v=8/);
+assert.match(page, /engine-actions-a\.js\?v=16/);
+assert.match(page, /engine-actions-b\.js\?v=9/);
 assert.match(page, /styles-responsive\.css\?v=14/);
 assert.match(styles, /\.board\[data-arena\] \.cell\.valid::before/);
 assert.match(styles, /\.board\[data-arena\] \.cell\.target::before/);
@@ -446,7 +474,7 @@ assert.match(source, /function botChooseHide\(\)/);
 assert.match(source, /scheduleBot\(botRevealPhase/);
 assert.match(source, /scheduleBot\(attacked\?botAttackPhase:botHidePhase/);
 assert.match(source, /u\.attackedTurn===state\.turn\|\|u\.flippedTurn===state\.turn/);
-assert.match(source, /allies\.forEach\(u=>u\.attackedTurn=state\.turn\)/);
+assert.match(source, /allies\.filter\(u=>u\.id!==attacker\.id\)\.forEach\(recordAttack\)/);
 assert.match(source, /function botFusionMissingCount\(p\)/);
 assert.match(source, /function botFusionSetupScore\(p\)/);
 assert.match(source, /priority:botFusionMaterialPriority\(p,card\)/);

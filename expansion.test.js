@@ -22,10 +22,13 @@ assert.match(ui, /beginMonkeyDestination/);
 assert.match(ui, /grantImpolutoPower/);
 assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
-assert.match(page, /engine-expansion\.js\?v=4/);
-assert.match(page, /VERSÃO 105/);
+assert.match(page, /engine-expansion\.js\?v=5/);
+assert.match(page, /VERSÃO 106/);
 assert.match(expansion, /Rosas Pálidas: quando um jogador perde um peão/);
 assert.match(expansion, /Rosas Negras: quando um jogador ganha pontos/);
+assert.match(expansion, /Cavaleiro da Casa Branca de Xadria: Justiça Alva/);
+assert.match(expansion, /1 ataque por turno e ganha mais 1 ataque para cada peão aliado derrotado/);
+assert.doesNotMatch(expansion, /Justiça[^\n]+100 ATK/);
 for (const exactName of ['Criatura Abissal','Devoto Abissal','Corvo da floresta Abissal','Amalgama Abissal','Ser Abissal: Repugnium','Ser Abissal: Anssiedium','Não há escapatoria','Eu vejo os olhos']) {
   assert.ok(expansion.includes(`name:'${exactName}'`), `nome Abissal alterado: ${exactName}`);
 }

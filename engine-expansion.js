@@ -20,7 +20,7 @@ Object.assign(defs,{
 });
 
 Object.assign(defs.babel,{movement:[[-2,0],[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1],[2,0]],materials:{requirements:[{kind:'tower'},{type:'TREVAS'}]},text:'Inimigos nas casas de seu alcance de movimento têm o ATK reduzido à metade.'});
-Object.assign(defs.justice,{atk:350,movement:[[-2,-1],[-2,0],[-2,1],[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1],[2,-1],[2,0],[2,1]],text:'Ataca com mais 100 ATK para cada peão aliado derrotado no último turno.'});
+Object.assign(defs.justice,{name:'Cavaleiro da Casa Branca de Xadria: Justiça Alva',atk:350,movement:[[-2,-1],[-2,0],[-2,1],[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1],[2,-1],[2,0],[2,1]],text:'Começa com 1 ataque por turno e ganha mais 1 ataque para cada peão aliado derrotado no turno anterior.'});
 Object.assign(defs.serpent,{name:'Grande Serpente Selvagem',movement:[[-3,0],[-2,-1],[-1,0],[0,-1],[0,1],[1,0],[2,1],[3,0]],activated:true,abilityLabel:'CRIAR OBSTÁCULO',text:'Habilidade: cria um obstáculo NATURAL em qualquer casa livre, uma vez por turno.'});
 Object.assign(defs.golem,{types:['NATURAL','PEDRA']});
 Object.assign(defs.venus,{text:'Todo peão dentro de seu raio não pode se mover para fora dele.'});
