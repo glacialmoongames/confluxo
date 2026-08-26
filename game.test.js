@@ -430,9 +430,9 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=7/);
-assert.match(page, /VERSÃO 113/);
+assert.match(page, /VERSÃO 114/);
 assert.match(page, /network\.js\?v=35/);
-assert.match(page, /engine-ui\.js\?v=29/);
+assert.match(page, /engine-ui\.js\?v=30/);
 assert.match(source, /function botCombinationWinsNow/);
 assert.match(source, /usesCombined:parts\.some\(u=>u\.fusion\)/);
 assert.match(source, /normalOptions\.length\?normalOptions:winningExceptions/);
@@ -504,6 +504,22 @@ assert.match(styles, /board \.piece\.p2/);
 assert.doesNotMatch(styles, /content:"J1"/);
 assert.doesNotMatch(styles, /content:"J2"/);
 assert.match(source, /function botUsePitEffect\(player,p\)/);
+assert.match(source, /function botUseEyesEffect\(player,p\)/);
+assert.match(source, /state\.players\[botOpponent\(player\)\]\.units\.filter/);
+assert.match(source, /k!==['"]eyes['"]&&effects\[k\]\.type===['"]EQUIPAMENTO['"]/);
+const ownEyesTarget = {name: 'Devoto aliado', row: 6, fusion: 0, atk: 250, equipment: []};
+const enemyEyesTarget = {name: 'Peão adversário', row: 1, fusion: 2, atk: 400, equipment: []};
+const eyesBotContext = {
+  state: {players: {1: {name: 'Bot', hand: ['eyes'], units: [ownEyesTarget]}, 2: {units: [enemyEyesTarget]}}},
+  effects: {eyes: {name: 'Eu vejo os olhos'}}, botOpponent: () => 2,
+  moveTargets: () => [{r: 2, c: 2}], effectiveAtk: unit => unit.atk,
+  copyEquipmentForRavens() {}, log() {}, render() {}
+};
+vm.createContext(eyesBotContext);
+vm.runInContext(source.match(/function botUseEyesEffect\([^\n]+/)[0], eyesBotContext);
+assert.equal(eyesBotContext.botUseEyesEffect(1, eyesBotContext.state.players[1]), true);
+assert.deepEqual(ownEyesTarget.equipment, [], 'o bot não deve equipar Eu vejo os olhos em um peão próprio');
+assert.deepEqual(enemyEyesTarget.equipment, ['eyes'], 'o bot deve usar Eu vejo os olhos em um peão adversário');
 assert.match(source, /function botUsePushEffect\(player,p,requirePit=false\)/);
 assert.match(source, /function botUseRetreatEffect\(player,p\)/);
 assert.match(source, /function botUseCamouflageEffect\(player,p\)/);
@@ -512,7 +528,7 @@ const arenaBotContext = {
   state: {arena: 'roses', defeatedCount: 0, players: {1: {units: []}, 2: {name: 'Bot', hand: ['blackRoses'], units: []}}},
   effects: {roses: {name: 'Campo das Rosas Pálidas', type: 'ARENA'}, blackRoses: {name: 'Colina das Rosas Negras', type: 'ARENA'}, kingdom: {name: 'Reino de Xadria', type: 'ARENA'}},
   botActor: () => 2, botOpponent: () => 1,
-  botUsePushEffect: () => false, botUseCastleEffect: () => false, botUsePitEffect: () => false,
+  botUsePushEffect: () => false, botUseCastleEffect: () => false, botUsePitEffect: () => false, botUseEyesEffect: () => false,
   botUseRetreatEffect: () => false, botUseCamouflageEffect: () => false,
   clearJungleFeatures() {}, allUnits: () => [], destroy() {}, render() {}, log() {},
   equipmentTargetAllowed: () => false, effectiveAtk: () => 0, copyEquipmentForRavens() {},
