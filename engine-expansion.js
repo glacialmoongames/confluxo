@@ -23,7 +23,7 @@ Object.assign(defs.babel,{movement:[[-2,0],[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1
 Object.assign(defs.justice,{name:'Cavaleiro da Casa Branca de Xadria: Justiça Alva',atk:350,movement:[[-2,-1],[-2,0],[-2,1],[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1],[2,-1],[2,0],[2,1]],text:'Começa com 1 ataque por turno e ganha mais 1 ataque para cada peão aliado derrotado no turno anterior.'});
 Object.assign(defs.serpent,{name:'Grande Serpente Selvagem',movement:[[-3,0],[-2,-1],[-1,0],[0,-1],[0,1],[1,0],[2,1],[3,0]],activated:true,abilityLabel:'CRIAR OBSTÁCULO',text:'Habilidade: cria um obstáculo NATURAL em qualquer casa livre, uma vez por turno.'});
 Object.assign(defs.golem,{types:['NATURAL','PEDRA']});
-Object.assign(defs.venus,{text:'Todo peão dentro de seu raio não pode se mover para fora dele.'});
+Object.assign(defs.venus,{text:'Peões adversários dentro de seu raio não podem se mover para fora dele.'});
 Object.assign(defs.uranus,{text:'Peões inimigos dentro de seu raio não podem se mover nem atacar.'});
 Object.assign(defs.rider,{activated:true,abilityLabel:'MONTAR ALIADO'});
 Object.assign(defs.jester,{activated:true,abilityLabel:'COPIAR HABILIDADE'});
@@ -39,12 +39,12 @@ Object.assign(effects,{
  reveal:{name:'Revelar',type:'UTILIDADE',icon:'◉',text:'Escolha qualquer peão virado para baixo e revele-o.'},
  abyss:{name:'Abismo do Terror',type:'ARENA',icon:'◉',text:'Peões virados para baixo são destruídos. Ao destruir um peão, o responsável ganha 100 ATK e cria um Poço na casa da vítima.'},
  noEscape:{name:'Não há escapatoria',type:'UTILIDADE',icon:'↯',text:'Nenhum peão pode se mover durante o próximo turno do oponente.'},
- eyes:{name:'Eu vejo os olhos',type:'EQUIPAMENTO',icon:'◉',text:'O equipado ganha 400 ATK. Se puder se mover e terminar o turno sem mover, este equipamento é destruído.'}
+ eyes:{name:'Eu vejo os olhos',type:'EQUIPAMENTO',icon:'◉',text:'O equipado ganha 400 ATK. Se puder se mover e terminar o turno sem mover, o peão equipado é destruído.'}
 });
 Object.assign(effects.roses,{text:'Sempre que um jogador perde um peão, compra uma carta aleatória entre as pilhas de Peões e Efeitos.'});
 Object.assign(effects.bow,{name:'Arco Primitivo',text:'O equipado pode atacar peões nas casas do seu próprio alcance de movimento, sem precisar estar em contato.'});
 
-const cardIcons={infantry:'guards',tower:'white-tower',jester:'jester-hat',archer:'bowman',duck:'duck',horse:'horse-head',babel:'evil-tower',justice:'knight-banner',divinissimo:'chess-bishop',terror:'crowned-skull',atra:'chess-queen',impoluto:'chess-king',rabbit:'rabbit',rider:'mounted-knight',serpent:'cobra',hawk:'hawk-emblem',golem:'golem-head',monkey:'monkey',jaguar:'tiger-head',crocodile:'croc-jaws',creature:'monster-grasp',devotee:'cultist',raven:'raven',amalgam:'tentacles-skull',repugnium:'haunting',anssiedium:'sinking-trap'};
+const cardIcons={infantry:'guards',tower:'white-tower',jester:'jester-hat',archer:'bowman',duck:'duck',horse:'horse-head',babel:'evil-tower',justice:'mounted-knight',divinissimo:'chess-bishop',terror:'mounted-knight',atra:'chess-queen',impoluto:'chess-king',rabbit:'rabbit',rider:'mounted-knight',serpent:'cobra',hawk:'hawk-emblem',golem:'golem-head',monkey:'monkey',jaguar:'tiger-head',crocodile:'croc-jaws',creature:'monster-grasp',devotee:'cultist',raven:'raven',amalgam:'tentacles-skull',repugnium:'haunting',anssiedium:'sinking-trap'};
 Object.entries(cardIcons).forEach(([key,name])=>setCardIcon(defs[key],name,['archer','horse','babel','terror','atra'].includes(key)?'black':'white'));
 const effectIcons={retreat:'backward-time',castle:'castle',sword:'rune-sword',burn:'burning-embers',roses:'rose',blackRoses:'shut-rose',kingdom:'empty-chessboard',crown:'queen-crown',camouflage:'hood',jungle:'forest',bow:'bow-arrow',tunnel:'cave-entrance',pit:'hole',push:'push',asteroid:'asteroid',project:'orbit',peace:'peace-dove',blackHole:'black-hole-bolas',moon:'moon-orbit',reveal:'semi-closed-eye',abyss:'evil-eyes',noEscape:'fish-escape',eyes:'all-seeing-eye'};
 Object.entries(effectIcons).forEach(([key,name])=>setCardIcon(effects[key],name,['roses','kingdom','crown','moon','reveal'].includes(key)?'black':'white'));
@@ -56,7 +56,7 @@ archetypes.abyss={name:'Terror Abissal',emblem:'◉',emblemArt:icon('evil-eyes')
 
 function archetypeVisual(key,extra=''){let a=archetypes[key];return `<img class="archetype-icon ${extra}" src="${a.emblemArt}" alt="Símbolo ${a.name}">`}
 function archetypeOfUnit(u){return state?.players?.[u?.owner]?.archetype||Object.keys(archetypes).find(key=>[...archetypes[key].pawns,...archetypes[key].fusions].includes(u?.kind))||'xadria'}
-function makePawnDeck(owner,key){let arc=archetypes[key];if(arc.pawnComposition)return shuffle(arc.pawnComposition.map(kind=>unit(kind,owner)));let fusionSlots=Math.min(6,arc.fusions.length*2),commonSlots=18-fusionSlots,cards=Array.from({length:commonSlots},(_,i)=>unit(arc.pawns[i%arc.pawns.length],owner));for(let i=0;i<fusionSlots;i++)cards.push(unit(arc.fusions[i%arc.fusions.length],owner));return shuffle(cards)}
+function makePawnDeck(owner,key){let arc=archetypes[key];if(arc.pawnComposition)return shuffle([...arc.pawnComposition,...arc.pawnComposition].map(kind=>unit(kind,owner)));let fusionSlots=Math.min(12,arc.fusions.length*4),commonSlots=36-fusionSlots,cards=Array.from({length:commonSlots},(_,i)=>unit(arc.pawns[i%arc.pawns.length],owner));for(let i=0;i<fusionSlots;i++)cards.push(unit(arc.fusions[i%arc.fusions.length],owner));return shuffle(cards)}
 
 fusionRequirementVisual=function(card){
  if(!card?.fusion)return'';

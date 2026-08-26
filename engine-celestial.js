@@ -5,7 +5,7 @@ function fusionSetConnected(parts){if(!parts.length)return false;let seen=new Se
 function mercuryMovesThisTurn(u){return u.mercuryMoveTurn===state.turn?(u.mercuryMoves||0):0}
 function mercuryCanMoveAgain(u){return hasEffect(u,'mercury')&&allUnits().some(v=>v.id!==u.id&&v.row!==null&&inMovementRadius(v,u))}
 function uranusBlocking(u){if(state.players[u.owner]?.moveLocked)return{name:'Não Há Escapatória'};return allUnits().find(v=>v.owner!==u.owner&&(hasEffect(v,'uranus')||hasEffect(v,'repugnium'))&&inMovementRadius(v,u))}
-function remainsInsideVenusRadius(u,r,c){return allUnits().filter(v=>v.id!==u.id&&hasEffect(v,'venus')&&inMovementRadius(v,u)).every(v=>inMovementRadius(v,{row:r,col:c}))}
+function remainsInsideVenusRadius(u,r,c){return allUnits().filter(v=>v.owner!==u.owner&&hasEffect(v,'venus')&&inMovementRadius(v,u)).every(v=>inMovementRadius(v,{row:r,col:c}))}
 function canBreakObstacle(u){return hasEffect(u,'golem')||hasEffect(u,'jupiter')}
 function onUnitDeployed(u){if(hasEffect(u,'saturn')&&!u.saturnGenerated){u.saturnGenerated=true;state.players[u.owner].hand.push('asteroid','asteroid');log(`${u.name} gerou 2 Cinturões de Asteroides na mão.`)}if(hasEffect(u,'devotee')){pendingCard={key:'devotee-pit',index:null,free:true};mode='pit';targets=[];for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)if(!at(r,c)&&!featureAt(r,c)&&!pitAt(r,c))targets.push({r,c});hint('O Devoto entrou em campo: escolha onde abrir um Poço sem Fundo.');renderBoard()}}
 function drawPawnReward(owner,reason){let p=state.players[owner];if(!p?.pawnDeck?.length){log(`${p?.name||'O jogador'} não tinha Peões para comprar por ${reason}.`);return false}p.reserve.push(p.pawnDeck.pop());log(`${p.name} comprou um Peão por ${reason}.`);return true}
