@@ -66,10 +66,9 @@ assert.equal(context.state.players[1].hand.length, 2);
 const initialDevotee = {id: 'd0', kind: 'devotee', owner: 1};
 context.pendingCard = null;
 context.mode = null;
-context.onUnitDeployed(initialDevotee, true);
-assert.equal(context.pendingCard, null, 'Devoto inicial não pode abrir um Poço');
 context.onUnitDeployed(initialDevotee);
-assert.equal(context.pendingCard.key, 'devotee-pit', 'Devoto colocado da mão deve manter seu efeito');
+assert.equal(context.pendingCard.key, 'devotee-pit', 'Devoto inicial também deve abrir um Poço');
+assert.equal(context.mode, 'pit');
 
 const protectedUnit = {name: 'Planeta', equipment: ['asteroid']};
 assert.equal(context.consumeAsteroidShield(protectedUnit), true);
