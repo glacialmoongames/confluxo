@@ -317,6 +317,13 @@ assert.equal(completedAmalgamParts, null, 'materiais adicionais devem continuar 
 vm.runInContext(source.match(/function selectPawnFromHand\([^\n]+/)[0], amalgamContext);
 amalgamContext.selectPawnFromHand(amalgamCard);
 assert.equal(JSON.stringify(completedAmalgamParts.map(part => part.id)), JSON.stringify(['devotee', 'abyss-ally', 'enemy']));
+const fusionPointerContext = {mode: 'combinar', selected: amalgamCard};
+vm.createContext(fusionPointerContext);
+vm.runInContext(source.match(/function confirmsVariableFusion\([^\n]+/)[0], fusionPointerContext);
+const amalgamClick = {target: {closest: selector => selector === '.reserve-piece' ? {dataset: {id: 'amalgam-card'}} : null}};
+assert.equal(fusionPointerContext.confirmsVariableFusion(amalgamClick), true, 'clicar novamente na Amálgama deve preservar a seleção até a confirmação');
+const outsideClick = {target: {closest: () => null}};
+assert.equal(fusionPointerContext.confirmsVariableFusion(outsideClick), false, 'cliques realmente externos ainda devem cancelar a combinação');
 const pitPlayer = {name: 'Bot 1', hand: ['pit'], units: []};
 const pitState = {pits: [], players: {1: pitPlayer, 2: {units: [{row: 3, col: 2, faceDown: false}]}}};
 const pitContext = {
@@ -437,9 +444,9 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=7/);
-assert.match(page, /VERSÃO 116/);
+assert.match(page, /VERSÃO 117/);
 assert.match(page, /network\.js\?v=35/);
-assert.match(page, /engine-ui\.js\?v=32/);
+assert.match(page, /engine-ui\.js\?v=33/);
 assert.match(source, /function botCombinationWinsNow/);
 assert.match(source, /usesCombined:parts\.some\(u=>u\.fusion\)/);
 assert.match(source, /normalOptions\.length\?normalOptions:winningExceptions/);
