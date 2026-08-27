@@ -128,7 +128,7 @@ const ravenOne = {id: 'raven-1', name: 'Corvo 1', owner: 1, kind: 'raven', row: 
 const ravenTwo = {id: 'raven-2', name: 'Corvo 2', owner: 2, kind: 'raven', row: 2, col: 4};
 const equipmentContext = {
   state: {turn: 3, current: 1, players: {1: {hand: []}, 2: {hand: []}}},
-  effects: {crown: {name: 'Coroa da Herdeira', equipOnly: 'infantry'}},
+  effects: {crown: {name: 'Coroa da Herdeira', equipOnly: 'infantry'}, sword: {name: 'Espada Maldita'}},
   allUnits: () => [ownInfantry, ownTower, enemyInfantry, ravenOne, ravenTwo],
   hasEffect: (unit, kind) => unit.kind === kind,
   log: () => {}
@@ -138,7 +138,9 @@ vm.runInContext(source.match(/function equipmentTargetAllowed\([^\n]+/)[0], equi
 vm.runInContext(source.match(/function copyEquipmentForRavens\([^\n]+/)[0], equipmentContext);
 assert.equal(equipmentContext.equipmentTargetAllowed('crown', ownInfantry), true);
 assert.equal(equipmentContext.equipmentTargetAllowed('crown', ownTower), false, 'Coroa deve rejeitar outro tipo de peão');
-assert.equal(equipmentContext.equipmentTargetAllowed('crown', enemyInfantry), false, 'Coroa deve rejeitar até Infantaria adversária');
+assert.equal(equipmentContext.equipmentTargetAllowed('crown', enemyInfantry), true, 'a restrição de tipo não deve impedir equipar uma Infantaria adversária');
+assert.equal(equipmentContext.equipmentTargetAllowed('sword', ownTower), true, 'Equipamento comum deve aceitar peão aliado');
+assert.equal(equipmentContext.equipmentTargetAllowed('sword', enemyInfantry), true, 'Equipamento comum deve aceitar peão adversário');
 equipmentContext.copyEquipmentForRavens('crown');
 assert.deepEqual(equipmentContext.state.players[1].hand, ['crown'], 'Corvo aliado também copia Equipamento usado pelo próprio jogador');
 assert.deepEqual(equipmentContext.state.players[2].hand, ['crown'], 'Corvo adversário copia Equipamento usado pelo rival');
@@ -444,9 +446,9 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=7/);
-assert.match(page, /VERSÃO 117/);
+assert.match(page, /VERSÃO 118/);
 assert.match(page, /network\.js\?v=35/);
-assert.match(page, /engine-ui\.js\?v=33/);
+assert.match(page, /engine-ui\.js\?v=34/);
 assert.match(source, /function botCombinationWinsNow/);
 assert.match(source, /usesCombined:parts\.some\(u=>u\.fusion\)/);
 assert.match(source, /normalOptions\.length\?normalOptions:winningExceptions/);
