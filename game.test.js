@@ -127,7 +127,7 @@ const enemyInfantry = {id: 'enemy-infantry', owner: 2, kind: 'infantry', row: 1,
 const ravenOne = {id: 'raven-1', name: 'Corvo 1', owner: 1, kind: 'raven', row: 5, col: 1};
 const ravenTwo = {id: 'raven-2', name: 'Corvo 2', owner: 2, kind: 'raven', row: 2, col: 4};
 const equipmentContext = {
-  state: {current: 1, players: {1: {hand: []}, 2: {hand: []}}},
+  state: {turn: 3, current: 1, players: {1: {hand: []}, 2: {hand: []}}},
   effects: {crown: {name: 'Coroa da Herdeira', equipOnly: 'infantry'}},
   allUnits: () => [ownInfantry, ownTower, enemyInfantry, ravenOne, ravenTwo],
   hasEffect: (unit, kind) => unit.kind === kind,
@@ -142,6 +142,13 @@ assert.equal(equipmentContext.equipmentTargetAllowed('crown', enemyInfantry), fa
 equipmentContext.copyEquipmentForRavens('crown');
 assert.deepEqual(equipmentContext.state.players[1].hand, ['crown'], 'Corvo aliado também copia Equipamento usado pelo próprio jogador');
 assert.deepEqual(equipmentContext.state.players[2].hand, ['crown'], 'Corvo adversário copia Equipamento usado pelo rival');
+equipmentContext.copyEquipmentForRavens('crown');
+assert.deepEqual(equipmentContext.state.players[1].hand, ['crown'], 'Corvo não pode copiar um segundo Equipamento no mesmo turno');
+assert.deepEqual(equipmentContext.state.players[2].hand, ['crown'], 'Limite de uma cópia por turno também vale para o Corvo rival');
+equipmentContext.state.current = 2;
+equipmentContext.copyEquipmentForRavens('crown');
+assert.deepEqual(equipmentContext.state.players[1].hand, ['crown', 'crown'], 'Corvo volta a ativar no turno do próximo jogador');
+assert.deepEqual(equipmentContext.state.players[2].hand, ['crown', 'crown'], 'Cada Corvo recupera sua ativação no turno seguinte');
 assert.match(source, /u\.bonusAtk=\(u\.bonusAtk\|\|0\)\+200/);
 assert.match(source, /hideMobileDetails\(\);selectedEffect=null;pendingCard=/);
 assert.match(source, /function animateRoseReward/);
@@ -430,9 +437,9 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=7/);
-assert.match(page, /VERSÃO 115/);
+assert.match(page, /VERSÃO 116/);
 assert.match(page, /network\.js\?v=35/);
-assert.match(page, /engine-ui\.js\?v=31/);
+assert.match(page, /engine-ui\.js\?v=32/);
 assert.match(source, /function botCombinationWinsNow/);
 assert.match(source, /usesCombined:parts\.some\(u=>u\.fusion\)/);
 assert.match(source, /normalOptions\.length\?normalOptions:winningExceptions/);
