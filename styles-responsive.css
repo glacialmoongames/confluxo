@@ -181,7 +181,10 @@
 }
 @media(max-width:760px) and (max-height:680px){main{grid-template-rows:27px 22px max(235px,calc(100dvh - 227px)) 27px 36px 64px 28px 210px}.player-strip{height:27px;min-height:27px}.side-controls,.action-panel .side-controls .action,.action-panel .side-controls .end-turn{height:36px;min-height:36px}.hand-zone{height:64px;min-height:64px}.hand-block,.reserve-block{height:58px}.hand,.pawn-hand{height:45px}.effect-card{height:41px}.finish-combination{bottom:106px}}
 
-/* Versão 124: Arena sobre as faixas, nomes na reserva e mãos laterais legíveis. */
+/* Versão 125: categorias de efeito coloridas e mãos laterais legíveis. */
+.effect-card.effect-equipment{background:linear-gradient(145deg,#244f83,#112943)!important;border-color:#69a6df;color:#f2f8ff}.effect-card.effect-equipment .type{color:#9fd2ff}
+.effect-card.effect-arena{background:linear-gradient(145deg,#9b5724,#4b2611)!important;border-color:#e79a55;color:#fff7e9}.effect-card.effect-arena .type{color:#ffc47c}
+.effect-card.effect-utility{background:linear-gradient(145deg,#316d48,#173824)!important;border-color:#79b88d;color:#f2fff5}.effect-card.effect-utility .type{color:#a5ddb5}
 .chronicle-actions{flex:0 0 auto;padding:6px;border-top:1px solid #b7ab95;background:#d8cfbf}.chronicle-actions .end-turn{width:100%;min-height:42px;margin:0;align-items:center}
 @media(min-width:761px){
  main{grid-template-rows:46px minmax(0,1fr) 46px}
