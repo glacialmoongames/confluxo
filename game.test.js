@@ -437,7 +437,7 @@ assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=7/);
 assert.match(page, /engine-actions-b\.js\?v=15/);
 assert.match(page, /engine-actions-a\.js\?v=24/);
-assert.match(page, /VERSÃO 133/);
+assert.match(page, /VERSÃO 134/);
 assert.match(page, /network\.js\?v=35/);
 assert.match(page, /engine-ui\.js\?v=37/);
 assert.match(source, /function botCombinationWinsNow/);
@@ -487,7 +487,7 @@ assert.equal(context.effects.camouflage, undefined, 'Camuflar-se deve sair do jo
 assert.doesNotMatch(source, /function flipSelected|function botSetFaceDown/, 'jogadores e bots não devem mais virar peões');
 assert.match(source, /hasEffect\(attacker,'jaguar'\)[^\n]+bonusAtk=.*\+100/, 'a Onça deve ganhar 100 ATK quando derrota um adversário');
 assert.match(source, /selectedEffect=\{key:k,index:i,owner,arena:false\}/, 'os detalhes devem manter o dono da carta inspecionada');
-assert.match(page, /styles-responsive\.css\?v=27/);
+assert.match(page, /styles-responsive\.css\?v=28/);
 assert.doesNotMatch(page, /SUA MÃO/);
 assert.match(page, /<div class="reserve-head"><div><b>Peões<\/b><\/div><span><b id="pawn-deck-count">0<\/b> na pilha<\/span><\/div>/);
 assert.match(styles, /reserve-hand-panel \.reserve-head>span/);
