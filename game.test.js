@@ -437,7 +437,7 @@ assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=7/);
 assert.match(page, /engine-actions-b\.js\?v=15/);
 assert.match(page, /engine-actions-a\.js\?v=23/);
-assert.match(page, /VERSÃO 125/);
+assert.match(page, /VERSÃO 126/);
 assert.match(page, /network\.js\?v=35/);
 assert.match(page, /engine-ui\.js\?v=37/);
 assert.match(source, /function botCombinationWinsNow/);
@@ -487,7 +487,8 @@ assert.equal(context.effects.camouflage, undefined, 'Camuflar-se deve sair do jo
 assert.doesNotMatch(source, /function flipSelected|function botSetFaceDown/, 'jogadores e bots não devem mais virar peões');
 assert.match(source, /hasEffect\(attacker,'jaguar'\)[^\n]+bonusAtk=.*\+100/, 'a Onça deve ganhar 100 ATK quando derrota um adversário');
 assert.match(source, /selectedEffect=\{key:k,index:i,owner,arena:false\}/, 'os detalhes devem manter o dono da carta inspecionada');
-assert.match(page, /styles-responsive\.css\?v=19/);
+assert.match(page, /styles-responsive\.css\?v=20/);
+assert.doesNotMatch(page, /SUA MÃO/);
 assert.match(source, /class="reserve-label"/);
 assert.match(source, /effect-equipment/);
 assert.match(source, /effect-arena/);
