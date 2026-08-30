@@ -24,7 +24,7 @@ assert.match(ui, /grantImpolutoPower/);
 assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
 assert.match(page, /engine-expansion\.js\?v=10/);
-assert.match(page, /VERSÃO 131/);
+assert.match(page, /VERSÃO 132/);
 assert.match(expansion, /Rosas Pálidas: quando um jogador perde um peão/);
 assert.match(expansion, /Rosas Negras: quando um jogador ganha pontos/);
 assert.match(expansion, /Cavaleiro da Casa Branca de Xadria: Justiça Alva/);
