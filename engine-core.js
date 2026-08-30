@@ -1,6 +1,6 @@
 const ROWS=8,COLS=6;
 let pointGoal=10;
-const defs={
+registerPawns({
  infantry:{name:'Infantaria do Reino de Xadria',atk:200,movement:[[-2,0],[-1,0],[0,-1],[0,1],[1,0],[2,0]],types:['LUZ','TREVAS'],glyph:'◐',art:'assets/cards/infantry.webp',artCrop:{scale:100,x:0,y:0},artCredit:'Delapouite · Game-icons.net · CC BY 3.0',text:'No ataque conjunto, dobra o ATK de um dos participantes.'},
  tower:{name:'Torre Branca de Xadria',atk:150,movement:[[-3,0],[-2,0],[-1,0],[1,0],[2,0],[3,0]],types:['LUZ','PEDRA'],glyph:'▥',art:'assets/cards/tower.webp',artCrop:{scale:100,x:0,y:0},artCredit:'Lorc · Game-icons.net · CC BY 3.0',text:'Pode se sacrificar para negar um ataque contra aliado adjacente.'},
  jester:{name:'Bobo da Casa Branca de Xadria',atk:100,movement:[[-2,-1],[-2,1],[-1,-1],[-1,1],[0,-1],[0,1],[1,-2],[1,2],[2,-1],[2,0],[2,1]],types:['LUZ'],glyph:'✦',art:'assets/cards/jester.webp',artCrop:{scale:100,x:0,y:0},artCredit:'Delapouite · Game-icons.net · CC BY 3.0',text:'Habilidade: escolhe qualquer peão em campo e mantém o efeito copiado até o fim da partida.'},
@@ -24,8 +24,8 @@ const defs={
  neptune:{name:'Objeto Celeste: Netuno',atk:250,movement:[[-1,0],[-1,2],[0,-3],[0,-1],[0,1],[0,3],[1,-2],[1,0]],types:['ÁGUA','AR'],glyph:'♆',celestial:true,art:'assets/planets/neptune.jpg',artCredit:'NASA/JPL-Caltech',text:'Uma única vez por turno para o jogador, independentemente de quantas cópias de Netuno estejam em campo, escolhe um peão e o empurra em direção ao outro lado da Arena.'},
  pluto:{name:'Objeto Celeste: Plutão',atk:100,movement:[[-2,1],[-1,0],[0,-1],[0,1],[1,0],[2,-1]],types:['PEDRA'],glyph:'♇',celestial:true,art:'assets/planets/pluto.jpg',artCredit:'NASA/JHUAPL/SwRI',text:'Ao vencer um combate, seu dono compra um Peão.'},
  sun:{name:'Objeto Celeste: SOL',atk:10000,movement:[[-3,0],[-2,-1],[-2,0],[-2,1],[-1,-3],[-1,-2],[-1,-1],[-1,0],[-1,1],[-1,2],[-1,3],[0,-2],[0,-1],[0,1],[0,2],[1,-1],[1,0],[1,1],[2,-2],[2,-1],[2,1],[2,2],[3,-2],[3,2]],types:['PEDRA','FOGO'],glyph:'☀',celestial:true,art:'assets/planets/sun.jpg',artCredit:'NASA/GSFC/Solar Dynamics Observatory',fusion:8,materials:{kinds:['mercury','venus','earth','mars','jupiter','saturn','uranus','neptune']},text:'Ao ser criado em campo, seu dono vence imediatamente a partida.'}
-};
-const effects={
+});
+registerEffects({
  retreat:{name:'Recuar!',type:'UTILIDADE',icon:'↩',art:'assets/cards/retreat.webp',artCrop:{scale:100,x:0,y:0},artCredit:'Delapouite · Game-icons.net · CC BY 3.0',text:'Escolha um peão; ele retorna ao local onde foi jogado.'},
  castle:{name:'Rocar Torre',type:'UTILIDADE',icon:'⇄',art:'assets/cards/castle.webp',artCrop:{scale:100,x:0,y:0},artCredit:'Lorc · Game-icons.net · CC BY 3.0',text:'Troque um peão com “Torre” no nome por outro peão aliado.'},
  sword:{name:'Espada Maldita de Xadria',type:'EQUIPAMENTO',icon:'†',art:'assets/cards/sword.webp',artCrop:{scale:100,x:0,y:0},artCredit:'Lorc · Game-icons.net · CC BY 3.0',text:'O equipado destrói qualquer rival, mas também cai após o combate. O dono do peão destruído escolhe qualquer outro peão que esteja no campo para receber a espada.'},
@@ -38,12 +38,10 @@ const effects={
  asteroid:{name:'Cinturão de Asteroides',type:'EQUIPAMENTO',icon:'☄',art:'assets/cards/asteroid.webp',artCrop:{scale:100,x:0,y:0},artCredit:'Delapouite · Game-icons.net · CC BY 3.0',text:'Se o peão equipado fosse destruído em combate, destrua um Cinturão de Asteroides e negue essa destruição.'},
  project:{name:'Projetar Astros',type:'ARENA',icon:'✺',art:'assets/cards/project.webp',artCrop:{scale:100,x:0,y:0},artCredit:'Skoll · Game-icons.net · CC BY 3.0',text:'Efeitos que exigem contato também funcionam dentro do raio de movimento do peão. Essa regra também vale para criar Peões Combinados.'},
  peace:{name:'Tratado de Paz',type:'UTILIDADE',icon:'⚑',art:'assets/cards/peace.webp',artCrop:{scale:100,x:0,y:0},artCredit:'Delapouite · Game-icons.net · CC BY 3.0',text:'Só pode ser jogado antes de atacar. Você não pode atacar neste turno e o oponente não pode atacar no próximo turno.'}
-};
-const archetypes={
- xadria:{name:'Xadria',emblem:'◐',pawns:['infantry','tower','jester','archer','duck','horse'],fusions:['babel','justice'],effects:['retreat','castle','sword','burn','roses','pit','push','peace']},
- wild:{name:'Selvagem',emblem:'✿',pawns:['rabbit','rider','hawk'],fusions:['serpent','golem'],effects:['jungle','bow','retreat','burn','pit','push','peace']},
- celestial:{name:'Objeto Celeste',emblem:'✺',pawns:['mercury','venus','earth','mars','jupiter','saturn','uranus','neptune','pluto'],fusions:['sun'],effects:['asteroid','project','burn','pit','push','peace'],pawnComposition:['mercury','mercury','venus','venus','earth','earth','mars','mars','jupiter','jupiter','saturn','saturn','uranus','uranus','neptune','neptune','pluto','sun']}
-};
+});
+registerArchetype('xadria',{name:'Xadria',emblem:'◐',pawns:['infantry','tower','jester','archer','duck','horse'],fusions:['babel','justice'],effects:['retreat','castle','sword','burn','roses','pit','push','peace']});
+registerArchetype('wild',{name:'Selvagem',emblem:'✿',pawns:['rabbit','rider','hawk'],fusions:['serpent','golem'],effects:['jungle','bow','retreat','burn','pit','push','peace']});
+registerArchetype('celestial',{name:'Objeto Celeste',emblem:'✺',pawns:['mercury','venus','earth','mars','jupiter','saturn','uranus','neptune','pluto'],fusions:['sun'],effects:['asteroid','project','burn','pit','push','peace'],pawnComposition:['mercury','mercury','venus','venus','earth','earth','mars','mars','jupiter','jupiter','saturn','saturn','uranus','uranus','neptune','neptune','pluto','sun']});
 let selectedDecks={1:'xadria',2:'wild'};
 let state,selected=null,selectedEffect=null,spectatorSelected=null,spectatorEffect=null,mode=null,targets=[],attackTargets=[],pendingCard=null,pendingPushTarget=null,pendingAbilityTarget=null,castleFirst=null,fusionMaterials=[],initialPlacementResume=null,gameVersion=0,botMode=false,botVsBot=false,botPlayer=2,botTimer=null,botWatchdogTimer=null,lastArenaVisual='none',arenaAnimationTimer=null;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];

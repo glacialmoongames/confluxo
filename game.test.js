@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 process.chdir(__dirname);
 
-const source = ['engine-core.js', 'engine-celestial.js', 'engine-actions-a.js', 'engine-actions-b.js', 'engine-ui.js'].map(file => fs.readFileSync(file, 'utf8')).join('\n');
+const source = ['game-catalog.js', 'engine-core.js', 'engine-celestial.js', 'engine-actions-a.js', 'engine-actions-b.js', 'engine-ui.js'].map(file => fs.readFileSync(file, 'utf8')).join('\n');
 const page = fs.readFileSync('index.html', 'utf8');
 const styles = ['styles-core.css', 'styles-game.css', 'styles-responsive.css']
   .map((file) => fs.readFileSync(file, 'utf8'))
@@ -443,7 +443,12 @@ assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=7/);
 assert.match(page, /engine-actions-b\.js\?v=16/);
 assert.match(page, /engine-actions-a\.js\?v=25/);
-assert.match(page, /VERSÃO 139/);
+assert.match(page, /VERSÃO 140/);
+assert.match(page, /game-catalog\.js\?v=1/);
+assert.match(source, /function registerPawns/);
+assert.match(source, /function registerEffects/);
+assert.match(source, /function registerArchetype/);
+assert.match(source, /function validateGameCatalog/);
 assert.match(page, /network\.js\?v=36/);
 assert.match(page, /engine-ui\.js\?v=37/);
 assert.match(source, /function botCombinationWinsNow/);
@@ -454,7 +459,7 @@ assert.match(source, /state\.arena==='kingdom'&&xadriaPair\.has\(k\)/);
 assert.match(page, /styles-core\.css\?v=5/);
 assert.match(page, /id="home-brand"/);
 assert.match(source, /\$\('#home-brand'\)\.onclick=/);
-assert.match(page, /engine-core\.js\?v=22/);
+assert.match(page, /engine-core\.js\?v=23/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
 assert.match(page, /engine-actions-a\.js\?v=25/);
 assert.match(page, /engine-actions-b\.js\?v=16/);

@@ -15,7 +15,8 @@ for (const card of ['divinissimo','terror','atra','impoluto','monkey','jaguar','
 for (const effect of ['crown','blackRoses','kingdom','tunnel','blackHole','moon','abyss','noEscape','eyes']) {
   assert.match(expansion, new RegExp(`${effect}:\\{`), `efeito ausente: ${effect}`);
 }
-assert.match(expansion, /archetypes\.abyss=/);
+assert.match(expansion, /registerArchetype\('abyss'/);
+assert.match(expansion, /validateGameCatalog\(\)/);
 assert.match(expansion, /assets\/icons\//);
 assert.match(runtime, /baseDoMove/);
 assert.match(runtime, /transformed:true,fusion:0,pointValue:1/, 'Atra criada pela Coroa deve valer somente um ponto');
@@ -23,8 +24,9 @@ assert.match(ui, /beginMonkeyDestination/);
 assert.match(ui, /grantImpolutoPower/);
 assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
-assert.match(page, /engine-expansion\.js\?v=11/);
-assert.match(page, /VERSÃO 139/);
+assert.match(page, /engine-expansion\.js\?v=12/);
+assert.doesNotMatch(expansion, /Object\.assign\((?:defs|effects|archetypes)/, 'o catálogo não deve ser alterado diretamente');
+assert.match(page, /VERSÃO 140/);
 assert.match(expansion, /Rosas Pálidas: quando um jogador perde um peão/);
 assert.match(expansion, /Rosas Negras: quando um jogador ganha pontos/);
 assert.match(expansion, /Lua em Órbita[^\n]+preenche continuamente seu raio até 3 casas/);
