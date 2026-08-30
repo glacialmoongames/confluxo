@@ -443,7 +443,7 @@ assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=7/);
 assert.match(page, /engine-actions-b\.js\?v=16/);
 assert.match(page, /engine-actions-a\.js\?v=25/);
-assert.match(page, /VERSÃO 138/);
+assert.match(page, /VERSÃO 139/);
 assert.match(page, /network\.js\?v=36/);
 assert.match(page, /engine-ui\.js\?v=37/);
 assert.match(source, /function botCombinationWinsNow/);
@@ -493,7 +493,7 @@ assert.equal(context.effects.camouflage, undefined, 'Camuflar-se deve sair do jo
 assert.doesNotMatch(source, /function flipSelected|function botSetFaceDown/, 'jogadores e bots não devem mais virar peões');
 assert.match(source, /hasEffect\(attacker,'jaguar'\)[^\n]+bonusAtk=.*\+100/, 'a Onça deve ganhar 100 ATK quando derrota um adversário');
 assert.match(source, /selectedEffect=\{key:k,index:i,owner,arena:false\}/, 'os detalhes devem manter o dono da carta inspecionada');
-assert.match(page, /styles-responsive\.css\?v=32/);
+assert.match(page, /styles-responsive\.css\?v=33/);
 assert.doesNotMatch(page, /SUA MÃO/);
 assert.match(page, /<div class="reserve-head"><div><b>Peões<\/b><\/div><span><b id="pawn-deck-count">0<\/b> na pilha<\/span><\/div>/);
 assert.match(styles, /reserve-hand-panel \.reserve-head>span/);
@@ -700,6 +700,8 @@ assert.match(styles, /\.board \.piece:not\(\.fusion\)\.deck-wild\{background:#29
 assert.match(styles, /\.board \.piece:not\(\.fusion\) \.board-art\{background:inherit!important;box-shadow:none!important\}/);
 assert.doesNotMatch(styles, /\.board \.piece:not\(\.fusion\) \.board-art\.tone-(?:black|white)[^{]*\{background:/);
 assert.doesNotMatch(styles, /\.board \.piece:not\(\.fusion\) \.board-art\.xadria-black-art img[^}]+invert\(1\)/, 'a Casa Preta deve usar ícone preto no campo');
+assert.match(styles, /\.setup\{grid-template-rows:minmax\(16px,1fr\) auto minmax\(16px,1fr\)[^}]+overflow-y:auto/, 'a tela inicial deve rolar quando o lobby ultrapassar a altura disponível');
+assert.match(styles, /\.setup-card,\.setup-card\.online-setup\{max-height:none;overflow:visible\}/, 'no celular a rolagem deve pertencer à página inicial inteira');
 assert.match(styles, /\.reserve-piece:not\(\.fusion-card\)\{background:#cfc5b3;box-shadow:none!important\}/);
 assert.match(styles, /\.unit-card:not\(\.combined-detail\)\[data-deck=celestial\] \.detail-art\{background:#173b5c!important\}/);
 assert.match(styles, /\.board\{outline:4px solid #17141b;outline-offset:0\}/);
