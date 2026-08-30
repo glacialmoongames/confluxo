@@ -4,6 +4,7 @@ const vm = require('node:vm');
 process.chdir(__dirname);
 
 const source = fs.readFileSync('network.js', 'utf8');
+assert.match(source, /document\.addEventListener\('click',[^\n]+\},false\)/, 'o estado online deve ser sincronizado depois que o clique alterar a jogada');
 
 function classList() {
   return { add() {}, remove() {}, toggle() {}, contains() { return true } };

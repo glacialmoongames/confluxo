@@ -194,5 +194,5 @@ document.addEventListener('DOMContentLoaded',()=>{
  window.addEventListener('online',()=>{if(onlineMode&&!dataChannel?.open){networkStatus('Internet restaurada — reconectando…','connecting');scheduleReconnect(100)}});
  window.addEventListener('offline',()=>{if(onlineMode){networkStatus('Sem internet — a partida tentará voltar automaticamente','connecting');document.body.classList.add('connection-lost')}});
  document.addEventListener('visibilitychange',()=>{if(!onlineMode||document.visibilityState!=='visible')return;if(dataChannel?.open){lastPacketAt=Date.now();sendPacket({type:'heartbeat',at:Date.now()});if(gameStarted()){flushPendingState();sendPacket({type:'sync-request',revision:networkRevision})}else sendDeckChoice()}else scheduleReconnect(100)});
- document.addEventListener('click',event=>{if(!onlineMode||applyingRemote||!state)return;if(event.target.closest('#setup,#rules-dialog'))return;let actor=state.placementPhase?state.placementPlayer:state.current;if(actor===localPlayer)syncOnlineState()},true)
+ document.addEventListener('click',event=>{if(!onlineMode||applyingRemote||!state)return;if(event.target.closest('#setup,#rules-dialog'))return;let actor=state.placementPhase?state.placementPlayer:state.current;if(actor===localPlayer)syncOnlineState()},false)
 });

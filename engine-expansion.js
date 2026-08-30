@@ -35,7 +35,7 @@ Object.assign(effects,{
  kingdom:{name:'Reino de Xadria',type:'ARENA',icon:'▦',undrawable:true,text:'Surge quando Campo das Rosas Pálidas e Colina das Rosas Negras se encontram e mantém os dois efeitos para ambos os jogadores. Rosas Pálidas: quando um jogador perde um peão, esse jogador compra 1 carta aleatória entre Peões e Efeitos. Rosas Negras: quando um jogador ganha pontos, esse jogador compra 1 carta aleatória entre Peões e Efeitos para cada ponto recebido.'},
  tunnel:{name:'Cavar Túnel',type:'UTILIDADE',icon:'◒',text:'Coloque duas entradas em casas livres e conectadas. Um peão que pisa em uma entrada sai pela outra.'},
  blackHole:{name:'Buraco Negro',type:'UTILIDADE',icon:'●',text:'Coloque-o em uma casa livre. No começo do próximo turno, todos os peões adjacentes são destruídos.'},
- moon:{name:'Lua em Órbita',type:'EQUIPAMENTO',icon:'☾',equipOnly:'earth',text:'Equipe somente à Terra: triplica seu raio e concede 100 ATK.'},
+ moon:{name:'Lua em Órbita',type:'EQUIPAMENTO',icon:'☾',equipOnly:'earth',text:'Equipe somente à Terra: estende e preenche continuamente seu raio até 3 casas, além de conceder 100 ATK.'},
  abyss:{name:'Abismo do Terror',type:'ARENA',icon:'◉',text:'Ao destruir um peão, o responsável ganha 100 ATK e cria um Poço na casa da vítima.'},
  noEscape:{name:'Não há escapatoria',type:'UTILIDADE',icon:'↯',text:'Nenhum peão pode se mover durante o próximo turno do oponente.'},
  eyes:{name:'Eu vejo os olhos',type:'EQUIPAMENTO',icon:'◉',text:'O equipado ganha 400 ATK. Se puder se mover e terminar o turno sem mover, o peão equipado é destruído.'}
