@@ -7,11 +7,11 @@
   <link rel="icon" type="image/svg+xml" href="assets/icons/confluxo-favicon.svg?v=1">
   <link rel="stylesheet" href="styles-core.css?v=3">
   <link rel="stylesheet" href="styles-game.css?v=8">
-  <link rel="stylesheet" href="styles-responsive.css?v=16">
+  <link rel="stylesheet" href="styles-responsive.css?v=17">
 </head>
 <body>
   <div id="setup" class="setup">
-    <span class="game-version">VERSÃO 122</span>
+    <span class="game-version">VERSÃO 123</span>
     <div class="setup-card">
       <span class="setup-mark"><img src="assets/icons/flower-twirl.svg" alt="Símbolo do Confluxo"></span>
       <small>DUELO DO CONFLUXO</small>
@@ -120,19 +120,6 @@
     </section>
 
     <section class="game-layout">
-      <aside class="left-panel action-panel panel">
-        <div class="side-controls">
-          <div class="panel-title controls-title">AÇÕES</div>
-          <button id="flip" class="action"><span>◐</span><div><b>Virar</b><small>uma vez por turno</small></div></button>
-          <button id="ability" class="action hidden" aria-hidden="true" tabindex="-1"><span>✥</span><div><b>Habilidade</b></div></button>
-          <button id="end-turn" class="primary end-turn">ENCERRAR TURNO <span>→</span></button>
-        </div>
-        <div class="deck-shelf compact-piles">
-          <button id="draw-pawn" class="action deck-stack pawn-stack" title="Comprar um peão"><span>⬢</span><div><small>PEÕES</small><em id="pawn-deck-count">18</em></div></button>
-          <button id="draw-effect" class="action deck-stack effect-stack" title="Comprar uma carta de efeito"><span>✦</span><div><small>EFEITOS</small><em id="effect-deck-count">17</em></div></button>
-        </div>
-      </aside>
-
       <aside class="details-panel panel">
         <div class="card-details mobile-details-hidden">
           <button id="mobile-details-close" class="mobile-details-close" aria-label="Fechar detalhes">×</button>
@@ -145,6 +132,13 @@
         </div>
       </aside>
 
+      <aside class="hand-zone effect-hand-panel panel">
+        <div class="hand-block">
+          <div class="hand-head"><div><small>SUA MÃO</small><b>Cartas de Efeito</b></div><span><b id="effect-deck-count">0</b> na pilha</span></div>
+          <div id="effect-hand" class="hand"></div>
+        </div>
+      </aside>
+
       <section class="board-wrap">
         <div id="peace-banner" class="peace-banner" aria-live="polite"><img src="assets/icons/peace-dove.svg" alt=""><span><b>TRATADO DE PAZ</b><small>Ataques temporariamente suspensos</small></span></div>
         <div id="board" class="board" aria-label="Tabuleiro 6 por 8"></div>
@@ -152,10 +146,18 @@
         <div id="hint" class="hint">Selecione um peão para ver seus detalhes.</div>
       </section>
 
+      <aside class="hand-zone reserve-hand-panel panel">
+        <div class="reserve-block">
+          <div class="reserve-head"><small>PEÕES · <b id="pawn-deck-count">0</b> NA PILHA</small></div>
+          <div id="pawn-hand" class="pawn-hand"></div>
+        </div>
+      </aside>
+
       <aside class="right-panel chronicle-panel panel">
         <div class="arena-row global-arena" title="Clique para ver o efeito da Arena"><span>ARENA DO DUELO</span><b id="arena-global">SLOT VAZIO</b><em id="arena-owner"></em></div>
         <div class="panel-title log-title">CRÔNICA DO COMBATE</div>
         <div id="log" class="log"></div>
+        <div class="chronicle-actions"><button id="end-turn" class="primary end-turn">ENCERRAR TURNO <span>→</span></button></div>
       </aside>
     </section>
 
@@ -165,16 +167,6 @@
       <div class="mini-stats"><span>Peões <b id="p1-field">3</b></span><span>Efeitos <b id="p1-hand-count">3</b></span><span>Peões na mão <b id="reserve-count">0</b></span></div>
     </section>
 
-    <section class="hand-zone">
-      <div class="hand-block">
-        <div class="hand-head"><div><small>SUA MÃO</small><b>Cartas de Efeito</b></div><span>Clique numa carta para jogar</span></div>
-        <div id="effect-hand" class="hand"></div>
-      </div>
-      <div class="reserve-block">
-        <div class="reserve-head"><small>MÃO DE PEÕES · COMUNS E COMBINADOS</small></div>
-        <div id="pawn-hand" class="pawn-hand"></div>
-      </div>
-    </section>
   </main>
 
   <dialog id="rules-dialog">
@@ -185,9 +177,8 @@
       <section><div class="rule-picture deploy"><i></i><i class="unit"></i></div><h3>2 · Posicione</h3><p>Clique no peão em sua mão e depois numa casa destacada do seu polo. Não há limite de peões em campo.</p></section>
       <section><div class="rule-picture move"><i class="origin"></i><i class="arrow">→</i><i class="target"></i></div><h3>3 · Mova</h3><p>Cada carta mostra seu alcance. Selecione o peão e clique numa das casas iluminadas.</p></section>
       <section><div class="rule-picture fight"><b>250</b><span>⚔</span><b>200</b></div><h3>4 · Ataque</h3><p>Clique no símbolo de ataque sobre um inimigo. Maior ATK vence; no empate, defensor e todos os atacantes participantes são destruídos.</p></section>
-      <section><div class="rule-picture joint-attack"><i>150</i><span>＋</span><i>200</i><b>350</b><em>⚔</em><strong>300</strong></div><h3>Ataque em conjunto</h3><p>Ao atacar, seus outros peões <b>virados para cima e em contato com o alvo</b> participam automaticamente. Seus ATKs são somados, mas somente o peão selecionado gasta seu ataque; os participantes ainda podem iniciar seus próprios ataques. Se a soma empatar com o ATK do alvo, todos os participantes e o defensor são destruídos.</p></section>
+      <section><div class="rule-picture joint-attack"><i>150</i><span>＋</span><i>200</i><b>350</b><em>⚔</em><strong>300</strong></div><h3>Ataque em conjunto</h3><p>Ao atacar, seus outros peões <b>em contato com o alvo</b> participam automaticamente. Seus ATKs são somados, mas somente o peão selecionado gasta seu ataque; os participantes ainda podem iniciar seus próprios ataques. Se a soma empatar com o ATK do alvo, todos os participantes e o defensor são destruídos.</p></section>
       <section><div class="rule-picture combine"><span>●</span><span>＋</span><span>●</span><b>✦</b></div><h3>5 · Combine</h3><p>Tenha o Peão Combinado na mão e selecione os materiais indicados em contato. A carta mostra exatamente quais faltam.</p></section>
-      <section><div class="rule-picture hidden-piece"><img src="assets/icons/forest.svg" alt=""></div><h3>Peões virados</h3><p>Use <b>Virar</b> para esconder um peão. Ele não move, ataca nem participa de ataque conjunto; o primeiro ataque apenas o revela.</p></section>
       <section><div class="rule-picture arena-rule"><img src="assets/icons/rose.svg" alt=""></div><h3>Efeitos e Arena</h3><p>Leia e ative habilidades nos detalhes da carta. A carta de Arena ocupa o slot global e afeta os dois lados.</p></section>
       <section><div class="rule-picture victory"><span>♛</span><b id="rules-goal">10</b></div><h3>Vitória</h3><p>Destrua peões até atingir a meta escolhida. Um Peão Combinado vale a quantidade de materiais usados.</p></section>
     </div>
@@ -199,12 +190,12 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="network.js?v=35"></script>
-  <script src="engine-core.js?v=20"></script>
-  <script src="engine-expansion.js?v=9"></script>
+  <script src="engine-core.js?v=21"></script>
+  <script src="engine-expansion.js?v=10"></script>
   <script src="engine-celestial.js?v=7"></script>
-  <script src="engine-actions-a.js?v=20"></script>
-  <script src="engine-actions-b.js?v=14"></script>
+  <script src="engine-actions-a.js?v=21"></script>
+  <script src="engine-actions-b.js?v=15"></script>
   <script src="engine-expansion-runtime.js?v=2"></script>
-  <script src="engine-ui.js?v=36"></script>
+  <script src="engine-ui.js?v=37"></script>
 </body>
 </html>

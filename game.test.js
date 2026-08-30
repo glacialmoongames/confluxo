@@ -404,18 +404,6 @@ assert.equal(defensiveContext.botAdvanceProgress(1, 6, 8), 1);
 assert.equal(defensiveContext.botAdvanceProgress(1, 4, 8), 3);
 assert.equal(defensiveContext.botAdvanceProgress(2, 1, 8), 1);
 assert.equal(defensiveContext.botAdvanceProgress(2, 3, 8), 3);
-vm.runInContext(source.match(/function botFlipDecisionValue\([^\n]+/)[0], defensiveContext);
-assert.ok(defensiveContext.botFlipDecisionValue(1000, 0, 500) > defensiveContext.botFlipDecisionValue(0, 1, 0), 'ataque favorável deve justificar revelar o peão');
-assert.ok(defensiveContext.botFlipDecisionValue(0, 1, 0) > defensiveContext.botFlipDecisionValue(0, 0, 500), 'avanço seguro deve ser melhor que exposição sem ação');
-const flipContext = {state: {turn: 4}, botActor: () => 2, log: () => {}, render: () => {}};
-vm.createContext(flipContext);
-vm.runInContext(source.match(/function botSetFaceDown\([^\n]+/)[0], flipContext);
-const flippable = {owner: 2, row: 3, faceDown: false, attackedTurn: 0, flippedTurn: 0, name: 'Peão'};
-assert.equal(flipContext.botSetFaceDown(flippable, true), true);
-assert.equal(flippable.faceDown, true);
-assert.equal(flippable.flippedTurn, 4);
-assert.equal(flipContext.botSetFaceDown({owner: 2, row: 3, faceDown: false, attackedTurn: 4, flippedTurn: 0}, true), false);
-assert.equal(flipContext.botSetFaceDown({owner: 2, row: 3, faceDown: false, attackedTurn: 0, flippedTurn: 4}, true), false);
 vm.runInContext(source.match(/function botEnemySpawnDistance\([^\n]+/)[0], defensiveContext);
 vm.runInContext(source.match(/function botFieldControlValue\([^\n]+/)[0], defensiveContext);
 assert.equal(defensiveContext.botEnemySpawnDistance(1, 1, 8), 0);
@@ -447,11 +435,11 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=7/);
-assert.match(page, /engine-actions-b\.js\?v=14/);
-assert.match(page, /engine-actions-a\.js\?v=20/);
-assert.match(page, /VERSÃO 122/);
+assert.match(page, /engine-actions-b\.js\?v=15/);
+assert.match(page, /engine-actions-a\.js\?v=21/);
+assert.match(page, /VERSÃO 123/);
 assert.match(page, /network\.js\?v=35/);
-assert.match(page, /engine-ui\.js\?v=36/);
+assert.match(page, /engine-ui\.js\?v=37/);
 assert.match(source, /function botCombinationWinsNow/);
 assert.match(source, /usesCombined:parts\.some\(u=>u\.fusion\)/);
 assert.match(source, /normalOptions\.length\?normalOptions:winningExceptions/);
@@ -460,10 +448,10 @@ assert.match(source, /state\.arena==='kingdom'&&xadriaPair\.has\(k\)/);
 assert.match(page, /styles-core\.css\?v=3/);
 assert.match(page, /id="home-brand"/);
 assert.match(source, /\$\('#home-brand'\)\.onclick=/);
-assert.match(page, /engine-core\.js\?v=20/);
+assert.match(page, /engine-core\.js\?v=21/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
-assert.match(page, /engine-actions-a\.js\?v=20/);
-assert.match(page, /engine-actions-b\.js\?v=14/);
+assert.match(page, /engine-actions-a\.js\?v=21/);
+assert.match(page, /engine-actions-b\.js\?v=15/);
 assert.match(source, /function recoverBotTurn/);
 assert.match(source, /catch\(error\)\{recoverBotTurn\(error\)\}/);
 assert.match(source, /function armBotWatchdog/);
@@ -494,9 +482,12 @@ assert.equal(logContext.inferLogType('Bot 2 ativou a Arena Selva Selvagem.'), 'a
 assert.match(source, /mobile\?state\.log:\[\.\.\.state\.log\]\.reverse\(\)/, 'a crônica móvel deve mostrar o evento mais recente primeiro');
 assert.match(page, /id="finish-combination"/, 'a Amálgama deve poder ser finalizada por um botão sobre a Arena');
 for (const type of ['combat','deploy','effect','combine','move','arena']) assert.match(styles, new RegExp(`log-entry\\.log-${type}`), `cor ausente na crônica: ${type}`);
-assert.match(source, /function destroyIfHiddenInAbyss/, 'o Abismo deve destruir peões virados para baixo');
+assert.doesNotMatch(page, /id="flip"/, 'a ação de virar deve ter sido removida da interface');
+assert.equal(context.effects.camouflage, undefined, 'Camuflar-se deve sair do jogo junto da mecânica de virar');
+assert.doesNotMatch(source, /function flipSelected|function botSetFaceDown/, 'jogadores e bots não devem mais virar peões');
+assert.match(source, /hasEffect\(attacker,'jaguar'\)[^\n]+bonusAtk=.*\+100/, 'a Onça deve ganhar 100 ATK quando derrota um adversário');
 assert.match(source, /selectedEffect=\{key:k,index:i,owner,arena:false\}/, 'os detalhes devem manter o dono da carta inspecionada');
-assert.match(page, /styles-responsive\.css\?v=16/);
+assert.match(page, /styles-responsive\.css\?v=17/);
 assert.match(styles, /\.board\[data-arena\] \.cell\.valid::before/);
 assert.match(styles, /\.board\[data-arena\] \.cell\.target::before/);
 assert.match(styles, /\.board \.piece\.p2\{border:3px solid/);
@@ -526,7 +517,7 @@ assert.equal(noticeContext.document.title, 'Confluxo — Jogo de Cartas Tático'
 assert.match(styles, /data-arena=abyss[^}]+six-eyes\.svg/);
 assert.doesNotMatch(fs.readFileSync('assets/icons/six-eyes.svg', 'utf8'), /M0 0h512v512H0z/, 'Six Eyes deve permanecer com fundo transparente');
 assert.match(page, /<h3>Ataque em conjunto<\/h3>/);
-assert.match(page, /virados para cima e em contato com o alvo/);
+assert.match(page, /outros peões <b>em contato com o alvo<\/b>/);
 assert.match(page, /network\.js\?v=35/);
 assert.match(page, /styles-game\.css\?v=8/);
 assert.match(page, /id="mode-bots"/);
@@ -558,14 +549,14 @@ assert.deepEqual(ownEyesTarget.equipment, [], 'o bot não deve equipar Eu vejo o
 assert.deepEqual(enemyEyesTarget.equipment, ['eyes'], 'o bot deve usar Eu vejo os olhos em um peão adversário');
 assert.match(source, /function botUsePushEffect\(player,p,requirePit=false\)/);
 assert.match(source, /function botUseRetreatEffect\(player,p\)/);
-assert.match(source, /function botUseCamouflageEffect\(player,p\)/);
+assert.doesNotMatch(source, /function botUseCamouflageEffect\(player,p\)/);
 assert.match(source, /played<2&&botPlayEffect\(\)/);
 const arenaBotContext = {
   state: {arena: 'roses', defeatedCount: 0, players: {1: {units: []}, 2: {name: 'Bot', hand: ['blackRoses'], units: []}}},
   effects: {roses: {name: 'Campo das Rosas Pálidas', type: 'ARENA'}, blackRoses: {name: 'Colina das Rosas Negras', type: 'ARENA'}, kingdom: {name: 'Reino de Xadria', type: 'ARENA'}},
   botActor: () => 2, botOpponent: () => 1,
   botUsePushEffect: () => false, botUseCastleEffect: () => false, botUsePitEffect: () => false, botUseEyesEffect: () => false,
-  botUseRetreatEffect: () => false, botUseCamouflageEffect: () => false,
+  botUseRetreatEffect: () => false,
   clearJungleFeatures() {}, allUnits: () => [], destroy() {}, render() {}, log() {},
   equipmentTargetAllowed: () => false, effectiveAtk: () => 0, copyEquipmentForRavens() {},
   botAttackChoices: () => [], playerAttackedThisTurn: () => false, playPeaceTreaty: () => false
@@ -591,13 +582,8 @@ assert.match(source, /ahead=botGameAdvantageScore\(player\)>0/);
 assert.match(source, /p\.archetype==='xadria'\?normal\.find\(card=>hasEffect\(card,'duck'\)\)/);
 assert.match(source, /fieldControl=botFieldControlValue\(advance,supportGap,botEnemySpawnDistance/);
 assert.match(source, /enemyApproach\.has/);
-assert.match(source, /function botChooseReveal\(\)/);
-assert.match(source, /function botChooseHide\(\)/);
-assert.match(source, /function botChooseHide\(\)\{if\(state\.arena==='abyss'\)return null/);
-assert.match(source, /scheduleBot\(hidden\?botHidePhase:botFinishTurn,hidden\?360:180\)/);
-assert.match(source, /scheduleBot\(botRevealPhase/);
-assert.match(source, /scheduleBot\(attacked\?botAttackPhase:botHidePhase/);
-assert.match(source, /u\.attackedTurn===state\.turn\|\|u\.flippedTurn===state\.turn/);
+assert.doesNotMatch(source, /function botChooseReveal|function botChooseHide|botRevealPhase|botHidePhase/);
+assert.match(source, /scheduleBot\(attacked\?botAttackPhase:botFinishTurn/);
 assert.match(source, /function botFusionMissingCount\(p\)/);
 assert.match(source, /function botFusionSetupScore\(p\)/);
 assert.match(source, /priority:botFusionMaterialPriority\(p,card\)/);
@@ -606,7 +592,7 @@ assert.match(source, /needsFusionMaterial=botFusionMissingCount\(p\)>0/);
 assert.match(source, /function botCombinationFollowup\(next\)/);
 assert.match(source, /botCombinationFollowup\(botAttackPhase\)/);
 assert.match(source, /function botUseCastleEffect\(player,p\)/);
-assert.match(source, /function botPrepareCastle\(\)/);
+assert.doesNotMatch(source, /function botPrepareCastle\(\)/);
 assert.match(source, /botUsePushEffect\(player,p,true\)\|\|botUseCastleEffect\(player,p\)/);
 assert.match(source, /botCastleGuardValue\(tower,p\)/);
 assert.match(styles, /art-crop\.celestial-art img/);

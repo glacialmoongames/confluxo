@@ -12,7 +12,7 @@ const styles = fs.readFileSync('styles-game.css', 'utf8') + fs.readFileSync('sty
 for (const card of ['divinissimo','terror','atra','impoluto','monkey','jaguar','crocodile','creature','devotee','raven','amalgam','repugnium','anssiedium']) {
   assert.match(expansion, new RegExp(`${card}:\\{`), `definição ausente: ${card}`);
 }
-for (const effect of ['crown','blackRoses','kingdom','tunnel','blackHole','moon','reveal','abyss','noEscape','eyes']) {
+for (const effect of ['crown','blackRoses','kingdom','tunnel','blackHole','moon','abyss','noEscape','eyes']) {
   assert.match(expansion, new RegExp(`${effect}:\\{`), `efeito ausente: ${effect}`);
 }
 assert.match(expansion, /archetypes\.abyss=/);
@@ -23,8 +23,8 @@ assert.match(ui, /beginMonkeyDestination/);
 assert.match(ui, /grantImpolutoPower/);
 assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
-assert.match(page, /engine-expansion\.js\?v=9/);
-assert.match(page, /VERSÃO 122/);
+assert.match(page, /engine-expansion\.js\?v=10/);
+assert.match(page, /VERSÃO 123/);
 assert.match(expansion, /Rosas Pálidas: quando um jogador perde um peão/);
 assert.match(expansion, /Rosas Negras: quando um jogador ganha pontos/);
 assert.match(expansion, /Cavaleiro da Casa Branca de Xadria: Justiça Alva/);
@@ -64,6 +64,9 @@ for (const icon of ['confluxo-favicon','empty-chessboard','flower-twirl','forest
 }
 assert.match(expansion, /rider:'caveman'/);
 assert.match(expansion, /jaguar:'feline'/);
+assert.match(expansion, /Onça Selvagem[^\n]+ganha 100 ATK permanentemente/);
+assert.doesNotMatch(expansion, /reveal:\{|camouflage/);
+assert.doesNotMatch(expansion, /Peões virados para baixo são destruídos/);
 for (const icon of ['caveman','feline']) assert.ok(fs.existsSync(`assets/icons/${icon}.svg`), `ícone ausente: ${icon}`);
 
 console.log('Expansion tests passed.');

@@ -9,7 +9,7 @@ Object.assign(defs,{
  atra:{name:'Rainha da Casa Preta de Xadria: Atra',atk:500,movement:[[-3,-3],[-3,3],[-2,-2],[-2,0],[-2,2],[-1,-1],[-1,0],[-1,1],[0,-2],[0,-1],[0,1],[0,2],[1,-1],[1,0],[1,1],[2,-2],[2,0],[2,2],[3,-3],[3,3]],types:['TREVAS'],glyph:'♛',fusion:4,materials:{type:'TREVAS'},activated:true,abilityLabel:'SACRIFICAR PEÃO',text:'Habilidade: sacrifique um aliado em seu raio para ganhar um movimento e um ataque extras neste turno.'},
  impoluto:{name:'Rei da Casa Branca de Xadria: Impoluto',atk:400,movement:[[-2,0],[-1,-1],[-1,0],[-1,1],[0,-2],[0,-1],[0,1],[0,2],[1,-1],[1,0],[1,1],[2,0]],types:['TREVAS'],glyph:'♚',fusion:3,materials:{type:'LUZ'},activated:true,abilityLabel:'CONCEDER ATK',text:'Uma vez por turno, perde 100 ATK e concede 200 ATK permanentemente a outro peão em seu raio.'},
  monkey:{name:'Macaco Selvagem',atk:200,movement:[[-3,-3],[-3,0],[-3,3],[-2,-2],[-2,0],[-2,2],[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,0]],types:['NATURAL'],glyph:'●',activated:true,abilityLabel:'MOVER ALIADO',text:'Habilidade: escolha um aliado NATURAL em contato e mova-o para uma casa dentro do raio do Macaco.'},
- jaguar:{name:'Onça Selvagem',atk:250,movement:[[-2,-1],[-2,0],[-2,1],[-1,-1],[-1,1],[2,0]],types:['NATURAL'],glyph:'◆',text:'Quando ataca um peão virado para baixo, destrói esse peão em vez de apenas revelá-lo.'},
+ jaguar:{name:'Onça Selvagem',atk:250,movement:[[-2,-1],[-2,0],[-2,1],[-1,-1],[-1,1],[2,0]],types:['NATURAL'],glyph:'◆',text:'Ao derrotar um peão adversário em combate, ganha 100 ATK permanentemente.'},
  crocodile:{name:'Crocodilo Selvagem',atk:350,movement:[[-2,-2],[-2,0],[-2,2],[-1,-2],[-1,-1],[-1,0],[-1,1],[-1,2],[0,-1],[0,1]],types:['NATURAL'],glyph:'⌁',fusion:2,materials:{type:'NATURAL'},text:'Depois de destruir um peão em combate, deve se mover novamente e, se alcançar outro adversário, pode atacar de novo.'},
  creature:{name:'Criatura Abissal',atk:200,movement:[[-1,-2],[-1,-1],[-1,0],[-1,1],[-1,2],[0,-1],[0,1],[1,-2],[1,-1],[1,0],[1,1],[1,2]],types:['TREVAS'],glyph:'●',text:'Um peão Abissal básico.'},
  devotee:{name:'Devoto Abissal',atk:250,movement:[[-2,-1],[-2,1],[-1,-1],[-1,0],[-1,1],[1,-1],[1,0],[1,1]],types:['TREVAS'],glyph:'†',text:'Quando entra em campo, cria um Poço sem Fundo em qualquer casa livre.'},
@@ -36,8 +36,7 @@ Object.assign(effects,{
  tunnel:{name:'Cavar Túnel',type:'UTILIDADE',icon:'◒',text:'Coloque duas entradas em casas livres e conectadas. Um peão que pisa em uma entrada sai pela outra.'},
  blackHole:{name:'Buraco Negro',type:'UTILIDADE',icon:'●',text:'Coloque-o em uma casa livre. No começo do próximo turno, todos os peões adjacentes são destruídos.'},
  moon:{name:'Lua em Órbita',type:'EQUIPAMENTO',icon:'☾',equipOnly:'earth',text:'Equipe somente à Terra: triplica seu raio e concede 100 ATK.'},
- reveal:{name:'Revelar',type:'UTILIDADE',icon:'◉',text:'Escolha qualquer peão virado para baixo e revele-o.'},
- abyss:{name:'Abismo do Terror',type:'ARENA',icon:'◉',text:'Peões virados para baixo são destruídos. Ao destruir um peão, o responsável ganha 100 ATK e cria um Poço na casa da vítima.'},
+ abyss:{name:'Abismo do Terror',type:'ARENA',icon:'◉',text:'Ao destruir um peão, o responsável ganha 100 ATK e cria um Poço na casa da vítima.'},
  noEscape:{name:'Não há escapatoria',type:'UTILIDADE',icon:'↯',text:'Nenhum peão pode se mover durante o próximo turno do oponente.'},
  eyes:{name:'Eu vejo os olhos',type:'EQUIPAMENTO',icon:'◉',text:'O equipado ganha 400 ATK. Se puder se mover e terminar o turno sem mover, o peão equipado é destruído.'}
 });
@@ -46,13 +45,13 @@ Object.assign(effects.bow,{name:'Arco Primitivo',text:'O equipado pode atacar pe
 
 const cardIcons={infantry:'guards',tower:'white-tower',jester:'jester-hat',archer:'bowman',duck:'duck',horse:'horse-head',babel:'evil-tower',justice:'mounted-knight',divinissimo:'chess-bishop',terror:'mounted-knight',atra:'chess-queen',impoluto:'chess-king',rabbit:'rabbit',rider:'caveman',serpent:'cobra',hawk:'hawk-emblem',golem:'golem-head',monkey:'monkey',jaguar:'feline',crocodile:'croc-jaws',creature:'monster-grasp',devotee:'cultist',raven:'raven',amalgam:'tentacles-skull',repugnium:'haunting',anssiedium:'sinking-trap'};
 Object.entries(cardIcons).forEach(([key,name])=>setCardIcon(defs[key],name,['archer','horse','babel','terror','atra'].includes(key)?'black':'white'));
-const effectIcons={retreat:'backward-time',castle:'castle',sword:'rune-sword',burn:'burning-embers',roses:'rose',blackRoses:'shut-rose',kingdom:'empty-chessboard',crown:'queen-crown',camouflage:'hood',jungle:'forest',bow:'bow-arrow',tunnel:'cave-entrance',pit:'hole',push:'push',asteroid:'asteroid',project:'orbit',peace:'peace-dove',blackHole:'black-hole-bolas',moon:'moon-orbit',reveal:'semi-closed-eye',abyss:'evil-eyes',noEscape:'fish-escape',eyes:'all-seeing-eye'};
-Object.entries(effectIcons).forEach(([key,name])=>setCardIcon(effects[key],name,['roses','kingdom','crown','moon','reveal'].includes(key)?'black':'white'));
+const effectIcons={retreat:'backward-time',castle:'castle',sword:'rune-sword',burn:'burning-embers',roses:'rose',blackRoses:'shut-rose',kingdom:'empty-chessboard',crown:'queen-crown',jungle:'forest',bow:'bow-arrow',tunnel:'cave-entrance',pit:'hole',push:'push',asteroid:'asteroid',project:'orbit',peace:'peace-dove',blackHole:'black-hole-bolas',moon:'moon-orbit',abyss:'evil-eyes',noEscape:'fish-escape',eyes:'all-seeing-eye'};
+Object.entries(effectIcons).forEach(([key,name])=>setCardIcon(effects[key],name,['roses','kingdom','crown','moon'].includes(key)?'black':'white'));
 
-Object.assign(archetypes.xadria,{emblem:'▦',emblemArt:icon('empty-chessboard'),fusions:['babel','justice','divinissimo','terror','atra','impoluto'],effects:['retreat','castle','sword','crown','burn','roses','blackRoses','pit','push','reveal','peace']});
-Object.assign(archetypes.wild,{emblem:'✿',emblemArt:icon('forest'),pawns:['rabbit','rider','hawk','monkey','jaguar'],fusions:['serpent','golem','crocodile'],effects:['camouflage','jungle','bow','tunnel','retreat','burn','pit','push','reveal','peace']});
-Object.assign(archetypes.celestial,{emblem:'✺',emblemArt:icon('orbit'),effects:['asteroid','project','blackHole','moon','burn','pit','push','reveal','peace']});
-archetypes.abyss={name:'Terror Abissal',emblem:'◉',emblemArt:icon('evil-eyes'),pawns:['creature','devotee','raven'],fusions:['amalgam','repugnium','anssiedium'],effects:['abyss','noEscape','eyes','pit','push','reveal','peace']};
+Object.assign(archetypes.xadria,{emblem:'▦',emblemArt:icon('empty-chessboard'),fusions:['babel','justice','divinissimo','terror','atra','impoluto'],effects:['retreat','castle','sword','crown','burn','roses','blackRoses','pit','push','peace']});
+Object.assign(archetypes.wild,{emblem:'✿',emblemArt:icon('forest'),pawns:['rabbit','rider','hawk','monkey','jaguar'],fusions:['serpent','golem','crocodile'],effects:['jungle','bow','tunnel','retreat','burn','pit','push','peace']});
+Object.assign(archetypes.celestial,{emblem:'✺',emblemArt:icon('orbit'),effects:['asteroid','project','blackHole','moon','burn','pit','push','peace']});
+archetypes.abyss={name:'Terror Abissal',emblem:'◉',emblemArt:icon('evil-eyes'),pawns:['creature','devotee','raven'],fusions:['amalgam','repugnium','anssiedium'],effects:['abyss','noEscape','eyes','pit','push','peace']};
 
 function archetypeVisual(key,extra=''){let a=archetypes[key];return `<img class="archetype-icon ${extra}" src="${a.emblemArt}" alt="Símbolo ${a.name}">`}
 function archetypeOfUnit(u){return state?.players?.[u?.owner]?.archetype||Object.keys(archetypes).find(key=>[...archetypes[key].pawns,...archetypes[key].fusions].includes(u?.kind))||'xadria'}
