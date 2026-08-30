@@ -18,12 +18,13 @@ for (const effect of ['crown','blackRoses','kingdom','tunnel','blackHole','moon'
 assert.match(expansion, /archetypes\.abyss=/);
 assert.match(expansion, /assets\/icons\//);
 assert.match(runtime, /baseDoMove/);
+assert.match(runtime, /transformed:true,fusion:0,pointValue:1/, 'Atra criada pela Coroa deve valer somente um ponto');
 assert.match(ui, /beginMonkeyDestination/);
 assert.match(ui, /grantImpolutoPower/);
 assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
 assert.match(page, /engine-expansion\.js\?v=9/);
-assert.match(page, /VERSÃO 121/);
+assert.match(page, /VERSÃO 122/);
 assert.match(expansion, /Rosas Pálidas: quando um jogador perde um peão/);
 assert.match(expansion, /Rosas Negras: quando um jogador ganha pontos/);
 assert.match(expansion, /Cavaleiro da Casa Branca de Xadria: Justiça Alva/);

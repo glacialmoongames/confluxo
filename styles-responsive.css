@@ -147,3 +147,36 @@
 
 /* Marcadores de ação sempre ficam acima das decorações das Arenas. */
 .board[data-arena] .cell.valid::before{content:"";position:absolute;display:block;width:27%;height:auto;aspect-ratio:1;right:auto;top:auto;border-radius:50%;background:#e3b85a;box-shadow:0 0 12px #e9b84e;filter:none;opacity:1;z-index:6;pointer-events:none}.board[data-arena] .cell.target::before{content:"⚔";position:absolute;display:grid;width:45%;height:auto;aspect-ratio:1;right:auto;top:auto;place-items:center;border-radius:50%;background:#792f3b;color:#fff;box-shadow:0 0 14px #8c243a;filter:none;opacity:1;z-index:7;pointer-events:none;font-size:clamp(9px,1.4vw,18px)}
+
+/* Versão 122: leitura, combinação móvel e crônica por categoria. */
+.combine-card-btn,.card-ability-btn{width:calc(100% - 16px);margin:7px 8px 3px;min-height:38px;font-size:11px}.finish-combination{position:absolute;z-index:30;left:50%;bottom:31px;transform:translateX(-50%);max-width:min(86%,360px);padding:9px 14px;border:2px solid #f0c76d;border-radius:5px;background:#542c67;color:#fff4cf;font:700 10px Georgia;letter-spacing:1px;box-shadow:0 5px 20px #000c,0 0 15px #c768e788;cursor:pointer;white-space:nowrap}.finish-combination:hover{filter:brightness(1.18)}
+.log-entry{border-left-width:4px;border-radius:3px;padding:7px 8px;margin:6px 0;background:#ded4c344}.log-entry.log-combat{border-color:#b83242;background:#b8324218}.log-entry.log-deploy{border-color:#37844e;background:#37844e18}.log-entry.log-effect{border-color:#3578b8;background:#3578b818}.log-entry.log-combine{border-color:#7d42a8;background:#7d42a818}.log-entry.log-move{border-color:#c39b27;background:#c39b271c}.log-entry.log-arena{border-color:#d56f26;background:#d56f261c}.log-entry.log-points{border-color:#aa7d25;background:#e4bb4d1c}.log-entry.log-combat b{color:#a32639}.log-entry.log-deploy b{color:#26703d}.log-entry.log-effect b{color:#28689f}.log-entry.log-combine b{color:#713493}.log-entry.log-move b{color:#8c6b0e}.log-entry.log-arena b{color:#ad541d}
+
+@media(min-width:761px){
+ main{max-width:1920px;padding-left:clamp(10px,1.25vw,24px);padding-right:clamp(10px,1.25vw,24px)}
+ .game-layout{grid-template-columns:110px minmax(240px,290px) minmax(360px,1fr) minmax(350px,410px);gap:10px}
+ .details-panel .unit-card{margin:7px}.details-panel .unit-card h3{font-size:15px;line-height:1.18}.details-panel .unit-card p,.details-panel .effect-detail .full-effect{font-size:11px;line-height:1.42}.details-panel .badge{font-size:9px}.details-panel .statline{font-size:12px}.details-panel .movement-preview{font-size:10px}
+ .chronicle-panel .log{padding:9px 11px;font-size:12px;line-height:1.45}.chronicle-panel .log-entry{padding:7px 8px;margin:7px 0}.chronicle-panel .log-title,.details-panel .panel-title{font-size:10px}
+ .action-panel .side-controls .action b{font-size:10px}.action-panel .side-controls .end-turn{font-size:10px}
+}
+@media(max-width:1160px) and (min-width:761px){
+ .game-layout{grid-template-columns:100px minmax(190px,220px) minmax(290px,1fr) minmax(270px,320px);gap:7px}
+ .details-panel .unit-card h3{font-size:13px}.details-panel .unit-card p,.details-panel .effect-detail .full-effect{font-size:10px}.chronicle-panel .log{font-size:11px;padding:7px}
+}
+
+@media(max-width:760px){
+ html,body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto;overscroll-behavior-x:none;overscroll-behavior-y:auto}
+ .topbar{height:38px;min-height:38px}.brand b{font-size:11px}.turn-panel span:first-child{font-size:7px}.turn-panel strong{font-size:9px}.turn-panel span:last-child{font-size:7px}
+ main{height:auto;min-height:calc(100dvh - 38px);overflow:visible;grid-template-rows:30px 24px max(260px,calc(100dvh - 253px)) 30px 40px 72px 28px 220px;gap:3px;padding-bottom:6px}
+ .board{width:100%;height:auto;max-width:100%;max-height:100%}
+ .player-strip{height:30px;min-height:30px}.player-id small{font-size:6px}.player-id b{font-size:9px}.score span{font-size:16px}.score small{font-size:6px}
+ .chronicle-panel .global-arena{height:24px;min-height:24px;flex-basis:24px;font-size:7px}.global-arena b{font-size:8px!important}
+ .hint{font-size:7px;line-height:1.2}.action-panel .side-controls,.action-panel .side-controls .action,.action-panel .side-controls .end-turn{height:40px;min-height:40px}.action-panel .side-controls .action b,.action-panel .side-controls .end-turn{font-size:7px}.action-panel .side-controls .action>span{font-size:16px}
+ .hand-zone{height:72px;min-height:72px}.hand-block,.reserve-block{height:66px}.hand-head small,.reserve-head small{font-size:6px}.hand,.pawn-hand{height:52px}.effect-card{height:47px}.effect-card h4{font-size:7px}.effect-card .type{font-size:5px}.reserve-piece{width:45px;height:45px;min-width:45px}.reserve-piece b{font-size:6px!important}
+ .card-details{max-height:calc(100dvh - 46px)}.unit-card h3{font-size:13px}.unit-card p,.effect-detail .full-effect{font-size:10px!important;line-height:1.4}.badge{font-size:8px}.statline{font-size:11px}.combine-card-btn,.card-ability-btn,.play-card-btn{min-height:40px;font-size:10px}
+ .finish-combination{position:fixed;bottom:118px;max-width:calc(100vw - 36px);font-size:9px;padding:9px 11px}
+ .chronicle-panel .log-title{display:block;order:7;width:100%;height:28px;padding:8px 10px;background:#e8e2d5;border:1px solid #9c8d70;border-bottom:0;border-radius:5px 5px 0 0;font-size:9px}
+ .chronicle-panel .log{display:block;order:8;width:100%;height:220px;min-height:220px;overflow-y:auto;padding:7px 8px;background:#e8e2d5;border:1px solid #9c8d70;border-top:0;border-radius:0 0 5px 5px;font-size:11px;line-height:1.42}
+ .chronicle-panel .log-entry{padding:8px;margin:6px 0}
+}
+@media(max-width:760px) and (max-height:680px){main{grid-template-rows:27px 22px max(235px,calc(100dvh - 227px)) 27px 36px 64px 28px 210px}.player-strip{height:27px;min-height:27px}.side-controls,.action-panel .side-controls .action,.action-panel .side-controls .end-turn{height:36px;min-height:36px}.hand-zone{height:64px;min-height:64px}.hand-block,.reserve-block{height:58px}.hand,.pawn-hand{height:45px}.effect-card{height:41px}.finish-combination{bottom:106px}}
