@@ -437,7 +437,7 @@ assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=7/);
 assert.match(page, /engine-actions-b\.js\?v=15/);
 assert.match(page, /engine-actions-a\.js\?v=24/);
-assert.match(page, /VERSÃO 132/);
+assert.match(page, /VERSÃO 133/);
 assert.match(page, /network\.js\?v=35/);
 assert.match(page, /engine-ui\.js\?v=37/);
 assert.match(source, /function botCombinationWinsNow/);
@@ -445,7 +445,7 @@ assert.match(source, /usesCombined:parts\.some\(u=>u\.fusion\)/);
 assert.match(source, /normalOptions\.length\?normalOptions:winningExceptions/);
 assert.match(source, /state\.arena=xadriaPair\.has\(previous\)&&xadriaPair\.has\(key\)&&previous!==key\?'kingdom':key/);
 assert.match(source, /state\.arena==='kingdom'&&xadriaPair\.has\(k\)/);
-assert.match(page, /styles-core\.css\?v=3/);
+assert.match(page, /styles-core\.css\?v=5/);
 assert.match(page, /id="home-brand"/);
 assert.match(source, /\$\('#home-brand'\)\.onclick=/);
 assert.match(page, /engine-core\.js\?v=21/);
@@ -487,7 +487,7 @@ assert.equal(context.effects.camouflage, undefined, 'Camuflar-se deve sair do jo
 assert.doesNotMatch(source, /function flipSelected|function botSetFaceDown/, 'jogadores e bots não devem mais virar peões');
 assert.match(source, /hasEffect\(attacker,'jaguar'\)[^\n]+bonusAtk=.*\+100/, 'a Onça deve ganhar 100 ATK quando derrota um adversário');
 assert.match(source, /selectedEffect=\{key:k,index:i,owner,arena:false\}/, 'os detalhes devem manter o dono da carta inspecionada');
-assert.match(page, /styles-responsive\.css\?v=26/);
+assert.match(page, /styles-responsive\.css\?v=27/);
 assert.doesNotMatch(page, /SUA MÃO/);
 assert.match(page, /<div class="reserve-head"><div><b>Peões<\/b><\/div><span><b id="pawn-deck-count">0<\/b> na pilha<\/span><\/div>/);
 assert.match(styles, /reserve-hand-panel \.reserve-head>span/);
@@ -542,7 +542,7 @@ assert.doesNotMatch(fs.readFileSync('assets/icons/six-eyes.svg', 'utf8'), /M0 0h
 assert.match(page, /<h3>Ataque em conjunto<\/h3>/);
 assert.match(page, /outros peões <b>em contato com o alvo<\/b>/);
 assert.match(page, /network\.js\?v=35/);
-assert.match(page, /styles-game\.css\?v=8/);
+assert.match(page, /styles-game\.css\?v=10/);
 assert.match(page, /id="mode-bots"/);
 assert.match(page, /BOT CONTRA BOT/);
 assert.match(source, /function botControls\(player\)/);
@@ -686,5 +686,9 @@ assert.match(styles, /\.board\{box-sizing:content-box;width:auto;height:calc\(10
 assert.match(styles, /\.board\{box-sizing:content-box;width:calc\(100% - 22px\)[^}]+aspect-ratio:6\/8/);
 assert.match(styles, /\.board \.piece\{box-shadow:none!important\}/);
 assert.doesNotMatch(styles, /\.board \.piece\.p[12]\{[^}]*box-shadow/);
+assert.match(styles, /\.board \.piece:not\(\.fusion\)\.deck-xadria\{background:#4b3455\}/);
+assert.match(styles, /\.board \.piece:not\(\.fusion\)\.deck-wild\{background:#365b3d\}/);
+assert.match(styles, /\.reserve-piece:not\(\.fusion-card\)\{background:#3d3441;box-shadow:none!important\}/);
+assert.match(styles, /\.unit-card:not\(\.combined-detail\)\[data-deck=celestial\] \.detail-art\{background:#173b5c!important\}/);
 
 console.log('game card tests passed');
