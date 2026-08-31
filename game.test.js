@@ -261,7 +261,7 @@ botDeployContext.hasEffect = (unit, effect) => unit.kind === effect;
 assert.equal(botDeployContext.botDeployPawn(), true);
 assert.equal(botDeployment.unit.id, 'duck', 'Xadria deve colocar o Pato em campo para bloquear o rival');
 const drawPlayer = {name: 'Bot', drawn: false, pawnDeck: ['pawn'], effectDeck: ['effect'], reserve: [], hand: []};
-const drawContext = {state: {awaitingDraw: true, players: {1: drawPlayer}}, botActor: () => 1, botGameAdvantageScore: () => 1, botFusionMissingCount: () => 0, log: () => {}};
+const drawContext = {state: {awaitingDraw: true, players: {1: drawPlayer}}, botActor: () => 1, botGameAdvantageScore: () => 1, botFusionMissingCount: () => 0, takePawnFromDeck: player => player.pawnDeck.pop(), log: () => {}};
 vm.createContext(drawContext);
 vm.runInContext(source.match(/function botDraw\([^\n]+/)[0], drawContext);
 drawContext.botDraw();
@@ -271,6 +271,20 @@ Object.assign(drawPlayer, {drawn: false, pawnDeck: ['fusion-material'], effectDe
 drawContext.botFusionMissingCount = () => 1;
 drawContext.botDraw();
 assert.deepEqual(drawPlayer.reserve, ['fusion-material'], 'material ausente para combinação deve superar a preferência por Efeitos');
+
+for (const name of ['ownedFusionKinds', 'ownsEveryUniqueFusion', 'takePawnFromDeck']) vm.runInContext(source.match(new RegExp(`function ${name}\\([^\\n]+`))[0], context);
+const completeFusionPlayer = {
+  archetype: 'xadria',
+  reserve: [{kind:'babel',fusion:2}],
+  units: [{kind:'justice',fusion:2}],
+  initialUnits: [],
+  pawnDeck: [{kind:'infantry',fusion:0},{kind:'babel',fusion:2}]
+};
+assert.equal(context.ownsEveryUniqueFusion(completeFusionPlayer), true);
+assert.equal(context.takePawnFromDeck(completeFusionPlayer).kind, 'infantry', 'quem já possui todas as combinações únicas deve comprar um peão normal');
+assert.equal(completeFusionPlayer.pawnDeck[0].kind, 'babel', 'a combinação repetida deve permanecer na pilha');
+const incompleteFusionPlayer = {archetype:'xadria',reserve:[],units:[],initialUnits:[],pawnDeck:[{kind:'infantry',fusion:0},{kind:'babel',fusion:2}]};
+assert.equal(context.takePawnFromDeck(incompleteFusionPlayer).kind, 'babel', 'antes de completar a coleção, a compra normal da pilha é preservada');
 const fusionPlanningContext = {botFusionMaterials: () => [{kind: 'tower'}]};
 vm.createContext(fusionPlanningContext);
 vm.runInContext(source.match(/function botFusionCoverage\([^\n]+/)[0], fusionPlanningContext);
@@ -448,17 +462,17 @@ assert.match(source, /if\(retreatObstacle\)state\.obstacles=state\.obstacles\.fi
 assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
-assert.match(page, /engine-celestial\.js\?v=7/);
-assert.match(page, /engine-actions-b\.js\?v=18/);
+assert.match(page, /engine-celestial\.js\?v=8/);
+assert.match(page, /engine-actions-b\.js\?v=19/);
 assert.match(page, /engine-actions-a\.js\?v=27/);
-assert.match(page, /VERSÃO 144/);
+assert.match(page, /VERSÃO 145/);
 assert.match(page, /game-catalog\.js\?v=1/);
 assert.match(source, /function registerPawns/);
 assert.match(source, /function registerEffects/);
 assert.match(source, /function registerArchetype/);
 assert.match(source, /function validateGameCatalog/);
 assert.match(page, /network\.js\?v=36/);
-assert.match(page, /engine-ui\.js\?v=38/);
+assert.match(page, /engine-ui\.js\?v=39/);
 assert.match(source, /function botCombinationWinsNow/);
 assert.match(source, /usesCombined:parts\.some\(u=>u\.fusion\)/);
 assert.match(source, /normalOptions\.length\?normalOptions:winningExceptions/);
@@ -469,10 +483,10 @@ assert.match(page, /styles-responsive\.css\?v=36/);
 assert.match(styles, /\.piece \.dual-xadria-art\{inset:2px/);
 assert.match(page, /id="home-brand"/);
 assert.match(source, /\$\('#home-brand'\)\.onclick=/);
-assert.match(page, /engine-core\.js\?v=26/);
+assert.match(page, /engine-core\.js\?v=27/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
 assert.match(page, /engine-actions-a\.js\?v=27/);
-assert.match(page, /engine-actions-b\.js\?v=18/);
+assert.match(page, /engine-actions-b\.js\?v=19/);
 assert.match(source, /function recoverBotTurn/);
 assert.match(source, /catch\(error\)\{recoverBotTurn\(error\)\}/);
 assert.match(source, /function armBotWatchdog/);

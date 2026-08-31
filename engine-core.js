@@ -63,6 +63,9 @@ function botControls(player){return botMode&&(botVsBot||player===botPlayer)}
 function botActor(){return botVsBot?state.current:botPlayer}
 function botOpponent(player=botActor()){return player===1?2:1}
 function makePawnDeck(owner,key){let arc=archetypes[key];if(arc.pawnComposition)return shuffle([...arc.pawnComposition,...arc.pawnComposition].map(kind=>unit(kind,owner)));let fusionSlots=key==='xadria'?8:6,commonSlots=36-fusionSlots,cards=Array.from({length:commonSlots},(_,i)=>unit(arc.pawns[i%arc.pawns.length],owner));for(let i=0;i<fusionSlots;i++)cards.push(unit(arc.fusions[i%arc.fusions.length],owner));return shuffle(cards)}
+function ownedFusionKinds(player){return new Set([...(player?.reserve||[]),...(player?.units||[]),...(player?.initialUnits||[])].filter(u=>u.fusion).map(u=>u.kind))}
+function ownsEveryUniqueFusion(player){let unique=archetypes[player?.archetype]?.fusions||[];if(!unique.length)return false;let owned=ownedFusionKinds(player);return unique.every(kind=>owned.has(kind))}
+function takePawnFromDeck(player){if(!player?.pawnDeck?.length)return null;let index=player.pawnDeck.length-1;if(ownsEveryUniqueFusion(player)){for(let i=index;i>=0;i--)if(!player.pawnDeck[i].fusion){index=i;break}}return player.pawnDeck.splice(index,1)[0]}
 function drawRandomInitialPawns(player,count=3){for(let i=0;i<count;i++){let index=player.pawnDeck.findIndex(u=>!u.fusion&&!u.condition);if(index<0)break;let u=player.pawnDeck.splice(index,1)[0];u.initial=true;player.initialUnits.push(u)}}
 function makeEffectDeck(key){let pool=archetypes[key].effects;return shuffle(Array.from({length:40},(_,i)=>pool[i%pool.length]))}
 function newGame(){
