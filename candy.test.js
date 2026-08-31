@@ -10,6 +10,7 @@ const ui = fs.readFileSync('engine-ui.js','utf8');
 const celestial = fs.readFileSync('engine-celestial.js','utf8');
 const boardRenderer = fs.readFileSync('engine-actions-a.js','utf8');
 const responsiveStyles = fs.readFileSync('styles-responsive.css','utf8');
+assert.match(fs.readFileSync('engine-expansion.js','utf8'),/cookieDemon:\{name:'Demônio Biscoito'[^\n]+fusion:4,materials:\{type:'DOCE'\}/,'Demônio Biscoito deve exigir 4 Peões DOCE');
 
 const conversionContext = {
   state:{current:1,players:{1:{name:'Doce',units:[]},2:{name:'Rival',units:[]}}},
