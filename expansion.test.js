@@ -7,7 +7,7 @@ const runtime = fs.readFileSync('engine-expansion-runtime.js', 'utf8');
 const ui = fs.readFileSync('engine-ui.js', 'utf8');
 const actionsA = fs.readFileSync('engine-actions-a.js', 'utf8');
 const page = fs.readFileSync('index.html', 'utf8');
-const styles = fs.readFileSync('styles-game.css', 'utf8') + fs.readFileSync('styles-responsive.css', 'utf8');
+const styles = fs.readFileSync('styles-core.css', 'utf8') + fs.readFileSync('styles-game.css', 'utf8') + fs.readFileSync('styles-responsive.css', 'utf8');
 
 for (const card of ['divinissimo','terror','atra','impoluto','monkey','jaguar','crocodile','creature','devotee','raven','amalgam','repugnium','anssiedium']) {
   assert.match(expansion, new RegExp(`${card}:\\{`), `definição ausente: ${card}`);
@@ -71,6 +71,10 @@ assert.match(styles, /\.art-crop\.xadria-white-art/);
 assert.match(styles, /\.art-crop\.xadria-black-art/);
 assert.match(styles, /\.peace-banner/);
 assert.match(styles, /data-arena=blackRoses/);
+assert.match(styles, /board\[data-p1=celestial\] \.zone1/);
+assert.match(styles, /board\[data-p2=celestial\] \.zone2/);
+assert.match(styles, /board\[data-p1=abyss\] \.zone1/);
+assert.match(styles, /board\[data-p2=abyss\] \.zone2/);
 assert.match(styles, /\.rules-hero/);
 
 for (const icon of ['confluxo-favicon','empty-chessboard','flower-twirl','forest','orbit','evil-eyes','six-eyes','haunting','rose','peace-dove']) {

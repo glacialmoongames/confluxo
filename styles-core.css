@@ -23,6 +23,10 @@ body{height:100vh;overflow:hidden}.topbar{height:56px;padding:0 20px;position:re
 .board[data-p1=wild] .zone1{background:linear-gradient(145deg,#48634d,#39463d);box-shadow:inset 0 -4px #88b47d}
 .board[data-p2=xadria] .zone2{background:linear-gradient(145deg,#66516f,#413948);box-shadow:inset 0 4px #d0a85e}
 .board[data-p2=wild] .zone2{background:linear-gradient(145deg,#48634d,#39463d);box-shadow:inset 0 4px #88b47d}
+.board[data-p1=celestial] .zone1{background:linear-gradient(145deg,#245579,#172d42);box-shadow:inset 0 -4px #70bce2}
+.board[data-p2=celestial] .zone2{background:linear-gradient(145deg,#245579,#172d42);box-shadow:inset 0 4px #70bce2}
+.board[data-p1=abyss] .zone1{background:linear-gradient(145deg,#6a244b,#291321);box-shadow:inset 0 -4px #c75488}
+.board[data-p2=abyss] .zone2{background:linear-gradient(145deg,#6a244b,#291321);box-shadow:inset 0 4px #c75488}
 .coord{position:absolute;z-index:6;pointer-events:none;color:#f5df9e;font:700 clamp(6px,.55vw,8px)/1 Arial;text-shadow:0 1px 2px #000,0 0 3px #000;opacity:.9}.coord-file{left:50%;transform:translateX(-50%)}.coord-top{top:2px}.coord-bottom{bottom:2px}.coord-rank{top:50%;transform:translateY(-50%)}.coord-left{left:2px}.coord-right{right:2px}
 .arena-row.bottom{background:#2c2730;color:#d5ccbf;border-color:#655c69}
 

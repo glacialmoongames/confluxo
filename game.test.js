@@ -493,7 +493,7 @@ assert.match(source, /usesCombined:parts\.some\(u=>u\.fusion\)/);
 assert.match(source, /normalOptions\.length\?normalOptions:winningExceptions/);
 assert.match(source, /state\.arena=xadriaPair\.has\(previous\)&&xadriaPair\.has\(key\)&&previous!==key\?'kingdom':key/);
 assert.match(source, /state\.arena==='kingdom'&&xadriaPair\.has\(k\)/);
-assert.match(page, /styles-core\.css\?v=6/);
+assert.match(page, /styles-core\.css\?v=7/);
 assert.match(page, /styles-responsive\.css\?v=36/);
 assert.match(styles, /\.piece \.dual-xadria-art\{inset:2px/);
 assert.match(page, /id="home-brand"/);
