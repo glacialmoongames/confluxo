@@ -32,7 +32,7 @@ assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
 assert.match(page, /engine-expansion\.js\?v=15/);
 assert.doesNotMatch(expansion, /Object\.assign\((?:defs|effects|archetypes)/, 'o catálogo não deve ser alterado diretamente');
-assert.match(page, /VERSÃO 143/);
+assert.match(page, /VERSÃO 144/);
 assert.match(expansion, /Rosas Pálidas: quando um jogador perde um peão/);
 assert.match(expansion, /Rosas Negras: quando um jogador ganha pontos/);
 assert.match(expansion, /Lua em Órbita[^\n]+preenche continuamente seu raio até 3 casas/);

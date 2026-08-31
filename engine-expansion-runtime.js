@@ -12,8 +12,7 @@ doMove=function(u,r,c){
 };
 
 function isSweetUnit(u){return !!u?.types?.includes('DOCE')}
-function mausoleumEdge(owner){let field=state.players[owner]?.units?.filter(u=>u.row!==null)||[];return field.length?(owner===1?Math.min(...field.map(u=>u.row)):Math.max(...field.map(u=>u.row))):(owner===1?ROWS-2:1)}
-function insideMausoleumOwnerArea(u){if(state.arena!=='mausoleum'||!state.arenaOwner||u?.row===null)return false;let edge=mausoleumEdge(state.arenaOwner);return state.arenaOwner===1?u.row>=edge:u.row<=edge}
+function insideMausoleumOwnerArea(u){return u?.row!==null&&mausoleumAreaContains(state.arenaOwner,u.row)}
 function refreshMausoleumTypes(){if(!state?.players)return;allUnits().forEach(u=>{u.baseTypes??=[...(u.types||[])];let transformed=insideMausoleumOwnerArea(u);if(transformed){u.types=['DOCE','ZUMBI'];u.mausoleumSweet=true}else if(u.mausoleumSweet){u.types=[...u.baseTypes];delete u.mausoleumSweet}})}
 function spawnRecipeZombie(owner,cell){if(!owner||cell.row===null||at(cell.row,cell.col))return false;let zombie=unit('candyZombie',owner);place(zombie,cell.row,cell.col);state.players[owner].units.push(zombie);log(`${effects.candyRecipe.name} criou ${zombie.name} em ${boardCoordinate(cell.row,cell.col)} para ${state.players[owner].name}.`,'effect');return true}
 function resolveCandyZombieConversion(zombie,killer){if(!hasEffect(zombie,'candyZombie')||state.current!==zombie.owner||!killer||killer.row===null)return false;let previous=killer.owner,newOwner=zombie.owner;if(previous===newOwner)return false;state.players[previous].units=state.players[previous].units.filter(u=>u.id!==killer.id);killer.owner=newOwner;killer.baseTypes=[...new Set([...(killer.baseTypes||killer.types||[]),'DOCE','ZUMBI'])];killer.types=[...killer.baseTypes];state.players[newOwner].units.push(killer);log(`${zombie.name} converteu ${killer.name} em DOCE · ZUMBI e o passou para ${state.players[newOwner].name}.`,'effect');return true}

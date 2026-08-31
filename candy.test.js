@@ -7,6 +7,8 @@ const core = fs.readFileSync('engine-core.js','utf8');
 const actions = fs.readFileSync('engine-actions-b.js','utf8');
 const runtime = fs.readFileSync('engine-expansion-runtime.js','utf8');
 const ui = fs.readFileSync('engine-ui.js','utf8');
+const boardRenderer = fs.readFileSync('engine-actions-a.js','utf8');
+const responsiveStyles = fs.readFileSync('styles-responsive.css','utf8');
 
 const conversionContext = {
   state:{current:1,players:{1:{name:'Doce',units:[]},2:{name:'Rival',units:[]}}},
@@ -47,12 +49,17 @@ const deployContext={
   at:()=>null,obstacleAt:()=>null,pitAt:()=>null,Map
 };
 vm.createContext(deployContext);
+vm.runInContext(core.match(/function mausoleumEdge\([^\n]+/)[0],deployContext);
+vm.runInContext(core.match(/function mausoleumAreaContains\([^\n]+/)[0],deployContext);
 vm.runInContext(core.match(/function deploymentTargetsFor\([^\n]+/)[0],deployContext);
 let deployTargets=deployContext.deploymentTargetsFor(1);
 assert.ok(deployTargets.some(cell=>cell.r===4&&cell.c===2),'Bruxa deve permitir colocação em contato fora do polo');
 deployContext.state.arena='mausoleum';
+deployContext.state.arenaOwner=1;
 deployTargets=deployContext.deploymentTargetsFor(1);
 assert.ok(deployTargets.some(cell=>cell.r===5&&cell.c===0),'Mausoléu deve expandir a área até o peão mais avançado');
+assert.equal(deployContext.mausoleumAreaContains(1,5),true,'a linha expandida deve fazer parte da área visual do Mausoléu');
+assert.equal(deployContext.mausoleumAreaContains(1,4),false,'linhas além do peão mais avançado não devem receber o efeito');
 
 assert.match(actions,/state\.graveyard/,'peões normais destruídos precisam entrar no cemitério');
 assert.match(actions,/spawnRecipeZombie\(recipeOwner,death\)/,'Receita de Doce precisa criar o Zombie Bombom');
@@ -61,5 +68,8 @@ assert.match(ui,/k==='trickTreat'/);
 assert.match(ui,/key==='candyRecipe'/);
 assert.match(runtime,/hasEffect\(ghost,'gumGhost'\)/);
 assert.match(runtime,/hasEffect\(u,'cookieDemon'\)/);
+assert.match(boardRenderer,/mausoleumAreaContains\(state\.arenaOwner,r\)\?' mausoleum-effect'/,'a área afetada pelo Mausoléu deve ser marcada visualmente');
+assert.match(responsiveStyles,/board\[data-arena=mausoleum\] \.cell\.light/,'o Mausoléu deve aplicar o tema rosa-claro à Arena');
+assert.match(responsiveStyles,/\.cell\.mausoleum-effect/,'as casas afetadas pelo Mausoléu precisam de destaque próprio');
 
 console.log('Mortos Doces tests passed');
