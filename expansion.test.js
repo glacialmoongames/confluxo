@@ -35,7 +35,7 @@ assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
 assert.match(page, /engine-expansion\.js\?v=18/);
 assert.doesNotMatch(expansion, /Object\.assign\((?:defs|effects|archetypes)/, 'o catálogo não deve ser alterado diretamente');
-assert.match(page, /VERSÃO 148/);
+assert.match(page, /VERSÃO 149/);
 assert.match(expansion, /Conde Quindim[^\n]+passa a valer \+1 ponto adicional/);
 assert.match(expansion, /iceWerewolf:'werewolf'/, 'Lobisomem Sorvete deve usar o ícone Werewolf de Lorc');
 assert.match(expansion, /Rosas Pálidas: quando um jogador perde um peão/);
