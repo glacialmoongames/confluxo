@@ -75,6 +75,8 @@ assert.match(styles, /board\[data-p1=celestial\] \.zone1/);
 assert.match(styles, /board\[data-p2=celestial\] \.zone2/);
 assert.match(styles, /board\[data-p1=abyss\] \.zone1/);
 assert.match(styles, /board\[data-p2=abyss\] \.zone2/);
+assert.match(styles, /data-arena=mausoleum\]\[data-view="1"\] \.cell\.zone2/);
+assert.match(styles, /data-arena=mausoleum\]\[data-view="2"\] \.cell\.zone1/);
 assert.match(styles, /\.rules-hero/);
 
 for (const icon of ['confluxo-favicon','empty-chessboard','flower-twirl','forest','orbit','evil-eyes','six-eyes','haunting','rose','peace-dove']) {

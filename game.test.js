@@ -494,7 +494,7 @@ assert.match(source, /normalOptions\.length\?normalOptions:winningExceptions/);
 assert.match(source, /state\.arena=xadriaPair\.has\(previous\)&&xadriaPair\.has\(key\)&&previous!==key\?'kingdom':key/);
 assert.match(source, /state\.arena==='kingdom'&&xadriaPair\.has\(k\)/);
 assert.match(page, /styles-core\.css\?v=7/);
-assert.match(page, /styles-responsive\.css\?v=36/);
+assert.match(page, /styles-responsive\.css\?v=37/);
 assert.match(styles, /\.piece \.dual-xadria-art\{inset:2px/);
 assert.match(page, /id="home-brand"/);
 assert.match(source, /\$\('#home-brand'\)\.onclick=/);
@@ -537,7 +537,7 @@ assert.equal(context.effects.camouflage, undefined, 'Camuflar-se deve sair do jo
 assert.doesNotMatch(source, /function flipSelected|function botSetFaceDown/, 'jogadores e bots não devem mais virar peões');
 assert.match(source, /hasEffect\(attacker,'jaguar'\)[^\n]+bonusAtk=.*\+100/, 'a Onça deve ganhar 100 ATK quando derrota um adversário');
 assert.match(source, /selectedEffect=\{key:k,index:i,owner,arena:false\}/, 'os detalhes devem manter o dono da carta inspecionada');
-assert.match(page, /styles-responsive\.css\?v=36/);
+assert.match(page, /styles-responsive\.css\?v=37/);
 assert.doesNotMatch(page, /SUA MÃO/);
 assert.match(page, /<div class="reserve-head"><div><b>Peões<\/b><\/div><span><b id="pawn-deck-count">0<\/b> na pilha<\/span><\/div>/);
 assert.match(styles, /reserve-hand-panel \.reserve-head>span/);
