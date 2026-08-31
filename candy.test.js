@@ -42,6 +42,17 @@ vm.createContext(werewolfContext);
 vm.runInContext(actions.match(/function effectiveAtk\([^\n]+/)[0],werewolfContext);
 assert.equal(werewolfContext.effectiveAtk(werewolf,false),500);
 
+const quindimContext={hasEffect:(unit,kind)=>unit.kind===kind,log:()=>{}};
+vm.createContext(quindimContext);
+vm.runInContext(actions.match(/function rewardQuindimKill\([^\n]+/)[0],quindimContext);
+const count={name:'Conde Quindim',kind:'quindimCount',fusion:2,pointValue:2,bonusAtk:0};
+assert.equal(quindimContext.rewardQuindimKill(count,300),true);
+assert.equal(count.bonusAtk,300,'Conde Quindim deve absorver o ATK do derrotado');
+assert.equal(count.pointValue,3,'a primeira derrota deve aumentar em um o valor do Conde');
+quindimContext.rewardQuindimKill(count,150);
+assert.equal(count.bonusAtk,450);
+assert.equal(count.pointValue,4,'cada nova derrota deve somar outro ponto ao valor do Conde');
+
 const deployContext={
   ROWS:8,COLS:6,
   state:{arena:null,players:{1:{units:[{row:5,col:2,kind:'jellyWitch'}]},2:{units:[]}}},
@@ -68,6 +79,8 @@ assert.match(ui,/k==='trickTreat'/);
 assert.match(ui,/key==='candyRecipe'/);
 assert.match(runtime,/hasEffect\(ghost,'gumGhost'\)/);
 assert.match(runtime,/hasEffect\(u,'cookieDemon'\)/);
+assert.match(actions,/if\(defeated\)rewardQuindimKill\(attacker,defAtk\)/,'o Conde atacante deve progredir ao derrotar');
+assert.match(actions,/if\(defeated\)rewardQuindimKill\(defender,attackerPower\)/,'o Conde defensor deve progredir ao derrotar');
 assert.match(boardRenderer,/mausoleumAreaContains\(state\.arenaOwner,r\)\?' mausoleum-effect'/,'a área afetada pelo Mausoléu deve ser marcada visualmente');
 assert.match(responsiveStyles,/board\[data-arena=mausoleum\] \.cell\.light/,'o Mausoléu deve aplicar o tema rosa-claro à Arena');
 assert.match(responsiveStyles,/\.cell\.mausoleum-effect/,'as casas afetadas pelo Mausoléu precisam de destaque próprio');
