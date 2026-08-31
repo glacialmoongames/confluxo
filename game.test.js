@@ -238,6 +238,7 @@ const botDeployContext = {
   COLS: 6,
   botActor: () => botDeployState.current,
   botFusionMaterialPriority: () => 0,
+  botBestDeploymentPlan: (player, p) => ({u: p.reserve.find(unit => unit.kind === 'duck') || p.reserve[0], target: player === 1 ? {r: 6, c: 2} : {r: 1, c: 2}}),
   at: () => null,
   obstacleAt: () => null,
   pitAt: () => null,
@@ -260,6 +261,20 @@ botDeployContext.state.players[1] = {deployed: false, archetype: 'xadria', reser
 botDeployContext.hasEffect = (unit, effect) => unit.kind === effect;
 assert.equal(botDeployContext.botDeployPawn(), true);
 assert.equal(botDeployment.unit.id, 'duck', 'Xadria deve colocar o Pato em campo para bloquear o rival');
+const deploymentScoreContext={};
+vm.createContext(deploymentScoreContext);
+vm.runInContext(source.match(/function botDeploymentScore\([^\n]+/)[0],deploymentScoreContext);
+const safeWeak=deploymentScoreContext.botDeploymentScore({risk:0,positioning:12000});
+const exposedWeak=deploymentScoreContext.botDeploymentScore({risk:1800,positioning:50000});
+assert.ok(safeWeak>exposedWeak,'um peão fraco deve evitar uma casa onde pode ser derrotado');
+const safeStrong=deploymentScoreContext.botDeploymentScore({risk:0,positioning:12000});
+const aggressiveStrong=deploymentScoreContext.botDeploymentScore({risk:200,attackOpportunity:180000,effectAdvantage:30000,positioning:35000});
+assert.ok(aggressiveStrong>safeStrong,'vantagem de ataque ou efeito deve justificar posicionamento agressivo');
+assert.match(source,/function botBestDeploymentPlan\(/);
+assert.match(source,/botBestDeploymentPlan\(player,p,\[u\],targets\)/,'a mesma análise estratégica deve ser usada nos peões iniciais');
+assert.match(source,/risk=hasEffect\(u,'duck'\)\?0:botProjectedEnemyRisk\(u\)/,'a colocação deve simular ataques imediatos e após movimento do adversário');
+assert.match(source,/attackOpportunity=botDeploymentAttackOpportunity\(u,enemies\)/);
+assert.match(source,/effectAdvantage=botDeploymentEffectAdvantage\(u,enemies,allies\)/);
 const drawPlayer = {name: 'Bot', drawn: false, pawnDeck: ['pawn'], effectDeck: ['effect'], reserve: [], hand: []};
 const drawContext = {state: {awaitingDraw: true, players: {1: drawPlayer}}, botActor: () => 1, botGameAdvantageScore: () => 1, botFusionMissingCount: () => 0, takePawnFromDeck: player => player.pawnDeck.pop(), log: () => {}};
 vm.createContext(drawContext);
@@ -465,14 +480,14 @@ assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=8/);
 assert.match(page, /engine-actions-b\.js\?v=20/);
 assert.match(page, /engine-actions-a\.js\?v=27/);
-assert.match(page, /VERSÃO 146/);
+assert.match(page, /VERSÃO 147/);
 assert.match(page, /game-catalog\.js\?v=1/);
 assert.match(source, /function registerPawns/);
 assert.match(source, /function registerEffects/);
 assert.match(source, /function registerArchetype/);
 assert.match(source, /function validateGameCatalog/);
 assert.match(page, /network\.js\?v=36/);
-assert.match(page, /engine-ui\.js\?v=39/);
+assert.match(page, /engine-ui\.js\?v=40/);
 assert.match(source, /function botCombinationWinsNow/);
 assert.match(source, /usesCombined:parts\.some\(u=>u\.fusion\)/);
 assert.match(source, /normalOptions\.length\?normalOptions:winningExceptions/);
@@ -640,14 +655,14 @@ assert.match(source, /jointSetup\*\(defensive\?35:3\)/);
 assert.match(source, /defensiveJoint\.length\?defensiveJoint/);
 assert.match(source, /u\.moveHistory=\[/);
 assert.match(source, /ahead=botGameAdvantageScore\(player\)>0/);
-assert.match(source, /p\.archetype==='xadria'\?normal\.find\(card=>hasEffect\(card,'duck'\)\)/);
+assert.match(source, /if\(hasEffect\(u,'duck'\)\)\{let nearest/, 'a Ave Eterna deve ser posicionada agressivamente como bloqueadora imortal');
 assert.match(source, /fieldControl=botFieldControlValue\(advance,supportGap,botEnemySpawnDistance/);
 assert.match(source, /enemyApproach\.has/);
 assert.doesNotMatch(source, /function botChooseReveal|function botChooseHide|botRevealPhase|botHidePhase/);
 assert.match(source, /scheduleBot\(attacked\?botAttackPhase:botFinishTurn/);
 assert.match(source, /function botFusionMissingCount\(p\)/);
 assert.match(source, /function botFusionSetupScore\(p\)/);
-assert.match(source, /priority:botFusionMaterialPriority\(p,card\)/);
+assert.match(source, /cardPriority=botFusionMaterialPriority\(p,u\)\*18/, 'materiais necessários para combinações devem continuar influenciando a colocação');
 assert.match(source, /fusionSetup=\(botFusionSetupScore\(p\)-fusionBefore\)\*5/);
 assert.match(source, /needsFusionMaterial=botFusionMissingCount\(p\)>0/);
 assert.match(source, /function botCombinationFollowup\(next\)/);
