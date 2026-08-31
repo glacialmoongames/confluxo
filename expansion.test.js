@@ -16,6 +16,7 @@ for (const effect of ['crown','blackRoses','kingdom','tunnel','blackHole','moon'
   assert.match(expansion, new RegExp(`${effect}:\\{`), `efeito ausente: ${effect}`);
 }
 for (const card of ['candyZombie','chocolateSkeleton','gumGhost','jellyWitch','quindimCount','cookieDemon','iceWerewolf']) assert.match(expansion,new RegExp(`${card}:\\{`),`carta Mortos Doces ausente: ${card}`);
+assert.match(expansion, /gumGhost:\{name:'Fantasma Chiclete',atk:200,/, 'Fantasma Chiclete deve possuir 200 ATK');
 for (const effect of ['candyRebuild','trickTreat','mausoleum','candyRecipe']) assert.match(expansion,new RegExp(`${effect}:\\{`),`efeito Mortos Doces ausente: ${effect}`);
 assert.match(expansion,/registerArchetype\('candy'/);
 assert.match(page,/data-deck="candy"/);
@@ -29,9 +30,9 @@ assert.match(ui, /beginMonkeyDestination/);
 assert.match(ui, /grantImpolutoPower/);
 assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
-assert.match(page, /engine-expansion\.js\?v=14/);
+assert.match(page, /engine-expansion\.js\?v=15/);
 assert.doesNotMatch(expansion, /Object\.assign\((?:defs|effects|archetypes)/, 'o catálogo não deve ser alterado diretamente');
-assert.match(page, /VERSÃO 142/);
+assert.match(page, /VERSÃO 143/);
 assert.match(expansion, /Rosas Pálidas: quando um jogador perde um peão/);
 assert.match(expansion, /Rosas Negras: quando um jogador ganha pontos/);
 assert.match(expansion, /Lua em Órbita[^\n]+preenche continuamente seu raio até 3 casas/);
