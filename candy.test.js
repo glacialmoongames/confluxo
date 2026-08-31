@@ -24,11 +24,12 @@ vm.runInContext(runtime.match(/function resolveCandyZombieConversion\([^\n]+/)[0
 assert.equal(conversionContext.resolveCandyZombieConversion(zombie,killer),true);
 assert.equal(killer.owner,1);
 assert.deepEqual(Array.from(killer.types),['PEDRA','DOCE','ZUMBI']);
+assert.equal(killer.candyConverted,true,'a conversão do Zombie deve permanecer marcada para efeitos DOCE');
 assert.equal(conversionContext.state.players[1].units[0],killer);
 
 const werewolfContext={
   allUnits:()=>[],
-  isSweetUnit:unit=>unit.types.includes('DOCE'),
+  isSweetUnit:unit=>unit.candyConverted===true||unit.types.includes('DOCE'),
   hasEffect:(unit,kind)=>unit.kind===kind,
   hasEquipment:()=>false,
   isCelestialUnit:()=>false,
@@ -37,11 +38,12 @@ const werewolfContext={
   state:{players:{1:{units:[]},2:{units:[]}}}
 };
 const werewolf={id:'w',kind:'iceWerewolf',owner:1,atk:100,bonusAtk:0,types:['DOCE']};
-const sweet={id:'s',kind:'candyZombie',owner:1,atk:350,bonusAtk:50,types:['DOCE']};
+const sweet={id:'s',kind:'tower',owner:1,atk:350,bonusAtk:50,types:['PEDRA'],candyConverted:true};
 werewolfContext.allUnits=()=>[werewolf,sweet];
 vm.createContext(werewolfContext);
 vm.runInContext(actions.match(/function effectiveAtk\([^\n]+/)[0],werewolfContext);
 assert.equal(werewolfContext.effectiveAtk(werewolf,false),500);
+assert.match(runtime,/u\.candyConverted===true\|\|u\.types\?\.includes\('DOCE'\)/,'Peões convertidos precisam contar como DOCE para o Lobisomem');
 
 const quindimContext={hasEffect:(unit,kind)=>unit.kind===kind,log:()=>{}};
 vm.createContext(quindimContext);

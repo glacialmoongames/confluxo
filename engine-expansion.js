@@ -46,10 +46,10 @@ registerEffects({
  abyss:{name:'Abismo do Terror',type:'ARENA',icon:'◉',text:'Ao destruir um peão, o responsável ganha 100 ATK e cria um Poço na casa da vítima.'},
  noEscape:{name:'Não há escapatoria',type:'UTILIDADE',icon:'↯',text:'Nenhum peão pode se mover durante o próximo turno do oponente.'},
  eyes:{name:'Eu vejo os olhos',type:'EQUIPAMENTO',icon:'◉',text:'O equipado ganha 400 ATK. Se puder se mover e terminar o turno sem mover, o peão equipado é destruído.'}
- ,candyRebuild:{name:'Remontar Doce',type:'UTILIDADE',icon:'♱',instant:true,text:'Traz de volta para sua mão de Peões o último peão não combinado destruído.'}
- ,trickTreat:{name:'Doces ou Travessuras',type:'UTILIDADE',icon:'◆',instant:true,text:'Todos os peões DOCE ganham 100 ATK; se Mausoléu das Gostosuras estiver ativo, eles perdem 100 ATK em vez disso.'}
- ,mausoleum:{name:'Mausoléu das Gostosuras',type:'ARENA',icon:'♱',text:'Expande a área de colocação de cada jogador até seu peão mais avançado. Peões na área do dono desta Arena passam a ser DOCE · ZUMBI enquanto permanecerem nela.'}
- ,candyRecipe:{name:'Receita de Doce',type:'EQUIPAMENTO',icon:'♱',text:'Quando o peão equipado é destruído, coloque um Zombie Bombom em sua casa sob o controle de quem jogou esta carta.'}
+ ,candyRebuild:{name:'Remontar Doce',type:'UTILIDADE',icon:'♱',instant:true,text:'Traga de volta para sua mão de Peões o último Peão não combinado destruído.'}
+ ,trickTreat:{name:'Doces ou Travessuras',type:'UTILIDADE',icon:'◆',instant:true,text:'Todos os Peões DOCE ganham 100 ATK caso a Arena não seja Mausoléu das Gostosuras. Se for, todos os Peões DOCE perdem 100 ATK.'}
+ ,mausoleum:{name:'Mausoléu das Gostosuras',type:'ARENA',icon:'♱',text:'A área onde cada jogador pode colocar seus Peões é expandida até seu Peão mais avançado. Peões na área do dono desta Arena passam a ser DOCE · ZUMBI no lugar de seus tipos convencionais enquanto permanecerem nela.'}
+ ,candyRecipe:{name:'Receita de Doce',type:'EQUIPAMENTO',icon:'♱',text:'Quando o Peão equipado for destruído, coloque um Zombie Bombom em sua casa sob o controle do jogador que usou esta carta.'}
 });
 updateEffect('roses',{text:'Sempre que um jogador perde um peão, compra uma carta aleatória entre as pilhas de Peões e Efeitos.'});
 updateEffect('bow',{name:'Arco Primitivo',text:'O equipado pode atacar peões nas casas do seu próprio alcance de movimento, sem precisar estar em contato.'});
