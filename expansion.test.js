@@ -17,6 +17,9 @@ for (const effect of ['crown','blackRoses','kingdom','tunnel','blackHole','moon'
 }
 for (const card of ['candyZombie','chocolateSkeleton','gumGhost','jellyWitch','quindimCount','cookieDemon','iceWerewolf']) assert.match(expansion,new RegExp(`${card}:\\{`),`carta Mortos Doces ausente: ${card}`);
 assert.match(expansion, /gumGhost:\{name:'Fantasma Chiclete',atk:200,/, 'Fantasma Chiclete deve possuir 200 ATK');
+assert.match(expansion, /chocolateSkeleton:\{name:'Esqueleto Chocolate'[^\n]+Peão Combinado em contato/);
+assert.doesNotMatch(expansion, /chocolateSkeleton:\{[^\n]+condition:'destroyed-this-turn'/);
+assert.doesNotMatch(expansion, /chocolateSkeletonTurns/);
 for (const effect of ['candyRebuild','trickTreat','mausoleum','candyRecipe']) assert.match(expansion,new RegExp(`${effect}:\\{`),`efeito Mortos Doces ausente: ${effect}`);
 assert.match(expansion,/registerArchetype\('candy'/);
 assert.match(page,/data-deck="candy"/);
@@ -30,9 +33,9 @@ assert.match(ui, /beginMonkeyDestination/);
 assert.match(ui, /grantImpolutoPower/);
 assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
-assert.match(page, /engine-expansion\.js\?v=17/);
+assert.match(page, /engine-expansion\.js\?v=18/);
 assert.doesNotMatch(expansion, /Object\.assign\((?:defs|effects|archetypes)/, 'o catálogo não deve ser alterado diretamente');
-assert.match(page, /VERSÃO 147/);
+assert.match(page, /VERSÃO 148/);
 assert.match(expansion, /Conde Quindim[^\n]+passa a valer \+1 ponto adicional/);
 assert.match(expansion, /iceWerewolf:'werewolf'/, 'Lobisomem Sorvete deve usar o ícone Werewolf de Lorc');
 assert.match(expansion, /Rosas Pálidas: quando um jogador perde um peão/);

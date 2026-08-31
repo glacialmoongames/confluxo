@@ -7,6 +7,7 @@ const core = fs.readFileSync('engine-core.js','utf8');
 const actions = fs.readFileSync('engine-actions-b.js','utf8');
 const runtime = fs.readFileSync('engine-expansion-runtime.js','utf8');
 const ui = fs.readFileSync('engine-ui.js','utf8');
+const celestial = fs.readFileSync('engine-celestial.js','utf8');
 const boardRenderer = fs.readFileSync('engine-actions-a.js','utf8');
 const responsiveStyles = fs.readFileSync('styles-responsive.css','utf8');
 
@@ -53,6 +54,20 @@ quindimContext.rewardQuindimKill(count,150);
 assert.equal(count.bonusAtk,450);
 assert.equal(count.pointValue,4,'cada nova derrota deve somar outro ponto ao valor do Conde');
 
+const skeletonSpawnContext={
+  state:{players:{1:{name:'Doce',units:[]},2:{name:'Rival',units:[]}}},
+  at:()=>null,
+  unit:(kind,owner)=>({id:'new-skeleton',kind,owner,row:null,col:null}),
+  place:(unit,row,col)=>{unit.row=row;unit.col=col},
+  boardCoordinate:()=> 'C4',
+  log:()=>{}
+};
+vm.createContext(skeletonSpawnContext);
+vm.runInContext(runtime.match(/function spawnChocolateSkeleton\([^\n]+/)[0],skeletonSpawnContext);
+assert.equal(skeletonSpawnContext.spawnChocolateSkeleton(1,{row:3,col:2}),true);
+assert.equal(skeletonSpawnContext.state.players[1].units[0].kind,'chocolateSkeleton');
+assert.deepEqual({row:skeletonSpawnContext.state.players[1].units[0].row,col:skeletonSpawnContext.state.players[1].units[0].col},{row:3,col:2},'o Esqueleto deve surgir na casa do combinado destruído');
+
 const deployContext={
   ROWS:8,COLS:6,
   state:{arena:null,players:{1:{units:[{row:5,col:2,kind:'jellyWitch'}]},2:{units:[]}}},
@@ -81,6 +96,10 @@ assert.match(runtime,/hasEffect\(ghost,'gumGhost'\)/);
 assert.match(runtime,/hasEffect\(u,'cookieDemon'\)/);
 assert.match(actions,/if\(defeated\)rewardQuindimKill\(attacker,defAtk\)/,'o Conde atacante deve progredir ao derrotar');
 assert.match(actions,/if\(defeated\)rewardQuindimKill\(defender,attackerPower\)/,'o Conde defensor deve progredir ao derrotar');
+assert.match(actions,/chocolateOwner=u\.fusion\?allUnits\(\)\.find/,'somente um Peão Combinado destruído deve ativar o Esqueleto');
+assert.match(actions,/if\(chocolateOwner\)spawnChocolateSkeleton\(chocolateOwner,death\)/);
+assert.doesNotMatch(celestial,/hasEffect\(v,'chocolateSkeleton'\)/,'Esqueleto Chocolate não deve mais impedir movimento');
+assert.doesNotMatch(runtime,/chocolateSkeletonTurns/,'o efeito antigo de contagem deve ser removido');
 assert.match(boardRenderer,/mausoleumAreaContains\(state\.arenaOwner,r\)\?' mausoleum-effect'/,'a área afetada pelo Mausoléu deve ser marcada visualmente');
 assert.match(responsiveStyles,/board\[data-arena=mausoleum\] \.cell\.light/,'o Mausoléu deve aplicar o tema rosa-claro à Arena');
 assert.match(responsiveStyles,/\.cell\.mausoleum-effect/,'as casas afetadas pelo Mausoléu precisam de destaque próprio');
