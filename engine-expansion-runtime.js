@@ -1,14 +1,23 @@
 /* Regras que estendem ações já carregadas sem duplicar o motor principal. */
 const baseDoMove=doMove;
 doMove=function(u,r,c){
- let from={row:u.row,col:u.col},wasAnssiedium=hasEffect(u,'anssiedium');
+ let from={row:u.row,col:u.col},wasAnssiedium=hasEffect(u,'anssiedium'),followers=allUnits().filter(ghost=>ghost.id!==u.id&&ghost.row!==null&&hasEffect(ghost,'gumGhost')&&adjacent(ghost,u)).map(ghost=>({ghost,dr:ghost.row-u.row,dc:ghost.col-u.col}));
  baseDoMove(u,r,c);
  if(wasAnssiedium&&!pitAt(from.row,from.col)){state.pits.push({row:from.row,col:from.col,owner:u.owner,source:'anssiedium'});log(`${u.name} deixou um Poço em ${boardCoordinate(from.row,from.col)}.`)}
  let pair=(state.tunnels||[]).find(entries=>entries.some(entry=>entry.row===u.row&&entry.col===u.col));
  if(pair){let exit=pair.find(entry=>entry.row!==u.row||entry.col!==u.col);if(exit&&!at(exit.row,exit.col)){let entrance=boardCoordinate(u.row,u.col);place(u,exit.row,exit.col);log(`${u.name} entrou no túnel em ${entrance} e saiu em ${boardCoordinate(exit.row,exit.col)}.`)}}
+ if(allUnits().some(piece=>piece.id===u.id))followers.forEach(({ghost,dr,dc})=>{if(!allUnits().some(piece=>piece.id===ghost.id))return;let row=u.row+dr,col=u.col+dc;if(row<0||row>=ROWS||col<0||col>=COLS||at(row,col)||obstacleAt(row,col)||pitAt(row,col))return;let origin=boardCoordinate(ghost.row,ghost.col);place(ghost,row,col);log(`${ghost.name} acompanhou ${u.name}: ${origin} → ${boardCoordinate(row,col)}.`,'move')});
  if(u.kind==='infantry'&&hasEquipment(u,'crown')&&(u.owner===1&&u.row===0||u.owner===2&&u.row===ROWS-1)){let keep={id:u.id,owner:u.owner,row:u.row,col:u.col,origin:u.origin,equipment:u.equipment.filter(e=>e!=='crown'),bonusAtk:u.bonusAtk||0,moveHistory:u.moveHistory};Object.assign(u,defs.atra,keep,{kind:'atra',faceDown:false,transformed:true,fusion:0,pointValue:1});log(`${defs.infantry.name} alcançou o polo rival e se transformou em ${u.name}.`,'effect')}
  render();
 };
+
+function isSweetUnit(u){return !!u?.types?.includes('DOCE')}
+function mausoleumEdge(owner){let field=state.players[owner]?.units?.filter(u=>u.row!==null)||[];return field.length?(owner===1?Math.min(...field.map(u=>u.row)):Math.max(...field.map(u=>u.row))):(owner===1?ROWS-2:1)}
+function insideMausoleumOwnerArea(u){if(state.arena!=='mausoleum'||!state.arenaOwner||u?.row===null)return false;let edge=mausoleumEdge(state.arenaOwner);return state.arenaOwner===1?u.row>=edge:u.row<=edge}
+function refreshMausoleumTypes(){if(!state?.players)return;allUnits().forEach(u=>{u.baseTypes??=[...(u.types||[])];let transformed=insideMausoleumOwnerArea(u);if(transformed){u.types=['DOCE','ZUMBI'];u.mausoleumSweet=true}else if(u.mausoleumSweet){u.types=[...u.baseTypes];delete u.mausoleumSweet}})}
+function spawnRecipeZombie(owner,cell){if(!owner||cell.row===null||at(cell.row,cell.col))return false;let zombie=unit('candyZombie',owner);place(zombie,cell.row,cell.col);state.players[owner].units.push(zombie);log(`${effects.candyRecipe.name} criou ${zombie.name} em ${boardCoordinate(cell.row,cell.col)} para ${state.players[owner].name}.`,'effect');return true}
+function resolveCandyZombieConversion(zombie,killer){if(!hasEffect(zombie,'candyZombie')||state.current!==zombie.owner||!killer||killer.row===null)return false;let previous=killer.owner,newOwner=zombie.owner;if(previous===newOwner)return false;state.players[previous].units=state.players[previous].units.filter(u=>u.id!==killer.id);killer.owner=newOwner;killer.baseTypes=[...new Set([...(killer.baseTypes||killer.types||[]),'DOCE','ZUMBI'])];killer.types=[...killer.baseTypes];state.players[newOwner].units.push(killer);log(`${zombie.name} converteu ${killer.name} em DOCE · ZUMBI e o passou para ${state.players[newOwner].name}.`,'effect');return true}
+function resolveCandyContacts(){if(!state?.players||state.resolvingCandyContacts)return;state.resolvingCandyContacts=true;let changed=true,guard=0;while(changed&&guard++<20){changed=false;let demons=allUnits().filter(u=>u.row!==null&&hasEffect(u,'cookieDemon'));for(let demon of demons){let victim=allUnits().find(u=>u.id!==demon.id&&u.row!==null&&isSweetUnit(u)&&adjacent(demon,u));if(!victim)continue;let name=victim.name;if(destroy(victim,demon.owner,'efeito')){demon.bonusAtk=(demon.bonusAtk||0)+200;log(`${demon.name} devorou ${name} e ganhou 200 ATK.`,'combat');changed=true;break}}}state.resolvingCandyContacts=false}
 
 const baseRenderBoard=renderBoard;
 renderBoard=function(){

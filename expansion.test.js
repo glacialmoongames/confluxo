@@ -15,6 +15,11 @@ for (const card of ['divinissimo','terror','atra','impoluto','monkey','jaguar','
 for (const effect of ['crown','blackRoses','kingdom','tunnel','blackHole','moon','abyss','noEscape','eyes']) {
   assert.match(expansion, new RegExp(`${effect}:\\{`), `efeito ausente: ${effect}`);
 }
+for (const card of ['candyZombie','chocolateSkeleton','gumGhost','jellyWitch','quindimCount','cookieDemon','iceWerewolf']) assert.match(expansion,new RegExp(`${card}:\\{`),`carta Mortos Doces ausente: ${card}`);
+for (const effect of ['candyRebuild','trickTreat','mausoleum','candyRecipe']) assert.match(expansion,new RegExp(`${effect}:\\{`),`efeito Mortos Doces ausente: ${effect}`);
+assert.match(expansion,/registerArchetype\('candy'/);
+assert.match(page,/data-deck="candy"/);
+for (const icon of ['half-body-crawling','skeleton','ghost','witch-face','vampire-cape','imp','graveyard','concrete-bag']) assert.ok(fs.existsSync(`assets/icons/${icon}.svg`),`ícone Mortos Doces ausente: ${icon}`);
 assert.match(expansion, /registerArchetype\('abyss'/);
 assert.match(expansion, /validateGameCatalog\(\)/);
 assert.match(expansion, /assets\/icons\//);
@@ -24,9 +29,9 @@ assert.match(ui, /beginMonkeyDestination/);
 assert.match(ui, /grantImpolutoPower/);
 assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
-assert.match(page, /engine-expansion\.js\?v=13/);
+assert.match(page, /engine-expansion\.js\?v=14/);
 assert.doesNotMatch(expansion, /Object\.assign\((?:defs|effects|archetypes)/, 'o catálogo não deve ser alterado diretamente');
-assert.match(page, /VERSÃO 141/);
+assert.match(page, /VERSÃO 142/);
 assert.match(expansion, /Rosas Pálidas: quando um jogador perde um peão/);
 assert.match(expansion, /Rosas Negras: quando um jogador ganha pontos/);
 assert.match(expansion, /Lua em Órbita[^\n]+preenche continuamente seu raio até 3 casas/);

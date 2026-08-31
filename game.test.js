@@ -241,6 +241,11 @@ const botDeployContext = {
   at: () => null,
   obstacleAt: () => null,
   pitAt: () => null,
+  deploymentTargetsFor: player => {
+    const rows = player === 1 ? [6, 7] : [0, 1], out = [];
+    for (const r of rows) for (let c = 0; c < 6; c++) out.push({r, c});
+    return out;
+  },
   doDeploy: (unit, r, c) => { botDeployment = {unit, r, c}; }
 };
 vm.createContext(botDeployContext);
@@ -444,30 +449,30 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=7/);
-assert.match(page, /engine-actions-b\.js\?v=17/);
-assert.match(page, /engine-actions-a\.js\?v=25/);
-assert.match(page, /VERSÃO 141/);
+assert.match(page, /engine-actions-b\.js\?v=18/);
+assert.match(page, /engine-actions-a\.js\?v=26/);
+assert.match(page, /VERSÃO 142/);
 assert.match(page, /game-catalog\.js\?v=1/);
 assert.match(source, /function registerPawns/);
 assert.match(source, /function registerEffects/);
 assert.match(source, /function registerArchetype/);
 assert.match(source, /function validateGameCatalog/);
 assert.match(page, /network\.js\?v=36/);
-assert.match(page, /engine-ui\.js\?v=37/);
+assert.match(page, /engine-ui\.js\?v=38/);
 assert.match(source, /function botCombinationWinsNow/);
 assert.match(source, /usesCombined:parts\.some\(u=>u\.fusion\)/);
 assert.match(source, /normalOptions\.length\?normalOptions:winningExceptions/);
 assert.match(source, /state\.arena=xadriaPair\.has\(previous\)&&xadriaPair\.has\(key\)&&previous!==key\?'kingdom':key/);
 assert.match(source, /state\.arena==='kingdom'&&xadriaPair\.has\(k\)/);
-assert.match(page, /styles-core\.css\?v=5/);
-assert.match(page, /styles-responsive\.css\?v=34/);
+assert.match(page, /styles-core\.css\?v=6/);
+assert.match(page, /styles-responsive\.css\?v=35/);
 assert.match(styles, /\.piece \.dual-xadria-art\{inset:2px/);
 assert.match(page, /id="home-brand"/);
 assert.match(source, /\$\('#home-brand'\)\.onclick=/);
-assert.match(page, /engine-core\.js\?v=24/);
+assert.match(page, /engine-core\.js\?v=25/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
-assert.match(page, /engine-actions-a\.js\?v=25/);
-assert.match(page, /engine-actions-b\.js\?v=17/);
+assert.match(page, /engine-actions-a\.js\?v=26/);
+assert.match(page, /engine-actions-b\.js\?v=18/);
 assert.match(source, /function recoverBotTurn/);
 assert.match(source, /catch\(error\)\{recoverBotTurn\(error\)\}/);
 assert.match(source, /function armBotWatchdog/);
@@ -503,7 +508,7 @@ assert.equal(context.effects.camouflage, undefined, 'Camuflar-se deve sair do jo
 assert.doesNotMatch(source, /function flipSelected|function botSetFaceDown/, 'jogadores e bots não devem mais virar peões');
 assert.match(source, /hasEffect\(attacker,'jaguar'\)[^\n]+bonusAtk=.*\+100/, 'a Onça deve ganhar 100 ATK quando derrota um adversário');
 assert.match(source, /selectedEffect=\{key:k,index:i,owner,arena:false\}/, 'os detalhes devem manter o dono da carta inspecionada');
-assert.match(page, /styles-responsive\.css\?v=34/);
+assert.match(page, /styles-responsive\.css\?v=35/);
 assert.doesNotMatch(page, /SUA MÃO/);
 assert.match(page, /<div class="reserve-head"><div><b>Peões<\/b><\/div><span><b id="pawn-deck-count">0<\/b> na pilha<\/span><\/div>/);
 assert.match(styles, /reserve-hand-panel \.reserve-head>span/);
@@ -671,17 +676,18 @@ assert.equal(goalContext.normalizePointGoal(15), 15);
 assert.equal(goalContext.normalizePointGoal(0), 1);
 assert.equal(goalContext.normalizePointGoal(150), 99);
 assert.equal(goalContext.normalizePointGoal('inválido'), 10);
-assert.match(source, /findIndex\(u=>!u\.fusion\)/);
+assert.match(source, /findIndex\(u=>!u\.fusion&&!u\.condition\)/);
 assert.match(source, /drawRandomInitialPawns\(player\)/);
 assert.doesNotMatch(source, /starters:/);
 const initialDrawContext = {};
 vm.createContext(initialDrawContext);
 vm.runInContext(source.match(/function drawRandomInitialPawns\([^\n]+/)[0], initialDrawContext);
-const initialPlayer = {pawnDeck: [{kind:'sun',fusion:8},{kind:'mars'},{kind:'venus'},{kind:'earth'},{kind:'mercury'}],initialUnits:[]};
+const initialPlayer = {pawnDeck: [{kind:'sun',fusion:8},{kind:'chocolateSkeleton',condition:'destroyed-this-turn'},{kind:'mars'},{kind:'venus'},{kind:'earth'},{kind:'mercury'}],initialUnits:[]};
 initialDrawContext.drawRandomInitialPawns(initialPlayer);
 assert.deepEqual(initialPlayer.initialUnits.map(u=>u.kind), ['mars','venus','earth']);
 assert.equal(initialPlayer.initialUnits.every(u=>u.initial), true);
 assert.equal(initialPlayer.pawnDeck.some(u=>u.kind==='sun'), true, 'Peões Combinados permanecem no deck');
+assert.equal(initialPlayer.pawnDeck.some(u=>u.kind==='chocolateSkeleton'), true, 'Peões condicionais não podem ser sorteados como iniciais');
 assert.match(source, /function completeSolarFusion/);
 assert.match(source, /syncOnlineAnimationState/);
 assert.match(source, /solarEvaporating=true/);
