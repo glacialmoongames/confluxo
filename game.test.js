@@ -483,7 +483,7 @@ assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=9/);
 assert.match(page, /engine-actions-b\.js\?v=25/);
 assert.match(page, /engine-actions-a\.js\?v=28/);
-assert.match(page, /VERSÃO 157/);
+assert.match(page, /VERSÃO 158/);
 assert.match(page, /game-catalog\.js\?v=1/);
 assert.match(source, /function registerPawns/);
 assert.match(source, /function registerEffects/);
@@ -598,7 +598,8 @@ assert.doesNotMatch(fs.readFileSync('assets/icons/six-eyes.svg', 'utf8'), /M0 0h
 assert.match(page, /<h3>Ataque em conjunto<\/h3>/);
 assert.match(page, /outros peões <b>em contato com o alvo<\/b>/);
 assert.match(page, /network\.js\?v=36/);
-assert.match(page, /styles-game\.css\?v=11/);
+assert.match(page, /styles-game\.css\?v=12/);
+assert.match(styles, /\.deck-choice\[data-deck=candy\]\{--deck-color:#d96f98\}/);
 assert.match(page, /id="mode-bots"/);
 assert.match(page, /BOT CONTRA BOT/);
 assert.match(source, /function botControls\(player\)/);
