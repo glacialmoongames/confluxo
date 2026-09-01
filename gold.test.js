@@ -68,6 +68,7 @@ assert.equal(suppression.hasEffect({kind:'duck',types:['NATURAL']},'duck'),false
 assert.equal(suppression.hasEffect({kind:'goldGoblin',types:['OURO']},'goldGoblin'),true);
 assert.match(core,/equipment\?\.includes\('goldArmor'\).*\[\[-1,0\],\[0,-1\],\[0,1\],\[1,0\]\]/);
 assert.match(actionsB,/consumeGoldArmor\(u\)/);
+assert.match(actionsB,/reason==='poço'\)\{state\.pits=state\.pits\.filter\(pit=>pit\.row!==u\.row\|\|pit\.col!==u\.col\)/,'Armadura de Ouro deve destruir o Poço ao salvar o peão');
 assert.match(actionsB,/resolveGoldenGoblin\(defender,attacker\)/);
 assert.match(actionsB,/goldDefeatedCount/);
 assert.match(actionsB,/hasEffect\(u,'goldDragon'\)/);
