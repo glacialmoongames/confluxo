@@ -60,6 +60,8 @@ assert.match(actionsB,/consumeGoldArmor\(u\)/);
 assert.match(actionsB,/resolveGoldenGoblin\(defender,attacker\)/);
 assert.match(actionsB,/goldDefeatedCount/);
 assert.match(actionsB,/hasEffect\(u,'goldDragon'\)/);
+assert.match(actionsB,/goldUnitHasReducedAttack\(u\)&&allUnits\(\)\.some\(priest=>priest\.row!==null&&hasEffect\(priest,'goldPriest'\)\)\)atk\*=2/,'Sacerdote deve dobrar o Peão Ouro que teve ATK reduzido');
+assert.doesNotMatch(actionsB,/hasEffect\(u,'goldPriest'\)&&allUnits\(\)\.some\(goldUnitHasReducedAttack\)/,'Sacerdote não deve dobrar o próprio ATK apenas porque outro peão foi reduzido');
 assert.match(ui,/transferGoldAttack\(pendingAbilityTarget,u\)/);
 assert.match(ui,/resolveAllOrNothing\(u\)/);
 assert.match(ui,/gildUnit\(u\)/);
