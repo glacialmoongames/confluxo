@@ -13,19 +13,19 @@ const page=fs.readFileSync('index.html','utf8');
 const styles=['styles-core.css','styles-game.css','styles-responsive.css'].map(file=>fs.readFileSync(file,'utf8')).join('\n');
 
 for(const pawn of ['goldWorshipper','goldGoblin','goldPriest','goldBlacksmith','goldGolem','goldDragon'])assert.match(expansion,new RegExp(`${pawn}:\\{`),`Peão Era Dourada ausente: ${pawn}`);
-for(const effect of ['goldenAge','goldArmor','richer','gild','allOrNothing'])assert.match(expansion,new RegExp(`${effect}:\\{`),`Efeito Era Dourada ausente: ${effect}`);
-for(const icon of ['tarot-17-the-star','goblin','sun-priest','blacksmith','rock-golem','wyvern','gold-stack','abdominal-armor','coins-pile','gold-nuggets','slot-machine']){
+for(const effect of ['goldenAge','goldArmor','camouflagedVest','richer','gild','allOrNothing'])assert.match(expansion,new RegExp(`${effect}:\\{`),`Efeito Era Dourada ausente: ${effect}`);
+for(const icon of ['tarot-17-the-star','goblin','sun-priest','blacksmith','rock-golem','wyvern','gold-stack','abdominal-armor','hidden','coins-pile','gold-nuggets','slot-machine']){
  assert.ok(fs.existsSync(`assets/icons/${icon}.svg`),`Ícone dourado ausente: ${icon}`);
  assert.doesNotMatch(fs.readFileSync(`assets/icons/${icon}.svg`,'utf8'),/<path d="M0 0h512v512H0z"\/>/,`Ícone ${icon} não pode ter fundo sólido`);
 }
 assert.match(page,/data-deck="gold"/);
-assert.match(page,/engine-gold\.js\?v=1/);
+assert.match(page,/engine-gold\.js\?v=2/);
 assert.match(styles,/deck-gold/);
 assert.match(styles,/data-arena=goldenAge/);
 
 const helperContext={state:{arena:null,goldDefeatedCount:0},hasEffect:(u,key)=>u.kind===key,allUnits:()=>[],inMovementRadius:()=>false,effectiveAtk:u=>u.atk+(u.bonusAtk||0),log:()=>{}};
 vm.createContext(helperContext);
-for(const name of ['isGoldUnit','materialMatchesRequirement','reduceGoldAttack','consumeGoldArmor','transferGoldAttack','gildUnit','resolveAllOrNothing'])vm.runInContext(gold.match(new RegExp(`function ${name}\\([^\\n]+`))[0],helperContext);
+for(const name of ['isGoldUnit','materialMatchesRequirement','reduceGoldAttack','consumeGoldArmor','equipCamouflagedVest','removeCamouflagedTypes','transferGoldAttack','gildUnit','resolveAllOrNothing'])vm.runInContext(gold.match(new RegExp(`function ${name}\\([^\\n]+`))[0],helperContext);
 const combined={kind:'goldGolem',types:['OURO'],fusion:2},normal={kind:'goldGoblin',types:['OURO']};
 assert.equal(helperContext.materialMatchesRequirement(combined,{type:'OURO',combined:true}),true);
 assert.equal(helperContext.materialMatchesRequirement(normal,{type:'OURO',combined:true}),false);
@@ -45,6 +45,12 @@ assert.deepEqual(Array.from(gilded.types),['PEDRA','OURO']);
 const armorBearer={equipment:['goldArmor']};
 assert.equal(helperContext.consumeGoldArmor(armorBearer),true);
 assert.deepEqual(armorBearer.equipment,[]);
+const vestBearer={id:'vest',types:['NATURAL'],baseTypes:['NATURAL'],equipment:[]},vestSource={id:'source',types:['LUZ','PEDRA']};
+assert.equal(helperContext.equipCamouflagedVest(vestBearer,vestSource),true);
+assert.deepEqual(Array.from(vestBearer.types),['NATURAL','LUZ','PEDRA']);
+assert.deepEqual(Array.from(vestBearer.equipment),['camouflagedVest']);
+helperContext.removeCamouflagedTypes(vestBearer);
+assert.deepEqual(Array.from(vestBearer.types),['NATURAL']);
 helperContext.allUnits=()=>[worshipper,{kind:'goldGoblin',types:['OURO'],atk:100,bonusAtk:0}];
 const jackpot={kind:'tower',types:['PEDRA'],atk:150,bonusAtk:0};
 assert.equal(helperContext.resolveAllOrNothing(jackpot),100,'Adorador não deve contribuir ATK por ser imune à redução');
@@ -60,10 +66,12 @@ assert.match(actionsB,/consumeGoldArmor\(u\)/);
 assert.match(actionsB,/resolveGoldenGoblin\(defender,attacker\)/);
 assert.match(actionsB,/goldDefeatedCount/);
 assert.match(actionsB,/hasEffect\(u,'goldDragon'\)/);
+assert.match(actionsB,/hasEquipment\(u,'camouflagedVest'\)\)atk\+=100/);
 assert.match(actionsB,/goldUnitHasReducedAttack\(u\)&&allUnits\(\)\.some\(priest=>priest\.row!==null&&hasEffect\(priest,'goldPriest'\)\)\)atk\*=2/,'Sacerdote deve dobrar o Peão Ouro que teve ATK reduzido');
 assert.doesNotMatch(actionsB,/hasEffect\(u,'goldPriest'\)&&allUnits\(\)\.some\(goldUnitHasReducedAttack\)/,'Sacerdote não deve dobrar o próprio ATK apenas porque outro peão foi reduzido');
 assert.match(ui,/transferGoldAttack\(pendingAbilityTarget,u\)/);
 assert.match(ui,/resolveAllOrNothing\(u\)/);
 assert.match(ui,/gildUnit\(u\)/);
+assert.match(ui,/equipCamouflagedVest\(pendingAbilityTarget,u\)/);
 
 console.log('Era Dourada tests passed');

@@ -23,7 +23,7 @@ const integrated = {console};
 vm.createContext(integrated);
 vm.runInContext(`${definitions}\nthis.summary=validateGameCatalog();this.defs=defs;this.effects=effects;this.archetypes=archetypes`, integrated);
 
-assert.deepEqual({...integrated.summary},{pawns:49,effects:30,archetypes:6});
+assert.deepEqual({...integrated.summary},{pawns:49,effects:31,archetypes:6});
 assert.equal(integrated.archetypes.xadria.pawns.length,6);
 assert.equal(integrated.archetypes.wild.pawns.length,5);
 assert.equal(integrated.archetypes.celestial.pawnComposition.length,18);
@@ -32,7 +32,7 @@ assert.equal(integrated.archetypes.candy.pawns.length,4);
 assert.equal(integrated.archetypes.candy.fusions.length,3);
 assert.equal(integrated.archetypes.gold.pawns.length,3);
 assert.equal(integrated.archetypes.gold.fusions.length,3);
-assert.equal(integrated.archetypes.gold.effects.length,9);
+assert.equal(integrated.archetypes.gold.effects.length,10);
 assert.equal(integrated.defs.goldDragon.materials.requirements[0].combined,true);
 assert.equal(integrated.defs.candyZombie.atk,150);
 assert.equal(integrated.defs.cookieDemon.materials.type,'DOCE');

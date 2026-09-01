@@ -33,9 +33,9 @@ assert.match(ui, /beginMonkeyDestination/);
 assert.match(ui, /grantImpolutoPower/);
 assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
-assert.match(page, /engine-expansion\.js\?v=24/);
+assert.match(page, /engine-expansion\.js\?v=25/);
 assert.doesNotMatch(expansion, /Object\.assign\((?:defs|effects|archetypes)/, 'o catálogo não deve ser alterado diretamente');
-assert.match(page, /VERSÃO 155/);
+assert.match(page, /VERSÃO 156/);
 assert.match(expansion, /candyRebuild:'concrete-bag'/);
 assert.match(expansion, /trickTreat:'wrapped-sweet'/);
 assert.match(expansion, /candyRecipe:'scroll-unfurled'/);
@@ -88,7 +88,7 @@ for (const icon of ['confluxo-favicon','empty-chessboard','flower-twirl','forest
 assert.match(expansion, /rider:'caveman'/);
 assert.match(expansion, /jaguar:'feline'/);
 assert.match(expansion, /Onça Selvagem[^\n]+ganha 100 ATK permanentemente/);
-assert.doesNotMatch(expansion, /reveal:\{|camouflage/);
+assert.doesNotMatch(expansion, /reveal:\{|camouflage:\{/);
 assert.doesNotMatch(expansion, /Peões virados para baixo são destruídos/);
 for (const icon of ['caveman','feline']) assert.ok(fs.existsSync(`assets/icons/${icon}.svg`), `ícone ausente: ${icon}`);
 
