@@ -481,30 +481,30 @@ assert.match(source, /babel-range/);
 assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=9/);
-assert.match(page, /engine-actions-b\.js\?v=21/);
-assert.match(page, /engine-actions-a\.js\?v=27/);
-assert.match(page, /VERSÃO 153/);
+assert.match(page, /engine-actions-b\.js\?v=22/);
+assert.match(page, /engine-actions-a\.js\?v=28/);
+assert.match(page, /VERSÃO 154/);
 assert.match(page, /game-catalog\.js\?v=1/);
 assert.match(source, /function registerPawns/);
 assert.match(source, /function registerEffects/);
 assert.match(source, /function registerArchetype/);
 assert.match(source, /function validateGameCatalog/);
 assert.match(page, /network\.js\?v=36/);
-assert.match(page, /engine-ui\.js\?v=42/);
+assert.match(page, /engine-ui\.js\?v=43/);
 assert.match(source, /function botCombinationWinsNow/);
 assert.match(source, /usesCombined:parts\.some\(u=>u\.fusion\)/);
 assert.match(source, /normalOptions\.length\?normalOptions:winningExceptions/);
 assert.match(source, /state\.arena=xadriaPair\.has\(previous\)&&xadriaPair\.has\(key\)&&previous!==key\?'kingdom':key/);
 assert.match(source, /state\.arena==='kingdom'&&xadriaPair\.has\(k\)/);
-assert.match(page, /styles-core\.css\?v=7/);
-assert.match(page, /styles-responsive\.css\?v=37/);
+assert.match(page, /styles-core\.css\?v=8/);
+assert.match(page, /styles-responsive\.css\?v=38/);
 assert.match(styles, /\.piece \.dual-xadria-art\{inset:2px/);
 assert.match(page, /id="home-brand"/);
 assert.match(source, /\$\('#home-brand'\)\.onclick=/);
-assert.match(page, /engine-core\.js\?v=27/);
+assert.match(page, /engine-core\.js\?v=28/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
-assert.match(page, /engine-actions-a\.js\?v=27/);
-assert.match(page, /engine-actions-b\.js\?v=21/);
+assert.match(page, /engine-actions-a\.js\?v=28/);
+assert.match(page, /engine-actions-b\.js\?v=22/);
 assert.match(source, /function recoverBotTurn/);
 assert.match(source, /catch\(error\)\{recoverBotTurn\(error\)\}/);
 assert.match(source, /function armBotWatchdog/);
@@ -540,7 +540,7 @@ assert.equal(context.effects.camouflage, undefined, 'Camuflar-se deve sair do jo
 assert.doesNotMatch(source, /function flipSelected|function botSetFaceDown/, 'jogadores e bots não devem mais virar peões');
 assert.match(source, /hasEffect\(attacker,'jaguar'\)[^\n]+bonusAtk=.*\+100/, 'a Onça deve ganhar 100 ATK quando derrota um adversário');
 assert.match(source, /selectedEffect=\{key:k,index:i,owner,arena:false\}/, 'os detalhes devem manter o dono da carta inspecionada');
-assert.match(page, /styles-responsive\.css\?v=37/);
+assert.match(page, /styles-responsive\.css\?v=38/);
 assert.doesNotMatch(page, /SUA MÃO/);
 assert.match(page, /<div class="reserve-head"><div><b>Peões<\/b><\/div><span><b id="pawn-deck-count">0<\/b> na pilha<\/span><\/div>/);
 assert.match(styles, /reserve-hand-panel \.reserve-head>span/);
@@ -598,7 +598,7 @@ assert.doesNotMatch(fs.readFileSync('assets/icons/six-eyes.svg', 'utf8'), /M0 0h
 assert.match(page, /<h3>Ataque em conjunto<\/h3>/);
 assert.match(page, /outros peões <b>em contato com o alvo<\/b>/);
 assert.match(page, /network\.js\?v=36/);
-assert.match(page, /styles-game\.css\?v=10/);
+assert.match(page, /styles-game\.css\?v=11/);
 assert.match(page, /id="mode-bots"/);
 assert.match(page, /BOT CONTRA BOT/);
 assert.match(source, /function botControls\(player\)/);
@@ -634,7 +634,7 @@ const arenaBotContext = {
   state: {arena: 'roses', defeatedCount: 0, players: {1: {units: []}, 2: {name: 'Bot', hand: ['blackRoses'], units: []}}},
   effects: {roses: {name: 'Campo das Rosas Pálidas', type: 'ARENA'}, blackRoses: {name: 'Colina das Rosas Negras', type: 'ARENA'}, kingdom: {name: 'Reino de Xadria', type: 'ARENA'}},
   botActor: () => 2, botOpponent: () => 1,
-  botUsePushEffect: () => false, botUseCastleEffect: () => false, botUsePitEffect: () => false, botUseEyesEffect: () => false,
+  botUsePushEffect: () => false, botUseCastleEffect: () => false, botUseGoldEffects: () => false, botUsePitEffect: () => false, botUseEyesEffect: () => false,
   botUseRetreatEffect: () => false,
   clearJungleFeatures() {}, allUnits: () => [], destroy() {}, render() {}, log() {},
   equipmentTargetAllowed: () => false, effectiveAtk: () => 0, copyEquipmentForRavens() {},
