@@ -13,6 +13,7 @@ const page=fs.readFileSync('index.html','utf8');
 const styles=['styles-core.css','styles-game.css','styles-responsive.css'].map(file=>fs.readFileSync(file,'utf8')).join('\n');
 
 for(const pawn of ['goldWorshipper','goldGoblin','goldPriest','goldBlacksmith','goldGolem','goldDragon'])assert.match(expansion,new RegExp(`${pawn}:\\{`),`Peão Era Dourada ausente: ${pawn}`);
+assert.match(expansion,/goldDragon:\{name:'O Dragão Banhado a Ouro: Ramon',atk:500,movement:\[\[-3,0\],\[-2,-1\],\[-2,0\],\[-2,1\],\[-1,-3\],\[-1,-2\],\[-1,-1\],\[-1,0\],\[-1,1\],\[-1,2\],\[-1,3\],\[0,-1\],\[0,1\],\[1,-2\],\[1,-1\],\[1,0\],\[1,1\],\[1,2\],\[2,-2\],\[2,2\]\]/,'O alcance de Ramon deve corresponder à tabela 7x7 do Cartas.md');
 for(const effect of ['goldenAge','goldArmor','camouflagedVest','richer','gild','allOrNothing'])assert.match(expansion,new RegExp(`${effect}:\\{`),`Efeito Era Dourada ausente: ${effect}`);
 for(const icon of ['tarot-17-the-star','goblin','sun-priest','blacksmith','rock-golem','wyvern','gold-stack','abdominal-armor','hidden','coins-pile','gold-nuggets','slot-machine']){
  assert.ok(fs.existsSync(`assets/icons/${icon}.svg`),`Ícone dourado ausente: ${icon}`);
