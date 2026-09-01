@@ -490,7 +490,7 @@ assert.match(page, /data-deck="celestial"/);
 assert.match(page, /engine-celestial\.js\?v=9/);
 assert.match(page, /engine-actions-b\.js\?v=26/);
 assert.match(page, /engine-actions-a\.js\?v=29/);
-assert.match(page, /VERSÃO 162/);
+assert.match(page, /VERSÃO 163/);
 assert.match(page, /game-catalog\.js\?v=1/);
 assert.match(source, /function registerPawns/);
 assert.match(source, /function registerEffects/);

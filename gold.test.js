@@ -7,6 +7,7 @@ const expansion=fs.readFileSync('engine-expansion.js','utf8');
 const gold=fs.readFileSync('engine-gold.js','utf8');
 const actionsA=fs.readFileSync('engine-actions-a.js','utf8');
 const actionsB=fs.readFileSync('engine-actions-b.js','utf8');
+const runtime=fs.readFileSync('engine-expansion-runtime.js','utf8');
 const core=fs.readFileSync('engine-core.js','utf8');
 const ui=fs.readFileSync('engine-ui.js','utf8');
 const page=fs.readFileSync('index.html','utf8');
@@ -20,7 +21,7 @@ for(const icon of ['tarot-17-the-star','goblin','sun-priest','blacksmith','rock-
  assert.doesNotMatch(fs.readFileSync(`assets/icons/${icon}.svg`,'utf8'),/<path d="M0 0h512v512H0z"\/>/,`Ícone ${icon} não pode ter fundo sólido`);
 }
 assert.match(page,/data-deck="gold"/);
-assert.match(page,/engine-gold\.js\?v=3/);
+assert.match(page,/engine-gold\.js\?v=4/);
 assert.match(styles,/deck-gold/);
 assert.match(styles,/data-arena=goldenAge/);
 
@@ -76,6 +77,10 @@ assert.match(actionsB,/goldDefeatedAtEntry/,'Ferreiro deve contar apenas derrota
 assert.match(core,/u\.kind==='goldBlacksmith'.*goldDefeatedAtEntry/);
 assert.match(styles,/goldParticleTransfer/);
 assert.match(styles,/goldPriestPulse/);
+assert.match(gold,/function syncGoldPriestVisuals\(\)/);
+assert.match(gold,/lastGoldReducedVisualKey/);
+assert.match(gold,/delete priest\.goldPriestPulse/);
+assert.match(runtime,/syncGoldPriestVisuals\(\)/);
 assert.match(styles,/goldPriestPulse 1\.15s ease-in-out 1/,'A pulsação dourada deve terminar após uma execução');
 assert.doesNotMatch(styles,/goldPriestPulse[^;}]*infinite/,'O efeito visual dourado não pode pulsar infinitamente');
 assert.match(actionsB,/hasEquipment\(u,'camouflagedVest'\)\)atk\+=100/);

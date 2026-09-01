@@ -21,6 +21,7 @@ function resolveCandyContacts(){if(!state?.players||state.resolvingCandyContacts
 
 const baseRenderBoard=renderBoard;
 renderBoard=function(){
+ if(typeof syncGoldPriestVisuals==='function')syncGoldPriestVisuals();
  baseRenderBoard();
  let board=$('#board');
  (state.blackHoles||[]).forEach(h=>{let cell=board.querySelector(`[data-r="${h.row}"][data-c="${h.col}"]`);if(cell&&!cell.querySelector('.black-hole'))cell.insertAdjacentHTML('beforeend','<span class="black-hole" title="Buraco Negro"><img src="assets/icons/black-hole-bolas.svg" alt=""></span>')});
