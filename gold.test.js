@@ -76,6 +76,8 @@ assert.match(actionsB,/goldDefeatedAtEntry/,'Ferreiro deve contar apenas derrota
 assert.match(core,/u\.kind==='goldBlacksmith'.*goldDefeatedAtEntry/);
 assert.match(styles,/goldParticleTransfer/);
 assert.match(styles,/goldPriestPulse/);
+assert.match(styles,/goldPriestPulse 1\.15s ease-in-out 1/,'A pulsação dourada deve terminar após uma execução');
+assert.doesNotMatch(styles,/goldPriestPulse[^;}]*infinite/,'O efeito visual dourado não pode pulsar infinitamente');
 assert.match(actionsB,/hasEquipment\(u,'camouflagedVest'\)\)atk\+=100/);
 assert.match(actionsB,/goldUnitHasReducedAttack\(u\)&&allUnits\(\)\.some\(priest=>priest\.row!==null&&hasEffect\(priest,'goldPriest'\)\)\)atk\*=2/,'Sacerdote deve dobrar o Peão Ouro que teve ATK reduzido');
 assert.doesNotMatch(actionsB,/hasEffect\(u,'goldPriest'\)&&allUnits\(\)\.some\(goldUnitHasReducedAttack\)/,'Sacerdote não deve dobrar o próprio ATK apenas porque outro peão foi reduzido');
