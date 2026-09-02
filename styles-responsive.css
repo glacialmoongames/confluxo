@@ -280,3 +280,8 @@
 :root{--arc-xadria-pawn-bg:#741f92;--arc-xadria-pawn-border:#df91ff;--arc-xadria-icon-bg:radial-gradient(circle at 35% 25%,#d079ff,#8425ad 58%,#39094d)}
 .piece.deck-xadria,.reserve-piece.deck-xadria,.unit-card[data-deck=xadria]{--archetype-bg:var(--arc-xadria-pawn-bg);--archetype-border:var(--arc-xadria-pawn-border)}
 .piece.deck-xadria .art-crop,.reserve-piece.deck-xadria .art-crop,.unit-card[data-deck=xadria] .art-crop{background:var(--arc-xadria-icon-bg)!important}
+
+/* Zonas Xadria com saturação equivalente às identidades dos demais arquétipos. */
+:root{--arc-xadria-zone:linear-gradient(145deg,#8528ad,#3f0c52)}
+.board[data-p1=xadria] .cell.zone1{background:var(--arc-xadria-zone);box-shadow:inset 0 -4px var(--arc-xadria-border)}.board[data-p2=xadria] .cell.zone2{background:var(--arc-xadria-zone);box-shadow:inset 0 4px var(--arc-xadria-border)}
+.board[data-arena=mausoleum][data-p1=xadria] .cell.mausoleum-zone-p1{background:var(--arc-xadria-zone)!important}.board[data-arena=mausoleum][data-p2=xadria] .cell.mausoleum-zone-p2{background:var(--arc-xadria-zone)!important}
