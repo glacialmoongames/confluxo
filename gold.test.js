@@ -21,7 +21,7 @@ for(const icon of ['tarot-17-the-star','goblin','sun-priest','blacksmith','rock-
  assert.doesNotMatch(fs.readFileSync(`assets/icons/${icon}.svg`,'utf8'),/<path d="M0 0h512v512H0z"\/>/,`Ícone ${icon} não pode ter fundo sólido`);
 }
 assert.match(page,/data-deck="gold"/);
-assert.match(page,/engine-gold\.js\?v=4/);
+assert.match(page,/engine-gold\.js\?v=5/);
 assert.match(styles,/deck-gold/);
 assert.match(styles,/data-arena=goldenAge/);
 
@@ -78,7 +78,8 @@ assert.match(core,/u\.kind==='goldBlacksmith'.*goldDefeatedAtEntry/);
 assert.match(styles,/goldParticleTransfer/);
 assert.match(styles,/goldPriestPulse/);
 assert.match(gold,/function syncGoldPriestVisuals\(\)/);
-assert.match(gold,/lastGoldReducedVisualKey/);
+assert.match(gold,/lastGoldPriestActivePairs/);
+assert.match(gold,/activatedPriests=priests\.filter/,'o Sacerdote só deve pulsar quando uma nova relação de efeito se tornar ativa');
 assert.match(gold,/delete priest\.goldPriestPulse/);
 assert.match(runtime,/syncGoldPriestVisuals\(\)/);
 assert.match(styles,/goldPriestPulse 1\.15s ease-in-out 1/,'A pulsação dourada deve terminar após uma execução');

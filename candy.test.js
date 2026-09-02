@@ -106,5 +106,8 @@ assert.doesNotMatch(runtime,/chocolateSkeletonTurns/,'o efeito antigo de contage
 assert.match(boardRenderer,/mausoleumAreaContains\(state\.arenaOwner,r\)\?' mausoleum-effect'/,'a área afetada pelo Mausoléu deve ser marcada visualmente');
 assert.match(responsiveStyles,/board\[data-arena=mausoleum\] \.cell\.light/,'o Mausoléu deve aplicar o tema rosa-claro à Arena');
 assert.match(responsiveStyles,/\.cell\.mausoleum-effect/,'as casas afetadas pelo Mausoléu precisam de destaque próprio');
+assert.match(runtime,/classList\.toggle\('mausoleum-zone-p1',mausoleumAreaContains\(1,row\)\)/,'a área expandida do J1 deve ser marcada independentemente do dono da Arena');
+assert.match(runtime,/classList\.toggle\('mausoleum-zone-p2',mausoleumAreaContains\(2,row\)\)/,'a área expandida do J2 deve ser marcada independentemente do dono da Arena');
+assert.match(responsiveStyles,/\.board\[data-p1=gold\]\{--p1-zone:var\(--arc-gold-bg\);--p1-zone-edge:var\(--arc-gold-border\)\}/,'a zona expandida de Era Dourada deve reutilizar a identidade dourada');
 
 console.log('Mortos Doces tests passed');
