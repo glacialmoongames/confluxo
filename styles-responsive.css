@@ -284,7 +284,7 @@
 /* Todas as zonas usam a mesma saturação-base da área Selvagem; apenas o matiz muda. */
 :root{--arc-xadria-zone:linear-gradient(145deg,hsl(285 16% 34%),hsl(285 10% 25%));--arc-wild-zone:linear-gradient(145deg,hsl(133 16% 34%),hsl(133 10% 25%));--arc-celestial-zone:linear-gradient(145deg,hsl(205 16% 34%),hsl(205 10% 25%));--arc-abyss-zone:linear-gradient(145deg,hsl(330 16% 34%),hsl(330 10% 25%));--arc-candy-zone:linear-gradient(145deg,hsl(340 16% 34%),hsl(340 10% 25%));--arc-gold-zone:linear-gradient(145deg,hsl(45 16% 34%),hsl(45 10% 25%))}
 /* A zona é uma camada translúcida constante: a Arena continua visível por baixo. */
-:root{--arc-xadria-zone-overlay:hsl(285 72% 48%/42%);--arc-wild-zone-overlay:hsl(133 72% 48%/42%);--arc-celestial-zone-overlay:hsl(205 72% 48%/42%);--arc-abyss-zone-overlay:hsl(330 72% 48%/42%);--arc-candy-zone-overlay:hsl(340 72% 48%/42%);--arc-gold-zone-overlay:hsl(45 72% 48%/42%)}
+:root{--arc-xadria-zone-overlay:hsl(285 72% 48%/30%);--arc-wild-zone-overlay:hsl(133 72% 48%/30%);--arc-celestial-zone-overlay:hsl(205 72% 48%/30%);--arc-abyss-zone-overlay:hsl(330 72% 48%/30%);--arc-candy-zone-overlay:hsl(340 72% 48%/30%);--arc-gold-zone-overlay:hsl(45 72% 48%/30%)}
 .board .cell.zone1{box-shadow:inset 0 0 0 100vmax var(--p1-zone-overlay),inset 0 -4px var(--p1-zone-edge)!important}.board .cell.zone2{box-shadow:inset 0 0 0 100vmax var(--p2-zone-overlay),inset 0 4px var(--p2-zone-edge)!important}
 
 /* Neutraliza as antigas variações Casa Branca/Casa Preta no fundo externo. */
