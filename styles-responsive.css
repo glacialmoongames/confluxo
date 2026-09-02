@@ -275,3 +275,8 @@
 
 /* A pontuação acompanha o contraste do cabeçalho ativo. */
 .player-strip.current .score span{color:currentColor;text-shadow:none}
+
+/* Todos os peões Xadria compartilham o fundo da Infantaria; só a cor do símbolo varia. */
+:root{--arc-xadria-pawn-bg:#741f92;--arc-xadria-pawn-border:#df91ff;--arc-xadria-icon-bg:radial-gradient(circle at 35% 25%,#d079ff,#8425ad 58%,#39094d)}
+.piece.deck-xadria,.reserve-piece.deck-xadria,.unit-card[data-deck=xadria]{--archetype-bg:var(--arc-xadria-pawn-bg);--archetype-border:var(--arc-xadria-pawn-border)}
+.piece.deck-xadria .art-crop,.reserve-piece.deck-xadria .art-crop,.unit-card[data-deck=xadria] .art-crop{background:var(--arc-xadria-icon-bg)!important}
