@@ -108,6 +108,6 @@ assert.match(responsiveStyles,/board\[data-arena=mausoleum\] \.cell\.light/,'o M
 assert.match(responsiveStyles,/\.cell\.mausoleum-effect/,'as casas afetadas pelo Mausoléu precisam de destaque próprio');
 assert.match(runtime,/classList\.toggle\('mausoleum-zone-p1',mausoleumAreaContains\(1,row\)\)/,'a área expandida do J1 deve ser marcada independentemente do dono da Arena');
 assert.match(runtime,/classList\.toggle\('mausoleum-zone-p2',mausoleumAreaContains\(2,row\)\)/,'a área expandida do J2 deve ser marcada independentemente do dono da Arena');
-assert.match(responsiveStyles,/\.board\[data-p1=gold\]\{--p1-zone:var\(--arc-gold-zone\);--p1-zone-edge:var\(--arc-gold-border\)\}/,'a zona expandida de Era Dourada deve reutilizar a identidade dourada normalizada');
+assert.match(responsiveStyles,/\.board\[data-p1=gold\]\{--p1-zone:var\(--arc-gold-zone\);--p1-zone-overlay:var\(--arc-gold-zone-overlay\);--p1-zone-edge:var\(--arc-gold-border\)\}/,'a zona expandida de Era Dourada deve reutilizar a identidade dourada normalizada');
 
 console.log('Mortos Doces tests passed');
