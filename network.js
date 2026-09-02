@@ -1,20 +1,22 @@
-var onlineMode=false,localPlayer=null,onlineRole=null,peerConnection=null,dataChannel=null,applyingRemote=false,remoteDeck=null,networkSequence=0,networkRevision=0,roomCode='',reconnectTimer=null,heartbeatTimer=null,deckSyncTimer=null,stateRetryTimer=null,stateSyncTimer=null,remoteVisualTimer=null,reconnectAttempts=0,pendingStatePacket=null,lastPacketAt=0,stateChunks={};
+var onlineMode=false,localPlayer=null,onlineRole=null,peerConnection=null,dataChannel=null,spectatorChannels=[],applyingRemote=false,remoteDeck=null,remoteName='',onlineNames={1:'Duelista 1',2:'Duelista 2'},networkSequence=0,networkRevision=0,roomCode='',reconnectTimer=null,heartbeatTimer=null,deckSyncTimer=null,stateRetryTimer=null,stateSyncTimer=null,remoteVisualTimer=null,reconnectAttempts=0,pendingStatePacket=null,lastPacketAt=0,stateChunks={};
 const STATE_CHUNK_SIZE=8000;
 
 function networkStatus(text,kind=''){
  const box=document.querySelector('.signal-status'),label=document.querySelector('#connection-status');
  if(label)label.textContent=text;if(box)box.className=`signal-status ${kind}`;
  const badge=document.querySelector('#network-badge');
- if(badge){badge.classList.toggle('connected',kind==='connected');badge.querySelector('span').textContent=kind==='connected'?`J${localPlayer} · ONLINE`:'CONECTANDO'}
+ if(badge){badge.classList.toggle('connected',kind==='connected');badge.querySelector('span').textContent=kind==='connected'?(onlineRole==='spectator'?'ESPECTADOR · ONLINE':`J${localPlayer} · ONLINE`):'CONECTANDO'}
 }
-function cleanRoomCode(value){return String(value||'').toUpperCase().replace(/[^A-Z]/g,'').slice(0,10)}
+function cleanRoomCode(value){return String(value||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,12)}
+function cleanPlayerName(value){return String(value||'').replace(/[<>]/g,'').trim().replace(/\s+/g,' ').slice(0,24)}
+function getOnlineName(fallback='Duelista'){let input=document.querySelector('#online-name'),name=cleanPlayerName(input?.value);if(input)input.value=name;return name||fallback}
 function getRoomCode(){
  const input=document.querySelector('#room-code');roomCode=cleanRoomCode(input.value);input.value=roomCode;
- if(roomCode.length===10){input.classList.remove('invalid');return roomCode}
- input.classList.remove('invalid');void input.offsetWidth;input.classList.add('invalid');networkStatus('O código precisa ter exatamente 10 letras','error');return null
+ if(roomCode.length>=1&&roomCode.length<=12){input.classList.remove('invalid');return roomCode}
+ input.classList.remove('invalid');void input.offsetWidth;input.classList.add('invalid');networkStatus('Use um código de 1 a 12 letras ou números','error');return null
 }
 function generateRoomCode(){
- const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ',values=new Uint32Array(10);crypto.getRandomValues(values);
+ const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',values=new Uint32Array(8);crypto.getRandomValues(values);
  document.querySelector('#room-code').value=[...values].map(value=>alphabet[value%alphabet.length]).join('');networkStatus('Código pronto — use o mesmo nos dois dispositivos','')
 }
 function roomPeerId(code){return `confluxo-${code.toLowerCase()}`}
@@ -22,8 +24,8 @@ function gameStarted(){return document.querySelector('#setup').classList.contain
 function clearConnectionTimers(){clearTimeout(reconnectTimer);clearInterval(heartbeatTimer);clearInterval(deckSyncTimer);clearTimeout(stateRetryTimer);clearTimeout(stateSyncTimer);reconnectTimer=null;heartbeatTimer=null;deckSyncTimer=null;stateRetryTimer=null;stateSyncTimer=null}
 function closePeer(){
  clearConnectionTimers();reconnectAttempts=0;networkRevision=0;pendingStatePacket=null;lastPacketAt=0;stateChunks={};
- const channel=dataChannel,peer=peerConnection;dataChannel=null;peerConnection=null;remoteDeck=null;
- try{channel?.removeAllListeners?.();channel?.close();peer?.removeAllListeners?.();peer?.destroy()}catch{}
+ const channel=dataChannel,peer=peerConnection,spectators=[...spectatorChannels];dataChannel=null;peerConnection=null;spectatorChannels=[];remoteDeck=null;remoteName='';
+ try{channel?.removeAllListeners?.();channel?.close();spectators.forEach(item=>{item.removeAllListeners?.();item.close()});peer?.removeAllListeners?.();peer?.destroy()}catch{}
 }
 function makePeer(id){
  const oldPeer=peerConnection;peerConnection=null;try{oldPeer?.removeAllListeners?.();oldPeer?.destroy()}catch{}
@@ -40,21 +42,29 @@ function handlePeerError(error){
  if(document.querySelector('#setup').classList.contains('hidden')&&error?.type!=='browser-incompatible'){networkStatus('Reconectando a partida…','connecting');scheduleReconnect();return}
  clearTimeout(reconnectTimer);reconnectTimer=null;networkStatus(messages[error?.type]||'Não foi possível estabelecer a conexão','error');setLobbyBusy(false)
 }
-function setLobbyBusy(busy){document.querySelector('#host-online').disabled=busy;document.querySelector('#join-online').disabled=busy;document.querySelector('#generate-code').disabled=busy;document.querySelector('#room-code').disabled=busy}
-function sendDeckChoice(type='deck'){if(!localPlayer)return false;return sendPacket({type,deck:selectedDecks[localPlayer],player:localPlayer,pointGoal:onlineRole==='host'?selectedPointGoal():pointGoal})}
+function setLobbyBusy(busy){document.querySelector('#host-online').disabled=busy;document.querySelector('#join-online').disabled=busy;document.querySelector('#spectate-online').disabled=busy;document.querySelector('#generate-code').disabled=busy;document.querySelector('#room-code').disabled=busy;document.querySelector('#online-name').disabled=busy}
+function selectedLobbyDeck(){return document.querySelector('.choice-row[data-player="1"] .deck-choice.selected')?.dataset.deck||'xadria'}
+function sendDeckChoice(type='deck'){if(!localPlayer)return false;return sendPacket({type,deck:selectedDecks[localPlayer],name:onlineNames[localPlayer],player:localPlayer,pointGoal:onlineRole==='host'?selectedPointGoal():pointGoal})}
 function stopDeckSync(){clearInterval(deckSyncTimer);deckSyncTimer=null}
 function startDeckSync(){
  stopDeckSync();sendDeckChoice();sendPacket({type:'deck-request'});
  deckSyncTimer=setInterval(()=>{if(!onlineMode||!dataChannel?.open)return stopDeckSync();if(remoteDeck)return stopDeckSync();sendDeckChoice();sendPacket({type:'deck-request'});networkStatus('Conectado - confirmando os decks...','connecting')},800)
 }
 function acceptRemoteDeck(packet){
- if(!packet.deck)return false;remoteDeck=packet.deck;selectedDecks[localPlayer===1?2:1]=packet.deck;if(onlineRole==='guest')setPointGoal(packet.pointGoal);stopDeckSync();updateOnlineStart();networkStatus(onlineRole==='host'?'Sala pronta — clique em Iniciar Partida Online':'Sala pronta — aguardando o anfitrião','connected');return true
+ if(!packet.deck)return false;let other=localPlayer===1?2:1;remoteDeck=packet.deck;remoteName=cleanPlayerName(packet.name)||`Duelista ${other}`;onlineNames[other]=remoteName;selectedDecks[other]=packet.deck;if(onlineRole==='guest')setPointGoal(packet.pointGoal);stopDeckSync();updateOnlineStart();networkStatus(onlineRole==='host'?'Sala pronta — clique em Iniciar Partida Online':'Sala pronta — aguardando o anfitrião','connected');return true
 }
+function sendChannelPacket(channel,packet,prefix='spectator'){
+ if(!channel?.open)return false;try{let serialized=packet?.type==='state'?JSON.stringify(packet):null;if(serialized&&serialized.length>STATE_CHUNK_SIZE){let total=Math.ceil(serialized.length/STATE_CHUNK_SIZE),id=`${prefix}-${packet.revision}-${packet.sequence||Date.now()}`;for(let index=0;index<total;index++)channel.send({type:'state-chunk',id,index,total,data:serialized.slice(index*STATE_CHUNK_SIZE,(index+1)*STATE_CHUNK_SIZE)});return true}channel.send(packet);return true}catch{return false}
+}
+function spectatorSnapshot(){return gameStarted()&&state?{type:'state',actor:0,sequence:networkSequence,revision:networkRevision,force:true,started:true,state:cloneNetworkValue(state),selectedDecks:cloneNetworkValue(selectedDecks)}:{type:'spectator-lobby',names:cloneNetworkValue(onlineNames),selectedDecks:cloneNetworkValue(selectedDecks),pointGoal:selectedPointGoal()}}
+function sendSpectatorSnapshot(channel){return sendChannelPacket(channel,spectatorSnapshot(),'watch')}
+function broadcastSpectators(packet){spectatorChannels=spectatorChannels.filter(channel=>channel?.open);spectatorChannels.forEach(channel=>sendChannelPacket(channel,packet,'watch'))}
+function attachSpectatorChannel(channel){spectatorChannels.push(channel);channel.on('open',()=>sendSpectatorSnapshot(channel));channel.on('data',packet=>{if(packet?.type==='heartbeat')return sendChannelPacket(channel,{type:'heartbeat',at:Date.now()});if(packet?.type==='spectate-request')sendSpectatorSnapshot(channel)});channel.on('close',()=>spectatorChannels=spectatorChannels.filter(item=>item!==channel));channel.on('error',()=>spectatorChannels=spectatorChannels.filter(item=>item!==channel))}
 function attachChannel(channel){
  const previous=dataChannel;if(previous&&previous!==channel){try{previous.removeAllListeners?.();previous.close()}catch{}}
  dataChannel=channel;
- dataChannel.on('open',()=>{if(channel!==dataChannel)return;clearTimeout(reconnectTimer);reconnectTimer=null;reconnectAttempts=0;lastPacketAt=Date.now();startHeartbeat();networkStatus('Conectado ao outro duelista','connected');document.querySelector('#network-badge').classList.remove('hidden');document.body.classList.remove('connection-lost');startDeckSync();updateOnlineStart();if(state&&gameStarted())updateOnlineLock();if(gameStarted()){flushPendingState();sendPacket({type:'sync-request',revision:networkRevision});if(onlineRole==='host')setTimeout(()=>sendGameState(true,false),80)}});
- dataChannel.on('data',raw=>{if(channel===dataChannel)receivePacket(raw)});
+ dataChannel.on('open',()=>{if(channel!==dataChannel)return;clearTimeout(reconnectTimer);reconnectTimer=null;reconnectAttempts=0;lastPacketAt=Date.now();startHeartbeat();document.querySelector('#network-badge').classList.remove('hidden');document.body.classList.remove('connection-lost');if(onlineRole==='spectator'){networkStatus('Conectado como espectador','connected');sendPacket({type:'spectate-request'});return}networkStatus('Conectado ao outro duelista','connected');startDeckSync();updateOnlineStart();if(state&&gameStarted())updateOnlineLock();if(gameStarted()){flushPendingState();sendPacket({type:'sync-request',revision:networkRevision});if(onlineRole==='host')setTimeout(()=>sendGameState(true,false),80)}});
+ dataChannel.on('data',raw=>{if(channel===dataChannel){if(onlineRole==='host'&&['visual','state','state-chunk'].includes(raw?.type))broadcastSpectators(raw);receivePacket(raw)}});
  dataChannel.on('close',()=>handleChannelClose(channel));
  dataChannel.on('error',()=>{if(channel===dataChannel&&!channel.open)handleChannelClose(channel)})
 }
@@ -77,11 +87,11 @@ function ensureHostPeer(recovering=false){
  if(peerConnection&&!peerConnection.destroyed){if(peerConnection.disconnected){try{peerConnection.reconnect()}catch{}}scheduleReconnect(3500);return peerConnection}
  const peer=makePeer(roomPeerId(roomCode));if(!peer){scheduleReconnect();return null}
  peer.on('open',()=>{if(!dataChannel?.open)networkStatus(recovering?'Sala recuperada — aguardando o adversário':'Sala pronta — aguardando o Duelista 2','connecting')});
- peer.on('connection',channel=>{if(dataChannel?.open)return channel.close();attachChannel(channel)});scheduleReconnect(5000);return peer
+ peer.on('connection',channel=>{if(channel.metadata?.role==='spectator')return attachSpectatorChannel(channel);if(dataChannel?.open)return channel.close();attachChannel(channel)});scheduleReconnect(5000);return peer
 }
 function connectGuestToHost(){
  if(!peerConnection||peerConnection.destroyed||peerConnection.disconnected||dataChannel?.open)return scheduleReconnect();
- const channel=peerConnection.connect(roomPeerId(roomCode),{reliable:true,serialization:'json',metadata:{room:roomCode}});attachChannel(channel);setTimeout(()=>{if(channel===dataChannel&&!channel.open){try{channel.close()}catch{}handleChannelClose(channel)}},10000)
+ const channel=peerConnection.connect(roomPeerId(roomCode),{reliable:true,serialization:'json',metadata:{room:roomCode,role:onlineRole==='spectator'?'spectator':'player'}});attachChannel(channel);setTimeout(()=>{if(channel===dataChannel&&!channel.open){try{channel.close()}catch{}handleChannelClose(channel)}},10000)
 }
 function ensureGuestPeer(recovering=false){
  if(peerConnection&&!peerConnection.destroyed){if(peerConnection.disconnected){try{peerConnection.reconnect()}catch{}scheduleReconnect();return peerConnection}connectGuestToHost();return peerConnection}
@@ -89,27 +99,30 @@ function ensureGuestPeer(recovering=false){
 }
 function createRoom(){
  const code=getRoomCode();if(!code)return;
- onlineMode=true;onlineRole='host';localPlayer=1;chooseOwnDeckRow();setLobbyBusy(true);networkStatus('Criando a sala…','connecting');
+ onlineMode=true;onlineRole='host';localPlayer=1;botVsBot=false;document.body.classList.remove('spectator-mode');selectedDecks[1]=selectedLobbyDeck();onlineNames[1]=getOnlineName('Duelista 1');chooseOwnDeckRow();setLobbyBusy(true);networkStatus('Criando a sala…','connecting');
  closePeer();roomCode=code;const peer=ensureHostPeer();if(!peer)return;
  peer.on('open',()=>networkStatus(`Sala ${code} pronta — aguardando o Duelista 2`,'connecting'))
 }
 function joinRoom(){
  const code=getRoomCode();if(!code)return;
- onlineMode=true;onlineRole='guest';localPlayer=2;chooseOwnDeckRow();setLobbyBusy(true);networkStatus('Procurando a sala…','connecting');
+ onlineMode=true;onlineRole='guest';localPlayer=2;botVsBot=false;document.body.classList.remove('spectator-mode');selectedDecks[2]=selectedLobbyDeck();onlineNames[2]=getOnlineName('Duelista 2');chooseOwnDeckRow();setLobbyBusy(true);networkStatus('Procurando a sala…','connecting');
  closePeer();roomCode=code;const peer=ensureGuestPeer();if(!peer)return;
  setTimeout(()=>{if(!dataChannel?.open&&document.querySelector('#setup').classList.contains('hidden')===false)handlePeerError({type:'peer-unavailable'})},12000)
 }
+function watchRoom(){
+ const code=getRoomCode();if(!code)return;onlineMode=true;onlineRole='spectator';localPlayer=null;botVsBot=true;spectatorViewPlayer=1;document.body.classList.add('spectator-mode');chooseOwnDeckRow();setLobbyBusy(true);networkStatus('Procurando a sala para assistir…','connecting');closePeer();roomCode=code;const peer=ensureGuestPeer();if(!peer)return;setTimeout(()=>{if(!dataChannel?.open&&!gameStarted())handlePeerError({type:'peer-unavailable'})},12000)
+}
 function chooseOwnDeckRow(){
- document.querySelectorAll('.lobby-role').forEach(button=>button.classList.toggle('selected',button.id===(onlineRole==='host'?'host-online':'join-online')));
- document.querySelectorAll('.choice-row').forEach(row=>{let own=+row.dataset.player===localPlayer;row.classList.toggle('online-only-player',own);row.classList.toggle('remote-player',!own)});
- document.querySelector('#point-goal').disabled=onlineRole==='guest';updateOnlineStart()
+ const selectedRole=onlineRole==='host'?'host-online':onlineRole==='guest'?'join-online':'spectate-online';document.querySelectorAll('.lobby-role').forEach(button=>button.classList.toggle('selected',button.id===selectedRole));
+ document.querySelector('.setup-card').classList.toggle('spectator-setup',onlineRole==='spectator');document.querySelector('#player-one-label').textContent=onlineRole==='spectator'?'ESPECTADOR':`SEU DECK · ${onlineNames[localPlayer]||''}`;document.querySelectorAll('.choice-row').forEach(row=>{let own=+row.dataset.player===1;row.classList.toggle('online-only-player',own);row.classList.toggle('remote-player',!own)});
+ document.querySelector('#point-goal').disabled=onlineRole!=='host';updateOnlineStart()
 }
 function sendPacket(packet){
  if(!dataChannel?.open)return false;
  try{
   let serialized=packet?.type==='state'?JSON.stringify(packet):null;
   if(serialized&&serialized.length>STATE_CHUNK_SIZE){let total=Math.ceil(serialized.length/STATE_CHUNK_SIZE),id=`${localPlayer}-${packet.revision}-${packet.sequence}`;for(let index=0;index<total;index++)dataChannel.send({type:'state-chunk',id,index,total,data:serialized.slice(index*STATE_CHUNK_SIZE,(index+1)*STATE_CHUNK_SIZE)});return true}
-  dataChannel.send(packet);return true
+  dataChannel.send(packet);if(onlineRole==='host'&&packet?.type==='visual')broadcastSpectators(packet);return true
  }catch(error){console.error('Falha ao enviar pacote online',error);networkStatus('Falha no envio — tentando novamente…','connecting');return false}
 }
 function cloneNetworkValue(value){return typeof structuredClone==='function'?structuredClone(value):JSON.parse(JSON.stringify(value))}
@@ -125,6 +138,7 @@ function sendGameState(force=false,advance=!force,allowAnimating=false){
  if(advance)networkRevision++;
  let packet={type:'state',actor:localPlayer,sequence:++networkSequence,revision:networkRevision,force,started:document.querySelector('#setup').classList.contains('hidden'),state:cloneNetworkValue(state),selectedDecks:cloneNetworkValue(selectedDecks)};
  if(advance||!pendingStatePacket||pendingStatePacket.revision<=packet.revision)pendingStatePacket=packet;
+ if(onlineRole==='host')broadcastSpectators(packet);
  return flushPendingState()
 }
 function syncOnlineState(urgent=false){
@@ -138,6 +152,7 @@ function receivePacket(raw){
  if(!packet||typeof packet!=='object')return;
  lastPacketAt=Date.now();
  if(packet.type==='heartbeat')return;
+ if(packet.type==='spectator-lobby'){onlineNames=packet.names||onlineNames;selectedDecks=packet.selectedDecks||selectedDecks;setPointGoal(packet.pointGoal);networkStatus('Sala encontrada — aguardando o início da partida','connected');return}
  if(packet.type==='state-chunk'){
   let index=Number(packet.index),total=Number(packet.total);if(!packet.id||!Number.isInteger(index)||!Number.isInteger(total)||index<0||index>=total||total>100||typeof packet.data!=='string')return;
   let transfer=stateChunks[packet.id];if(!transfer||transfer.total!==total)transfer=stateChunks[packet.id]={total,parts:Array(total),received:0};if(transfer.parts[index]===undefined){transfer.parts[index]=packet.data;transfer.received++}if(transfer.received===total){delete stateChunks[packet.id];try{receivePacket(JSON.parse(transfer.parts.join('')))}catch{sendPacket({type:'sync-request',revision:networkRevision})}}return
@@ -157,30 +172,30 @@ function receivePacket(raw){
  if(packet.type!=='state'||!packet.state)return;
  let incomingRevision=Number(packet.revision);if(!Number.isFinite(incomingRevision))incomingRevision=networkRevision+1;
  if(incomingRevision<networkRevision){acknowledgeState(incomingRevision);sendGameState(true,false);return}
- if(incomingRevision===networkRevision&&state){acknowledgeState(incomingRevision);return}
+ if(incomingRevision===networkRevision&&state&&!packet.force){acknowledgeState(incomingRevision);return}
  networkRevision=incomingRevision;if(pendingStatePacket&&pendingStatePacket.revision<=networkRevision){pendingStatePacket=null;clearTimeout(stateRetryTimer);stateRetryTimer=null}
- let inspectedUnitId=selected?.id,inspectedEffect=selectedEffect?{...selectedEffect}:null;
- clearTimeout(remoteVisualTimer);remoteVisualTimer=null;applyingRemote=true;if(packet.started)document.querySelector('#setup').classList.add('hidden');state=packet.state;selectedDecks=packet.selectedDecks||selectedDecks;selected=findInspectedUnit(inspectedUnitId);selectedEffect=inspectedEffect;mode=null;targets=[];pendingCard=null;castleFirst=null;fusionMaterials=[];
+ let watching=typeof spectatingMatch==='function'&&spectatingMatch(),inspected=watching?spectatorSelected:selected,shownEffect=watching?spectatorEffect:selectedEffect,inspectedUnitId=inspected?.id,inspectedEffect=shownEffect?{...shownEffect}:null;
+ clearTimeout(remoteVisualTimer);remoteVisualTimer=null;applyingRemote=true;if(packet.started)document.querySelector('#setup').classList.add('hidden');state=packet.state;selectedDecks=packet.selectedDecks||selectedDecks;if(watching){spectatorSelected=findInspectedUnit(inspectedUnitId);spectatorEffect=inspectedEffect}else{selected=findInspectedUnit(inspectedUnitId);selectedEffect=inspectedEffect}mode=null;targets=[];pendingCard=null;castleFirst=null;fusionMaterials=[];
  document.querySelectorAll('#turn-draw,#pass,#sword-transfer').forEach(element=>element.classList.add('hidden'));render();applyingRemote=false;acknowledgeState(networkRevision);networkStatus('Jogada recebida','connected');checkWin();if(!state.forfeitWinner)resumeOnlinePhase()
 }
 function resumeOnlinePhase(){
- if(!onlineMode||!state)return;updateOnlineLock();
+ if(!onlineMode||!state)return;updateOnlineLock();if(onlineRole==='spectator')return;
  if(state.swordQueue?.[0]===localPlayer)return openSwordTransfer();
  if(state.placementPhase&&state.placementPlayer===localPlayer){beginInitialPlacement(localPlayer);return}
  if(!state.placementPhase&&state.current===localPlayer&&state.passPurpose){beginTurn();syncOnlineState()}
 }
 function updateOnlineLock(){
- if(!onlineMode||!state)return;let active=canLocalAct()&&(state.placementPhase?state.placementPlayer===localPlayer:true);document.body.classList.toggle('online-waiting',!active);
- if(!active)hint(state.swordQueue?.length?'Aguardando a escolha da Espada Maldita…':`Aguardando a jogada do Duelista ${state.current}…`)
+ if(!onlineMode||!state)return;if(onlineRole==='spectator'){document.body.classList.add('online-waiting');hint(`Assistindo pela visão de ${state.players[spectatorViewPlayer].name}.`);return}let active=canLocalAct()&&(state.placementPhase?state.placementPlayer===localPlayer:true);document.body.classList.toggle('online-waiting',!active);
+ if(!active)hint(state.swordQueue?.length?'Aguardando a escolha da Espada Maldita…':`Aguardando a jogada de ${state.players[state.current].name}…`)
 }
 function updateOnlineStart(){
  if(!onlineMode)return;let start=document.querySelector('#start-game'),connected=!!dataChannel?.open;
- if(onlineRole==='host'){start.textContent=connected&&remoteDeck?'INICIAR PARTIDA ONLINE':connected?'SINCRONIZANDO DECKS…':'AGUARDANDO DUELISTA 2';start.disabled=!(connected&&remoteDeck)}else{start.textContent=connected?'AGUARDANDO O ANFITRIÃO':'ENTRE EM UMA SALA';start.disabled=true}
+ if(onlineRole==='host'){start.textContent=connected&&remoteDeck?'INICIAR PARTIDA ONLINE':connected?'SINCRONIZANDO DECKS…':'AGUARDANDO DUELISTA 2';start.disabled=!(connected&&remoteDeck)}else if(onlineRole==='spectator'){start.textContent=connected?'ASSISTINDO À SALA':'ESCOLHA ESPECTAR SALA';start.disabled=true}else{start.textContent=connected?'AGUARDANDO O ANFITRIÃO':'ENTRE EM UMA SALA';start.disabled=true}
 }
 function selectGameMode(mode){
- onlineMode=mode==='online';botMode=mode==='bot'||mode==='bots';botVsBot=mode==='bots';document.querySelector('#mode-local').classList.toggle('selected',mode==='local');document.querySelector('#mode-bot').classList.toggle('selected',mode==='bot');document.querySelector('#mode-bots').classList.toggle('selected',botVsBot);document.querySelector('#mode-online').classList.toggle('selected',onlineMode);document.querySelector('#online-lobby').classList.toggle('hidden',!onlineMode);document.querySelector('.setup-card').classList.toggle('online-setup',onlineMode);document.querySelector('#player-two-label').textContent=botMode?'BOT · DUELISTA 2':'DUELISTA 2';document.querySelectorAll('.choice-row').forEach(row=>row.classList.remove('online-only-player','remote-player'));
- document.querySelector('#player-one-label').textContent=botVsBot?'BOT · DUELISTA 1':'DUELISTA 1';
- if(!onlineMode){closePeer();onlineRole=null;localPlayer=null;roomCode='';setLobbyBusy(false);document.querySelector('#point-goal').disabled=false;document.querySelector('#start-game').disabled=false;document.querySelector('#start-game').textContent=botVsBot?'ASSISTIR BOTS LUTAREM':botMode?'INICIAR CONTRA O BOT':'INICIAR DUELO LOCAL'}else{document.querySelector('#point-goal').disabled=false;document.querySelector('#start-game').disabled=true;document.querySelector('#start-game').textContent='DIGITE O MESMO CÓDIGO NOS DOIS DISPOSITIVOS';networkStatus('Digite um código e escolha uma opção','')}
+ onlineMode=mode==='online';botMode=mode==='bot'||mode==='bots';botVsBot=mode==='bots';spectatorViewPlayer=1;document.body.classList.remove('spectator-mode');document.querySelector('#mode-local').classList.toggle('selected',mode==='local');document.querySelector('#mode-bot').classList.toggle('selected',mode==='bot');document.querySelector('#mode-bots').classList.toggle('selected',botVsBot);document.querySelector('#mode-online').classList.toggle('selected',onlineMode);document.querySelector('#online-lobby').classList.toggle('hidden',!onlineMode);document.querySelector('.setup-card').classList.toggle('online-setup',onlineMode);document.querySelector('.setup-card').classList.remove('spectator-setup');document.querySelector('#player-two-label').textContent=botMode?'BOT · DUELISTA 2':'DUELISTA 2';document.querySelectorAll('.choice-row').forEach(row=>row.classList.remove('online-only-player','remote-player'));
+ document.querySelector('#player-one-label').textContent=onlineMode?'SEU DECK':botVsBot?'BOT · DUELISTA 1':'DUELISTA 1';
+ if(!onlineMode){closePeer();onlineRole=null;localPlayer=null;roomCode='';setLobbyBusy(false);document.querySelector('#point-goal').disabled=false;document.querySelector('#start-game').disabled=false;document.querySelector('#start-game').textContent=botVsBot?'ASSISTIR BOTS LUTAREM':botMode?'INICIAR CONTRA O BOT':'INICIAR DUELO LOCAL'}else{document.querySelector('#point-goal').disabled=false;document.querySelector('#start-game').disabled=true;document.querySelector('#start-game').textContent='DIGITE O CÓDIGO DA SALA';networkStatus('Escolha seu deck, digite um código e entre','')}
 }
 function onlineDeckChanged(player,deck){if(onlineMode&&player===localPlayer)sendDeckChoice()}
 function startOnlineGame(){if(onlineRole!=='host'||!dataChannel?.open||!remoteDeck)return;selectedPointGoal();networkStatus('Iniciando a partida…','connecting');document.querySelector('#setup').classList.add('hidden');newGame();sendGameState(true,true)}
@@ -190,9 +205,9 @@ document.addEventListener('DOMContentLoaded',()=>{
  roomInput.addEventListener('input',()=>{roomInput.value=cleanRoomCode(roomInput.value);roomInput.classList.remove('invalid')});
  roomInput.addEventListener('keydown',event=>{if(event.key==='Enter')document.querySelector('#join-online').click()});
  document.querySelector('#generate-code').onclick=generateRoomCode;
- document.querySelector('#mode-local').onclick=()=>selectGameMode('local');document.querySelector('#mode-bot').onclick=()=>selectGameMode('bot');document.querySelector('#mode-bots').onclick=()=>selectGameMode('bots');document.querySelector('#mode-online').onclick=()=>selectGameMode('online');document.querySelector('#host-online').onclick=createRoom;document.querySelector('#join-online').onclick=joinRoom;
+ document.querySelector('#mode-local').onclick=()=>selectGameMode('local');document.querySelector('#mode-bot').onclick=()=>selectGameMode('bot');document.querySelector('#mode-bots').onclick=()=>selectGameMode('bots');document.querySelector('#mode-online').onclick=()=>selectGameMode('online');document.querySelector('#host-online').onclick=createRoom;document.querySelector('#join-online').onclick=joinRoom;document.querySelector('#spectate-online').onclick=watchRoom;
  window.addEventListener('online',()=>{if(onlineMode&&!dataChannel?.open){networkStatus('Internet restaurada — reconectando…','connecting');scheduleReconnect(100)}});
  window.addEventListener('offline',()=>{if(onlineMode){networkStatus('Sem internet — a partida tentará voltar automaticamente','connecting');document.body.classList.add('connection-lost')}});
- document.addEventListener('visibilitychange',()=>{if(!onlineMode||document.visibilityState!=='visible')return;if(dataChannel?.open){lastPacketAt=Date.now();sendPacket({type:'heartbeat',at:Date.now()});if(gameStarted()){flushPendingState();sendPacket({type:'sync-request',revision:networkRevision})}else sendDeckChoice()}else scheduleReconnect(100)});
+ document.addEventListener('visibilitychange',()=>{if(!onlineMode||document.visibilityState!=='visible')return;if(dataChannel?.open){lastPacketAt=Date.now();sendPacket({type:'heartbeat',at:Date.now()});if(onlineRole==='spectator')sendPacket({type:'spectate-request'});else if(gameStarted()){flushPendingState();sendPacket({type:'sync-request',revision:networkRevision})}else sendDeckChoice()}else scheduleReconnect(100)});
  document.addEventListener('click',event=>{if(!onlineMode||applyingRemote||!state)return;if(event.target.closest('#setup,#rules-dialog'))return;let actor=state.placementPhase?state.placementPlayer:state.current;if(actor===localPlayer)syncOnlineState()},false)
 });

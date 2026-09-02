@@ -5,6 +5,11 @@ process.chdir(__dirname);
 
 const source = fs.readFileSync('network.js', 'utf8');
 assert.match(source, /document\.addEventListener\('click',[^\n]+\},false\)/, 'o estado online deve ser sincronizado depois que o clique alterar a jogada');
+assert.match(source, /replace\(\/\[\^A-Z0-9\]\/g,''\)\.slice\(0,12\)/, 'códigos devem aceitar letras e números até 12 caracteres');
+assert.match(source, /selectedDecks\[2\]=selectedLobbyDeck\(\)/, 'quem entra na sala deve usar o deck exibido na primeira seleção como J2');
+assert.match(source, /channel\.metadata\?\.role==='spectator'/, 'o anfitrião deve separar espectadores do canal do adversário');
+assert.match(source, /spectatorChannels\.forEach\(channel=>sendChannelPacket/, 'o estado deve ser distribuído para vários espectadores');
+assert.match(source, /if\(packet\?\.type==='heartbeat'\)[^\n]+if\(packet\?\.type==='spectate-request'\)/, 'o canal espectador deve aceitar somente presença e solicitação de leitura');
 
 function classList() {
   return { add() {}, remove() {}, toggle() {}, contains() { return true } };
@@ -45,6 +50,10 @@ function makeClient(player, initialState) {
       querySelectorAll() { return [] }
     },
     state: structuredClone(initialState),
+    botVsBot: false,
+    spectatorViewPlayer: 1,
+    spectatorSelected: null,
+    spectatorEffect: null,
     pointGoal: 10,
     selectedDecks: { 1: 'xadria', 2: 'selvagem' },
     selected: null,
@@ -66,6 +75,7 @@ function makeClient(player, initialState) {
     allUnits() { return [] },
     confirm() { return false }
   };
+  context.spectatingMatch = () => context.onlineRole === 'spectator';
   context.selectedPointGoal = () => context.pointGoal;
   context.setPointGoal = value => context.pointGoal = Math.max(1, Math.min(99, Math.round(Number(value)) || 10));
   vm.createContext(context);
@@ -76,6 +86,34 @@ function makeClient(player, initialState) {
   context.updateOnlineStart = () => {};
   context.gameStarted = () => true;
   return context;
+}
+
+{
+  const client = makeClient(1, playerState(1, 'codigo'));
+  assert.equal(client.cleanRoomCode('a-1_b2'), 'A1B2');
+  assert.equal(client.cleanRoomCode('1234567890ABCDE'), '1234567890AB');
+  assert.equal(client.cleanPlayerName('  Ana   <Lua>  '), 'Ana Lua');
+}
+
+{
+  const host = makeClient(1, playerState(1, 'estado-para-espectadores'));
+  const receivedA = [], receivedB = [];
+  host.spectatorChannels = [
+    {open: true, send(packet) { receivedA.push(structuredClone(packet)); }},
+    {open: true, send(packet) { receivedB.push(structuredClone(packet)); }}
+  ];
+  host.sendGameState(true, false);
+  assert.equal(receivedA.at(-1).state.marker, 'estado-para-espectadores');
+  assert.equal(receivedB.at(-1).state.marker, 'estado-para-espectadores');
+}
+
+{
+  const watcher = makeClient(1, playerState(1, 'estado-local'));
+  watcher.onlineRole = 'spectator';watcher.localPlayer = null;watcher.botVsBot = true;
+  watcher.dataChannel = {open: true, send() {}};
+  watcher.receivePacket({type:'state',force:true,revision:0,started:true,state:playerState(2,'estado-observado'),selectedDecks:{1:'xadria',2:'wild'}});
+  assert.equal(watcher.state.marker, 'estado-observado', 'o espectador deve aceitar o retrato completo mesmo na revisão inicial');
+  assert.equal(watcher.state.current, 2);
 }
 
 function link(a, b, shouldDrop = () => false) {

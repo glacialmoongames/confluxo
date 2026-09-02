@@ -43,7 +43,7 @@ registerArchetype('xadria',{name:'Xadria',emblem:'◐',pawns:['infantry','tower'
 registerArchetype('wild',{name:'Selvagem',emblem:'✿',pawns:['rabbit','rider','hawk'],fusions:['serpent','golem'],effects:['jungle','bow','retreat','burn','pit','push','peace']});
 registerArchetype('celestial',{name:'Objeto Celeste',emblem:'✺',pawns:['mercury','venus','earth','mars','jupiter','saturn','uranus','neptune','pluto'],fusions:['sun'],effects:['asteroid','project','burn','pit','push','peace'],pawnComposition:['mercury','mercury','venus','venus','earth','earth','mars','mars','jupiter','jupiter','saturn','saturn','uranus','uranus','neptune','neptune','pluto','sun']});
 let selectedDecks={1:'xadria',2:'wild'};
-let state,selected=null,selectedEffect=null,spectatorSelected=null,spectatorEffect=null,mode=null,targets=[],attackTargets=[],pendingCard=null,pendingPushTarget=null,pendingAbilityTarget=null,castleFirst=null,fusionMaterials=[],initialPlacementResume=null,gameVersion=0,botMode=false,botVsBot=false,botPlayer=2,botTimer=null,botWatchdogTimer=null,lastArenaVisual='none',arenaAnimationTimer=null;
+let state,selected=null,selectedEffect=null,spectatorSelected=null,spectatorEffect=null,spectatorViewPlayer=1,mode=null,targets=[],attackTargets=[],pendingCard=null,pendingPushTarget=null,pendingAbilityTarget=null,castleFirst=null,fusionMaterials=[],initialPlacementResume=null,gameVersion=0,botMode=false,botVsBot=false,botPlayer=2,botTimer=null,botWatchdogTimer=null,lastArenaVisual='none',arenaAnimationTimer=null;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function uid(){return Math.random().toString(36).slice(2,9)}
 function unit(kind,owner){let d=defs[kind];return{id:uid(),kind,owner,row:null,col:null,origin:null,movedTurn:0,attackedTurn:0,equipment:[],abilityTurn:0,mounted:null,...d,types:[...(d.types||[])],baseTypes:[...(d.types||[])],pointValue:1}}
@@ -74,7 +74,7 @@ function newGame(){
  selected=null;selectedEffect=null;spectatorSelected=null;spectatorEffect=null;initialPlacementResume=null;
  state={turn:1,current:1,pointGoal:selectedPointGoal(),players:{},obstacles:[],pits:[],graveyard:[],log:[],animating:false,initialDeal:true,awaitingDraw:false,arena:null,arenaOwner:null,arenaDefeatedStart:0,swordQueue:[],defeatedCount:0,goldDefeatedCount:0,placementPhase:true,placementPlayer:1,passPurpose:null,forfeitWinner:null,celestialWinner:null};
  clearTimeout(botTimer);botTimer=null;clearTimeout(botWatchdogTimer);botWatchdogTimer=null;clearTimeout(arenaAnimationTimer);arenaAnimationTimer=null;lastArenaVisual='none';
- for(let p=1;p<=2;p++){let key=selectedDecks[p],player=state.players[p]={name:botControls(p)?`Bot ${p}`:`Duelista ${p}`,archetype:key,score:0,units:[],initialUnits:[],hand:[],reserve:[],arena:null,drawn:true,deployed:false,moved:false,attackedThisTurn:false,attackLocked:false,neptuneAbilityTurn:0,lastLosses:0,lossesThisTurn:0,pawnDeck:makePawnDeck(p,key),effectDeck:makeEffectDeck(key)};for(let i=0;i<3;i++)player.hand.push(player.effectDeck.pop());drawRandomInitialPawns(player)}
+ for(let p=1;p<=2;p++){let key=selectedDecks[p],configuredName=onlineMode&&typeof onlineNames!=='undefined'?onlineNames[p]:null,player=state.players[p]={name:configuredName|| (botControls(p)?`Bot ${p}`:`Duelista ${p}`),archetype:key,score:0,units:[],initialUnits:[],hand:[],reserve:[],arena:null,drawn:true,deployed:false,moved:false,attackedThisTurn:false,attackLocked:false,neptuneAbilityTurn:0,lastLosses:0,lossesThisTurn:0,pawnDeck:makePawnDeck(p,key),effectDeck:makeEffectDeck(key)};for(let i=0;i<3;i++)player.hand.push(player.effectDeck.pop());drawRandomInitialPawns(player)}
  log('Preparação: escolha onde posicionar os três peões iniciais.');clearAction();render();beginInitialPlacement(1);setTimeout(()=>{if(version!==gameVersion)return;state.initialDeal=false;renderHands()},1300);
 }
 function initialTargetsFor(player){let rows=player===1?[ROWS-2,ROWS-1]:[0,1],out=[];for(let r of rows)for(let c=0;c<COLS;c++)if(!at(r,c)&&!obstacleAt(r,c)&&!pitAt(r,c))out.push({r,c});return out}
@@ -96,6 +96,8 @@ function fruitAt(r,c){let feature=featureAt(r,c);return feature?.type==='FRUIT'?
 function pitAt(r,c){return (state.pits||[]).find(p=>p.row===r&&p.col===c)}
 function collectFruit(u,r,c){let fruit=fruitAt(r,c);if(!u||!fruit)return false;state.obstacles=state.obstacles.filter(x=>x!==fruit);u.bonusAtk=(u.bonusAtk||0)+100;u.fruitPickup=true;log(`${u.name} pegou uma fruta em ${boardCoordinate(r,c)} e ganhou 100 ATK.`);let version=gameVersion;setTimeout(()=>{if(version!==gameVersion)return;delete u.fruitPickup;renderBoard();if(onlineMode)syncOnlineState(true)},760);return true}
 function own(u){return u&&u.owner===state.current}
-function viewPlayerNumber(){return botMode?1:onlineMode&&localPlayer?localPlayer:state.current}
-function perspectivePlayer(){return botMode?1:onlineMode&&localPlayer?localPlayer:state.current}
+function spectatingMatch(){return botVsBot||onlineMode&&typeof onlineRole!=='undefined'&&onlineRole==='spectator'}
+function viewPlayerNumber(){return spectatingMatch()?spectatorViewPlayer:botMode?1:onlineMode&&localPlayer?localPlayer:state.current}
+function perspectivePlayer(){return spectatingMatch()?spectatorViewPlayer:botMode?1:onlineMode&&localPlayer?localPlayer:state.current}
+function setSpectatorView(player){if(!spectatingMatch()||!state)return;spectatorViewPlayer=player===2?2:1;spectatorSelected=null;spectatorEffect=null;render()}
 function canLocalAct(){if(state?.animating||botVsBot)return false;if(botMode)return state.swordQueue?.length?state.swordQueue[0]!==botPlayer:state.current!==botPlayer;return !onlineMode||(state.swordQueue?.length?state.swordQueue[0]===localPlayer:state.current===localPlayer)}

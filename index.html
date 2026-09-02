@@ -6,12 +6,12 @@
   <title>Confluxo — Jogo de Cartas Tático</title>
   <link rel="icon" type="image/svg+xml" href="assets/icons/confluxo-favicon.svg?v=1">
     <link rel="stylesheet" href="styles-core.css?v=9">
-  <link rel="stylesheet" href="styles-game.css?v=12">
+  <link rel="stylesheet" href="styles-game.css?v=13">
   <link rel="stylesheet" href="styles-responsive.css?v=49">
 </head>
 <body>
   <div id="setup" class="setup">
-    <span class="game-version">VERSÃO 172</span>
+    <span class="game-version">VERSÃO 173</span>
     <div class="setup-card">
       <span class="setup-mark"><img src="assets/icons/flower-twirl.svg" alt="Símbolo do Confluxo"></span>
       <small>DUELO DO CONFLUXO</small>
@@ -28,15 +28,18 @@
         <small id="point-goal-help">Escolha quantos pontos são necessários para vencer.</small>
       </label>
       <div id="online-lobby" class="online-lobby hidden">
+        <label class="room-label" for="online-name">SEU NOME NA PARTIDA</label>
+        <input id="online-name" class="online-name" type="text" maxlength="24" autocomplete="nickname" placeholder="Digite seu nome">
         <label class="room-label" for="room-code">CÓDIGO DA PARTIDA</label>
         <div class="room-code-row">
-          <input id="room-code" type="text" maxlength="10" inputmode="text" autocomplete="off" spellcheck="false" placeholder="DEZLETRAS" aria-describedby="room-help">
+          <input id="room-code" type="text" maxlength="12" inputmode="text" autocomplete="off" spellcheck="false" placeholder="ATÉ 12 CARACTERES" aria-describedby="room-help">
           <button id="generate-code" type="button">GERAR</button>
         </div>
-        <p id="room-help" class="room-help">Os dois jogadores digitam exatamente o mesmo código de 10 letras.</p>
+        <p id="room-help" class="room-help">Use de 1 a 12 letras ou números. Jogadores e espectadores digitam o mesmo código.</p>
         <div class="lobby-roles">
           <button id="host-online" class="lobby-role"><span>Ⅰ</span><b>CRIAR SALA</b><small>Você será o Duelista 1</small></button>
           <button id="join-online" class="lobby-role"><span>Ⅱ</span><b>ENTRAR NA SALA</b><small>Você será o Duelista 2</small></button>
+          <button id="spectate-online" class="lobby-role"><span>◉</span><b>ESPECTAR SALA</b><small>Assista sem interferir</small></button>
         </div>
         <div class="signal-status"><i id="connection-light"></i><b id="connection-status">Digite um código e escolha uma opção</b></div>
       </div>
@@ -109,6 +112,7 @@
       <span id="phase-label">Escolha sua ação</span>
     </div>
     <div class="header-actions">
+      <div id="spectator-controls" class="spectator-controls hidden" aria-label="Perspectiva da partida"><button type="button" data-view="1">VISÃO J1</button><button type="button" data-view="2">VISÃO J2</button></div>
       <div id="network-badge" class="network-badge hidden"><i></i><span>ONLINE</span></div>
       <button id="forfeit-btn" class="icon-btn danger-btn" title="Desistir da partida" aria-label="Desistir da partida">⚑</button>
       <button id="rules-btn" class="icon-btn" title="Regras">?</button>
@@ -194,14 +198,14 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="game-catalog.js?v=1"></script>
-  <script src="network.js?v=36"></script>
-  <script src="engine-core.js?v=29"></script>
+  <script src="network.js?v=37"></script>
+  <script src="engine-core.js?v=30"></script>
   <script src="engine-expansion.js?v=27"></script>
   <script src="engine-celestial.js?v=9"></script>
-  <script src="engine-actions-a.js?v=30"></script>
+  <script src="engine-actions-a.js?v=31"></script>
   <script src="engine-actions-b.js?v=26"></script>
   <script src="engine-expansion-runtime.js?v=9"></script>
   <script src="engine-gold.js?v=5"></script>
-  <script src="engine-ui.js?v=44"></script>
+  <script src="engine-ui.js?v=45"></script>
 </body>
 </html>
