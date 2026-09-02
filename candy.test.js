@@ -32,7 +32,7 @@ const werewolfContext={
   allUnits:()=>[],
   isSweetUnit:unit=>unit.candyConverted===true||unit.types.includes('DOCE'),
   hasEffect:(unit,kind)=>unit.kind===kind,
-  hasEquipment:()=>false,
+  hasEquipment:(unit,key)=>unit.equipment?.includes(key)||false,
   isCelestialUnit:()=>false,
   effectContact:()=>false,
   inMovementRadius:()=>false,
@@ -42,9 +42,15 @@ const werewolf={id:'w',kind:'iceWerewolf',owner:1,atk:100,bonusAtk:0,types:['DOC
 const sweet={id:'s',kind:'tower',owner:1,atk:350,bonusAtk:50,types:['PEDRA'],candyConverted:true};
 werewolfContext.allUnits=()=>[werewolf,sweet];
 vm.createContext(werewolfContext);
-vm.runInContext(actions.match(/function effectiveAtk\([^\n]+/)[0],werewolfContext);
+vm.runInContext(actions.match(/function effectiveAtk[\s\S]+?(?=\nfunction destroy)/)[0],werewolfContext);
 assert.equal(werewolfContext.effectiveAtk(werewolf,false),500);
 assert.match(runtime,/u\.candyConverted===true\|\|u\.types\?\.includes\('DOCE'\)/,'Peões convertidos precisam contar como DOCE para o Lobisomem');
+sweet.candyConverted=false;sweet.types=['PEDRA'];sweet.atk=100;sweet.bonusAtk=0;sweet.row=2;sweet.equipment=['goldArmor'];
+assert.equal(werewolfContext.effectiveAtk(werewolf,false),100,'um peão que ainda não é DOCE não deve alterar o Lobisomem');
+sweet.types.push('DOCE');
+assert.equal(werewolfContext.effectiveAtk(werewolf,false),700,'o Lobisomem deve atualizar imediatamente usando o ATK efetivo do novo peão DOCE');
+sweet.types=['PEDRA'];
+assert.equal(werewolfContext.effectiveAtk(werewolf,false),100,'o Lobisomem deve perder imediatamente o bônus quando o peão deixar de ser DOCE');
 
 const quindimContext={hasEffect:(unit,kind)=>unit.kind===kind,log:()=>{}};
 vm.createContext(quindimContext);
