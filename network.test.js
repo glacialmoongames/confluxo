@@ -67,6 +67,7 @@ function makeClient(player, initialState) {
     checkWin() {},
     hint() {},
     openSwordTransfer() {},
+    openDrawChoice() {},
     beginInitialPlacement() {},
     beginTurn() {},
     canLocalAct() { return context.state.current === context.localPlayer },
@@ -86,6 +87,17 @@ function makeClient(player, initialState) {
   context.updateOnlineStart = () => {};
   context.gameStarted = () => true;
   return context;
+}
+
+{
+  const drawState = playerState(2, 'compra-pendente');
+  drawState.awaitingDraw = true;
+  drawState.players[2].drawn = false;
+  const guest = makeClient(2, drawState);
+  let reopened = 0;
+  guest.openDrawChoice = () => reopened++;
+  guest.resumeOnlinePhase();
+  assert.equal(reopened, 1, 'a escolha de compra deve reaparecer após voltar à aba ou ressincronizar');
 }
 
 {

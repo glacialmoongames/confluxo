@@ -184,6 +184,7 @@ function resumeOnlinePhase(){
  if(state.swordQueue?.[0]===localPlayer)return openSwordTransfer();
  if(state.placementPhase&&state.placementPlayer===localPlayer){beginInitialPlacement(localPlayer);return}
  if(!state.placementPhase&&state.current===localPlayer&&state.passPurpose){beginTurn();syncOnlineState()}
+ else if(!state.placementPhase&&state.current===localPlayer&&state.awaitingDraw&&!state.players[localPlayer].drawn)openDrawChoice()
 }
 function updateOnlineLock(){
  if(!onlineMode||!state)return;if(onlineRole==='spectator'){document.body.classList.add('online-waiting');hint(`Assistindo pela visão de ${state.players[spectatorViewPlayer].name}.`);return}let active=canLocalAct()&&(state.placementPhase?state.placementPlayer===localPlayer:true);document.body.classList.toggle('online-waiting',!active);
