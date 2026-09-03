@@ -10,6 +10,10 @@ assert.match(source, /selectedDecks\[2\]=selectedLobbyDeck\(\)/, 'quem entra na 
 assert.match(source, /channel\.metadata\?\.role==='spectator'/, 'o anfitrião deve separar espectadores do canal do adversário');
 assert.match(source, /spectatorChannels\.forEach\(channel=>sendChannelPacket/, 'o estado deve ser distribuído para vários espectadores');
 assert.match(source, /if\(packet\?\.type==='heartbeat'\)[^\n]+if\(packet\?\.type==='spectate-request'\)/, 'o canal espectador deve aceitar somente presença e solicitação de leitura');
+assert.match(source, /onlineSpectators=\[\]/, 'o lobby deve manter a lista de espectadores');
+assert.match(source, /type:'spectator-list'/, 'a lista de espectadores deve ser sincronizada');
+assert.match(source, /function renderLobbyParticipants/, 'o lobby deve mostrar os perfis presentes');
+assert.match(source, /updatePointGoalControl/, 'a meta de pontos deve ser visível somente ao anfitrião');
 
 function classList() {
   return { add() {}, remove() {}, toggle() {}, contains() { return true } };

@@ -5,11 +5,15 @@ create table if not exists public.profiles (
   username_key text not null unique check (char_length(username_key) between 3 and 18),
   wins bigint not null default 0 check (wins >= 0),
   losses bigint not null default 0 check (losses >= 0),
+  rating bigint not null default 1000 check (rating >= 0),
+  profile_icon text not null default 'flower-twirl',
   deck_usage jsonb not null default '{}'::jsonb check (jsonb_typeof(deck_usage) = 'object'),
   created_at timestamptz not null default now()
 );
 
 alter table public.profiles add column if not exists deck_usage jsonb not null default '{}'::jsonb;
+alter table public.profiles add column if not exists rating bigint not null default 1000;
+alter table public.profiles add column if not exists profile_icon text not null default 'flower-twirl';
 alter table public.match_reports add column if not exists deck text;
 alter table public.completed_matches add column if not exists player_one_deck text;
 alter table public.completed_matches add column if not exists player_two_deck text;
@@ -42,7 +46,7 @@ alter table public.match_reports enable row level security;
 alter table public.completed_matches enable row level security;
 
 drop policy if exists "Perfis visiveis para jogadores" on public.profiles;
-create policy "Perfis visiveis para jogadores" on public.profiles for select to authenticated using (true);
+create policy "Perfis visiveis para jogadores" on public.profiles for select to anon, authenticated using (true);
 
 create or replace function public.handle_new_user()
 returns trigger
@@ -102,13 +106,31 @@ begin
   if inserted_match is null then return true; end if;
   update public.profiles set wins = wins + 1 where id = p_winner;
   update public.profiles set losses = losses + 1 where id in (me,p_opponent) and id <> p_winner;
+  update public.profiles set rating = rating + 30 where id = p_winner;
+  update public.profiles set rating = greatest(0,rating - 30) where id in (me,p_opponent) and id <> p_winner;
   update public.profiles set deck_usage = jsonb_set(deck_usage, array[p_deck], to_jsonb(coalesce((deck_usage ->> p_deck)::bigint,0)+1), true) where id = me;
   update public.profiles set deck_usage = jsonb_set(deck_usage, array[opponent_deck], to_jsonb(coalesce((deck_usage ->> opponent_deck)::bigint,0)+1), true) where id = p_opponent;
   return true;
 end;
 $$;
 
+create or replace function public.set_profile_icon(p_icon text)
+returns boolean
+language plpgsql
+security definer set search_path = ''
+as $$
+begin
+  if auth.uid() is null or p_icon !~ '^[a-z0-9-]{1,40}$' then
+    raise exception 'invalid profile icon';
+  end if;
+  update public.profiles set profile_icon = p_icon where id = auth.uid();
+  return found;
+end;
+$$;
+
 revoke all on public.profiles, public.match_reports, public.completed_matches from anon, authenticated;
-grant select on public.profiles to authenticated;
+grant select on public.profiles to anon, authenticated;
 revoke all on function public.report_match_result(uuid,uuid,uuid,text,text) from public, anon;
 grant execute on function public.report_match_result(uuid,uuid,uuid,text,text) to authenticated;
+revoke all on function public.set_profile_icon(text) from public, anon;
+grant execute on function public.set_profile_icon(text) to authenticated;

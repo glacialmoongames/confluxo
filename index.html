@@ -7,28 +7,39 @@
   <link rel="icon" type="image/svg+xml" href="assets/icons/confluxo-favicon.svg?v=1">
     <link rel="stylesheet" href="styles-core.css?v=10">
   <link rel="stylesheet" href="styles-game.css?v=15">
-  <link rel="stylesheet" href="styles-responsive.css?v=55">
+  <link rel="stylesheet" href="styles-responsive.css?v=56">
 </head>
 <body>
   <div id="setup" class="setup">
-    <span class="game-version">VERSÃO 189</span>
-    <div class="setup-card">
-      <span class="setup-mark"><img src="assets/icons/flower-twirl.svg" alt="Símbolo do Confluxo"></span>
-      <small>CONFLUXO</small>
-      <h1>Preparar duelo</h1>
+    <span class="game-version">VERSÃO 190</span>
+    <header class="setup-header">
+      <div class="setup-brand"><img src="assets/icons/flower-twirl.svg" alt=""><span><b>CONFLUXO</b><small>JOGO DE CARTAS TÁTICO</small></span></div>
       <section id="account-card" class="account-card" aria-label="Conta do jogador">
-        <span class="account-avatar"><img src="assets/icons/flower-twirl.svg" alt=""></span>
-        <span class="account-summary"><small>PERFIL DO JOGADOR</small><b id="account-name">Jogar como convidado</b><em id="account-record">CONVIDADO · PARTIDAS NÃO CONTABILIZADAS</em></span>
+        <button id="account-avatar" class="account-avatar" type="button"><img id="account-avatar-image" src="assets/icons/flower-twirl.svg" alt="Ícone do perfil"></button>
+        <span class="account-summary"><small>PERFIL DO JOGADOR</small><b id="account-name">Jogar como convidado</b><strong id="account-elo">SEM ELO</strong><em id="account-record">CONVIDADO · PARTIDAS NÃO CONTABILIZADAS</em></span>
         <button id="account-open" type="button">ENTRAR OU CRIAR CONTA</button>
         <button id="account-logout" class="account-logout hidden" type="button">SAIR</button>
       </section>
-      <div class="game-mode" role="group" aria-label="Modo de jogo">
+    </header>
+    <div class="setup-shell">
+      <aside class="leaderboard-panel">
+        <div class="leaderboard-title"><img src="assets/icons/queen-crown.svg" alt=""><span><small>RANKING GLOBAL</small><b>LEADERBOARD</b></span></div>
+        <ol id="leaderboard-list"><li class="leaderboard-empty">Carregando ranking…</li></ol>
+      </aside>
+      <div class="setup-card">
+      <span class="setup-mark"><img src="assets/icons/flower-twirl.svg" alt="Símbolo do Confluxo"></span>
+      <small>CONFLUXO</small>
+      <h1>Preparar duelo</h1>
+      <nav class="setup-tabs" aria-label="Categorias de jogo">
+        <button id="setup-tab-local" class="setup-tab selected" type="button">MODOS LOCAIS</button>
+        <button id="mode-online" class="setup-tab" type="button">MULTIPLAYER ONLINE</button>
+      </nav>
+      <div id="local-modes" class="game-mode" role="group" aria-label="Modo local">
         <button id="mode-local" class="mode-choice selected"><span>◈</span><b>NO MESMO DISPOSITIVO</b><small>Entregue a tela a cada turno</small></button>
         <button id="mode-bot" class="mode-choice"><span>◆</span><b>CONTRA O BOT</b><small>Enfrente um rival automático</small></button>
         <button id="mode-bots" class="mode-choice"><span>⚔</span><b>BOT CONTRA BOT</b><small>Assista a um duelo automático</small></button>
-        <button id="mode-online" class="mode-choice"><span>⌁</span><b>ONLINE · WEBRTC</b><small>Um dispositivo para cada jogador</small></button>
       </div>
-      <label class="point-goal-control" for="point-goal">
+      <label id="point-goal-control" class="point-goal-control" for="point-goal">
         <span>VITÓRIA POR PONTOS</span>
         <span class="point-goal-input"><input id="point-goal" type="number" min="1" max="99" value="10" inputmode="numeric" aria-describedby="point-goal-help"><b>PONTOS</b></span>
         <small id="point-goal-help">Escolha quantos pontos são necessários para vencer.</small>
@@ -48,6 +59,12 @@
           <button id="spectate-online" class="lobby-role"><span>◉</span><b>ESPECTAR SALA</b><small>Assista sem interferir</small></button>
         </div>
         <div class="signal-status"><i id="connection-light"></i><b id="connection-status">Digite um código e escolha uma opção</b></div>
+        <div id="lobby-participants" class="lobby-participants hidden">
+          <small class="lobby-participants-title">NA SALA</small>
+          <div id="lobby-player-one"></div>
+          <div id="lobby-player-two"></div>
+          <div id="lobby-spectators"></div>
+        </div>
       </div>
       <div class="deck-choices">
         <section>
@@ -74,7 +91,9 @@
         </section>
       </div>
       <div class="setup-actions"><button id="setup-rules-btn" class="secondary">COMO JOGAR</button><button id="start-game" class="primary">INICIAR DUELO LOCAL</button></div>
+      </div>
     </div>
+    <footer class="setup-footer"><span><img src="assets/icons/flower-twirl.svg" alt="">CONFLUXO</span><small>GLACIAL MOON GAMES · DUELOS TÁTICOS ENTRE ARQUÉTIPOS</small></footer>
   </div>
   <div id="turn-draw" class="turn-draw hidden">
     <div class="draw-choice-card">
@@ -185,17 +204,26 @@
 
   <dialog id="rules-dialog">
     <button class="dialog-close" aria-label="Fechar">×</button>
-    <div class="rules-hero"><img src="assets/icons/flower-twirl.svg" alt="Símbolo do Confluxo"><div><small>GUIA VISUAL</small><h2>Como jogar Confluxo</h2><p>Compre, posicione e combine seus peões para dominar a Arena.</p></div></div>
+    <div class="rules-hero"><img src="assets/icons/flower-twirl.svg" alt="Símbolo do Confluxo"><div><small>GUIA VISUAL</small><h2>Como jogar Confluxo</h2><p>O objetivo é alcançar a meta de pontos destruindo peões. Cada turno segue quatro decisões simples.</p></div></div>
+    <ol class="rules-quickstart"><li><b>1</b> Escolha uma pilha</li><li><b>2</b> Posicione um peão</li><li><b>3</b> Mova e ataque</li><li><b>4</b> Encerre o turno</li></ol>
     <div class="rules-grid">
-      <section><div class="rule-picture draw"><span>⬢</span><b>OU</b><span>✦</span></div><h3>1 · Compre</h3><p>Na primeira rodada ninguém compra. Depois, cada turno começa escolhendo uma carta de <b>Peão</b> ou de <b>Efeito</b>.</p></section>
+      <section><div class="rule-picture draw"><span>⬢</span><b>OU</b><span>✦</span></div><h3>Comece comprando</h3><p>Na primeira rodada ninguém compra. Nos turnos seguintes, escolha <b>uma</b> pilha: Peão ou Efeito.</p></section>
       <section><div class="rule-picture deploy"><i></i><i class="unit"></i></div><h3>2 · Posicione</h3><p>Clique no peão em sua mão e depois numa casa destacada do seu polo. Não há limite de peões em campo.</p></section>
       <section><div class="rule-picture move"><i class="origin"></i><i class="arrow">→</i><i class="target"></i></div><h3>3 · Mova</h3><p>Cada carta mostra seu alcance. Selecione o peão e clique numa das casas iluminadas.</p></section>
       <section><div class="rule-picture fight"><b>250</b><span>⚔</span><b>200</b></div><h3>4 · Ataque</h3><p>Clique no símbolo de ataque sobre um inimigo. Maior ATK vence; no empate, defensor e todos os atacantes participantes são destruídos.</p></section>
       <section><div class="rule-picture joint-attack"><i>150</i><span>＋</span><i>200</i><b>350</b><em>⚔</em><strong>300</strong></div><h3>Ataque em conjunto</h3><p>Ao atacar, seus outros peões <b>em contato com o alvo</b> participam automaticamente. Seus ATKs são somados, mas somente o peão selecionado gasta seu ataque; os participantes ainda podem iniciar seus próprios ataques. Se a soma empatar com o ATK do alvo, todos os participantes e o defensor são destruídos.</p></section>
       <section><div class="rule-picture combine"><span>●</span><span>＋</span><span>●</span><b>✦</b></div><h3>5 · Combine</h3><p>Tenha o Peão Combinado na mão e selecione os materiais indicados em contato. A carta mostra exatamente quais faltam.</p></section>
       <section><div class="rule-picture arena-rule"><img src="assets/icons/rose.svg" alt=""></div><h3>Efeitos e Arena</h3><p>Leia e ative habilidades nos detalhes da carta. A carta de Arena ocupa o slot global e afeta os dois lados.</p></section>
-      <section><div class="rule-picture victory"><span>♛</span><b id="rules-goal">10</b></div><h3>Vitória</h3><p>Destrua peões até atingir a meta escolhida. Um Peão Combinado vale a quantidade de materiais usados.</p></section>
+      <section><div class="rule-picture victory"><span>♛</span><b id="rules-goal">10</b></div><h3>Como vencer</h3><p>Alcance a meta destruindo peões. Peões normais valem 1 ponto; um Peão Combinado vale a quantidade de cartas usadas para criá-lo.</p></section>
     </div>
+  </dialog>
+
+  <dialog id="profile-icon-dialog" class="account-dialog profile-icon-dialog">
+    <button class="dialog-close" aria-label="Fechar">×</button>
+    <small>PERSONALIZAR PERFIL</small>
+    <h2>Escolha seu ícone</h2>
+    <p>Você pode usar qualquer ícone das cartas e arquétipos do jogo.</p>
+    <div id="profile-icon-grid" class="profile-icon-grid"></div>
   </dialog>
 
   <dialog id="account-dialog" class="account-dialog">
@@ -219,9 +247,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js?v=1"></script>
-  <script src="account.js?v=5"></script>
+  <script src="account.js?v=6"></script>
   <script src="game-catalog.js?v=1"></script>
-  <script src="network.js?v=39"></script>
+  <script src="network.js?v=40"></script>
   <script src="engine-core.js?v=31"></script>
   <script src="engine-expansion.js?v=27"></script>
   <script src="engine-celestial.js?v=9"></script>
