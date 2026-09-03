@@ -6,8 +6,8 @@
   <title>Confluxo — Jogo de Cartas Tático</title>
   <link rel="icon" type="image/svg+xml" href="assets/icons/confluxo-favicon.svg?v=1">
     <link rel="stylesheet" href="styles-core.css?v=10">
-  <link rel="stylesheet" href="styles-game.css?v=15">
-  <link rel="stylesheet" href="styles-responsive.css?v=61">
+  <link rel="stylesheet" href="styles-game.css?v=16">
+  <link rel="stylesheet" href="styles-responsive.css?v=62">
 </head>
 <body>
   <div id="setup" class="setup">
@@ -53,9 +53,9 @@
         </div>
         <p id="room-help" class="room-help">Use de 1 a 12 letras ou números. Jogadores e espectadores digitam o mesmo código.</p>
         <div class="lobby-roles">
-          <button id="host-online" class="lobby-role"><span>Ⅰ</span><b>CRIAR SALA</b><small>Você será o Duelista 1</small></button>
-          <button id="join-online" class="lobby-role"><span>Ⅱ</span><b>ENTRAR NA SALA</b><small>Você será o Duelista 2</small></button>
-          <button id="spectate-online" class="lobby-role"><span>◉</span><b>ESPECTAR SALA</b><small>Assista sem interferir</small></button>
+          <button id="host-online" class="lobby-role"><span>Ⅰ</span><b>CRIAR SALA</b></button>
+          <button id="join-online" class="lobby-role"><span>Ⅱ</span><b>ENTRAR NA SALA</b></button>
+          <button id="quick-match-online" class="lobby-role"><span>⚔</span><b>PARTIDA RÁPIDA</b><small>Escolha o deck e confirme</small></button>
         </div>
         <div class="signal-status"><i id="connection-light"></i><b id="connection-status">Digite um código e escolha uma opção</b></div>
         <div id="lobby-participants" class="lobby-participants hidden">
@@ -92,7 +92,7 @@
       <div class="setup-actions"><button id="setup-rules-btn" class="secondary">COMO JOGAR</button><button id="start-game" class="primary">INICIAR DUELO LOCAL</button></div>
       </div>
     </div>
-    <footer class="setup-footer"><span><img src="assets/icons/flower-twirl.svg" alt="">CONFLUXO</span><small class="game-version">VERSÃO 195</small></footer>
+    <footer class="setup-footer"><span><img src="assets/icons/flower-twirl.svg" alt="">CONFLUXO</span><small class="game-version">VERSÃO 196</small></footer>
   </div>
   <div id="turn-draw" class="turn-draw hidden">
     <div class="draw-choice-card">
@@ -261,7 +261,7 @@
   <script src="supabase-config.js?v=1"></script>
   <script src="account.js?v=8"></script>
   <script src="game-catalog.js?v=1"></script>
-  <script src="network.js?v=40"></script>
+  <script src="network.js?v=41"></script>
   <script src="engine-core.js?v=31"></script>
   <script src="engine-expansion.js?v=27"></script>
   <script src="engine-celestial.js?v=9"></script>
