@@ -11,7 +11,7 @@ const core = fs.readFileSync('engine-core.js', 'utf8').split('let selectedDecks'
 const expansion = fs.readFileSync('engine-expansion.js', 'utf8').split('function archetypeVisual')[0];
 vm.runInContext(`${fs.readFileSync('game-catalog.js', 'utf8')}\n${core}\n${expansion}\nthis.catalog={defs,effects,archetypes};`, context);
 
-assert.match(page, /i18n\.js\?v=3/);
+assert.match(page, /i18n\.js\?v=4/);
 assert.match(page, /id="language-toggle"/);
 assert.match(source, /navigator\.language\?\.toLowerCase\(\)==='pt-br'\?'pt-BR':'en'/, 'somente pt-BR deve abrir em português por padrão');
 assert.match(source, /function translateRules\(/, 'o guia de regras deve possuir tradução própria');
@@ -25,6 +25,11 @@ assert.match(source, /function translatedCardNames\(/, 'nomes de cartas dentro d
 assert.match(source, /attributes:true,attributeFilter:\['title','aria-label','placeholder','alt'\]/, 'atributos alterados durante a navegação também devem continuar em inglês');
 for (const phrase of ['Escolha seu deck, digite um código e entre','DIGITE O CÓDIGO DA SALA','Entre ou crie um nome único para seus duelos online.','Preparação: escolha onde posicionar os três peões iniciais.','Escolha seu deck e clique em Pronto','PROCURANDO ADVERSÁRIO…','INICIAR PARTIDA ONLINE','Aguardando jogador','Use um código de 1 a 12 letras ou números']) assert.ok(source.includes(phrase), `texto do menu sem tradução: ${phrase}`);
 assert.match(source, /replace\(\/\^SEU DECK · \//, 'o nome dinâmico do deck do jogador deve ser traduzido');
+for (const label of ['VITÓRIA','VITÓRIAS','DERROTA','DERROTAS','MAIS USADO:','PARTIDAS NÃO CONTABILIZADAS']) assert.ok(source.includes(label), `texto composto da conta sem tradução: ${label}`);
+const compositeTranslator = source.match(/ function translatedCardNames\(value\)\{[^\n]+\}/)?.[0];
+assert.ok(compositeTranslator, 'tradutor de textos compostos deve existir');
+vm.runInContext(`const cardNames=new Map;${compositeTranslator};this.translateComposite=translatedCardNames;`, context);
+assert.equal(context.translateComposite('2 VITÓRIAS · 1 DERROTA · MAIS USADO: SELVAGEM'),'2 WINS · 1 LOSS · MOST USED: WILD');
 for (const key of Object.keys(context.catalog.defs)) assert.match(source, new RegExp(`\\b${key}:\\[`), `tradução ausente para o peão ${key}`);
 for (const key of Object.keys(context.catalog.effects)) assert.match(source, new RegExp(`\\b${key}:\\[`), `tradução ausente para o efeito ${key}`);
 for (const key of Object.keys(context.catalog.archetypes)) assert.match(source, new RegExp(`\\b${key}:'`), `tradução ausente para o arquétipo ${key}`);
