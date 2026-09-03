@@ -49,6 +49,9 @@ assert.match(responsive, /\.profile-icon-grid\{grid-template-columns:repeat\(4,m
 assert.match(responsive, /@media\(max-width:760px\)\{\.setup-header\{min-height:0[\s\S]*?\.setup-header \.setup-brand\{display:none\}/, 'no celular o cabeçalho deve reservar espaço somente para a conta');
 assert.match(responsive, /:not\(\.board \*\)\{border-radius:5px\}/, 'o arredondamento global deve excluir tudo que estiver dentro da arena');
 assert.match(responsive, /\.setup-header \.account-summary strong\{grid-column:2;grid-row:1\/3;align-self:center;justify-self:center\}/, 'o Flux deve ficar centralizado na mesma altura do botão de conta');
+assert.match(responsive, /#leaderboard-list \.leaderboard-row:nth-child\(1\) \.leaderboard-profile\{background:rgba\(218,177,72,\.14\)\}/, 'o primeiro lugar deve receber um fundo dourado discreto');
+assert.match(responsive, /#leaderboard-list \.leaderboard-row:nth-child\(2\) \.leaderboard-profile\{background:rgba\(196,204,214,\.11\)\}/, 'o segundo lugar deve receber um fundo prateado discreto');
+assert.match(responsive, /#leaderboard-list \.leaderboard-row:nth-child\(3\) \.leaderboard-profile\{background:rgba\(181,111,67,\.13\)\}/, 'o terceiro lugar deve receber um fundo bronze discreto');
 assert.match(account, /p_deck:state\.players\[localPlayer\]\?\.archetype/);
 assert.match(account, /reportedOnlineMatches/);
 assert.match(network, /onlineAccounts=\{1:null,2:null\}/);

@@ -22,6 +22,9 @@ assert.match(source, /if\(\['host','guest','spectator'\]\.includes\(onlineRole\)
 assert.match(source, /packet\.type==='room-left'/, 'a saída da sala deve ser informada ao outro duelista');
 assert.match(source, /function updateRematchAvailability\(/, 'a conexão deve controlar se Jogar novamente continua disponível');
 assert.match(source, /dataChannel=null;updateRematchAvailability\(\)/, 'uma queda do adversário deve desativar imediatamente a revanche');
+assert.match(source, /function cancelQuickMatch\(\)/, 'a procura rápida deve poder ser cancelada');
+assert.match(source, /busy&&!quickMatchSearching/, 'o botão da partida rápida deve continuar ativo durante a procura');
+assert.match(source, /ticket!==quickMatchTicket\|\|!quickMatchSearching/, 'uma resposta tardia não deve reabrir uma busca cancelada');
 
 function classList() {
   return { add() {}, remove() {}, toggle() {}, contains() { return true } };
