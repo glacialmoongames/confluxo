@@ -7,16 +7,15 @@
   <link rel="icon" type="image/svg+xml" href="assets/icons/confluxo-favicon.svg?v=1">
     <link rel="stylesheet" href="styles-core.css?v=10">
   <link rel="stylesheet" href="styles-game.css?v=15">
-  <link rel="stylesheet" href="styles-responsive.css?v=57">
+  <link rel="stylesheet" href="styles-responsive.css?v=58">
 </head>
 <body>
   <div id="setup" class="setup">
-    <span class="game-version">VERSÃO 191</span>
     <header class="setup-header">
       <div class="setup-brand"><img src="assets/icons/flower-twirl.svg" alt=""><span><b>CONFLUXO</b><small>JOGO DE CARTAS TÁTICO</small></span></div>
       <section id="account-card" class="account-card" aria-label="Conta do jogador">
         <button id="account-avatar" class="account-avatar" type="button"><img id="account-avatar-image" src="assets/icons/flower-twirl.svg" alt="Ícone do perfil"></button>
-        <span class="account-summary"><small>PERFIL DO JOGADOR</small><b id="account-name">Jogar como convidado</b><strong id="account-elo">SEM ELO</strong><em id="account-record">CONVIDADO · PARTIDAS NÃO CONTABILIZADAS</em></span>
+        <span class="account-summary"><small>PERFIL DO JOGADOR</small><b id="account-name">Jogar como convidado</b><strong id="account-flux">SEM FLUX</strong><em id="account-record">CONVIDADO · PARTIDAS NÃO CONTABILIZADAS</em></span>
         <button id="account-open" type="button">ENTRAR OU CRIAR CONTA</button>
         <button id="account-logout" class="account-logout hidden" type="button">SAIR</button>
       </section>
@@ -93,7 +92,7 @@
       <div class="setup-actions"><button id="setup-rules-btn" class="secondary">COMO JOGAR</button><button id="start-game" class="primary">INICIAR DUELO LOCAL</button></div>
       </div>
     </div>
-    <footer class="setup-footer"><span><img src="assets/icons/flower-twirl.svg" alt="">CONFLUXO</span><small>GLACIAL MOON GAMES · DUELOS TÁTICOS ENTRE ARQUÉTIPOS</small></footer>
+    <footer class="setup-footer"><span><img src="assets/icons/flower-twirl.svg" alt="">CONFLUXO</span><small class="game-version">VERSÃO 192</small></footer>
   </div>
   <div id="turn-draw" class="turn-draw hidden">
     <div class="draw-choice-card">
@@ -221,9 +220,22 @@
   <dialog id="profile-icon-dialog" class="account-dialog profile-icon-dialog">
     <button class="dialog-close" aria-label="Fechar">×</button>
     <small>PERSONALIZAR PERFIL</small>
-    <h2>Escolha seu ícone</h2>
-    <p>Você pode usar qualquer ícone das cartas e arquétipos do jogo.</p>
+    <h2>Personalize seu perfil</h2>
+    <p>Escolha uma cor de arquétipo e qualquer ícone disponível no jogo.</p>
+    <div id="profile-color-grid" class="profile-color-grid"></div>
     <div id="profile-icon-grid" class="profile-icon-grid"></div>
+  </dialog>
+
+  <dialog id="public-profile-dialog" class="account-dialog public-profile-dialog">
+    <button class="dialog-close" aria-label="Fechar">×</button>
+    <div class="profile-view-hero">
+      <span id="profile-view-avatar" class="profile-view-avatar"><img id="profile-view-icon" src="assets/icons/flower-twirl.svg" alt="Ícone do perfil"></span>
+      <span><small>PERFIL DE DUELISTA</small><h2 id="profile-view-name">Carregando perfil…</h2><strong id="profile-view-flux">— FLUX</strong></span>
+    </div>
+    <div class="profile-view-stats"><span><small>CARREIRA</small><b id="profile-view-record">—</b></span><span><small>VITÓRIAS NAS ÚLTIMAS 10</small><b id="profile-view-rate">—</b></span><span><small>DECK MAIS USADO</small><b id="profile-view-deck">—</b></span></div>
+    <button id="profile-customize" class="profile-customize hidden" type="button">PERSONALIZAR PERFIL</button>
+    <div class="profile-history-title"><small>HISTÓRICO RECENTE</small><b>ÚLTIMAS 10 PARTIDAS</b></div>
+    <ol id="profile-view-history" class="profile-history"><li class="profile-history-empty">Buscando partidas recentes…</li></ol>
   </dialog>
 
   <dialog id="account-dialog" class="account-dialog">
@@ -232,7 +244,7 @@
     <small>IDENTIDADE DE DUELISTA</small>
     <h2 id="account-dialog-title">Sua conta Confluxo</h2>
     <div id="account-fields" class="account-fields">
-      <label>NOME ÚNICO<input id="account-username" type="text" maxlength="18" autocomplete="nickname" placeholder="Ex.: Daniel Moon"></label>
+      <label>NOME ÚNICO<input id="account-username" type="text" maxlength="18" autocomplete="nickname" placeholder="Seu nome de duelista"></label>
       <label>SENHA<input id="account-password" type="password" minlength="6" autocomplete="current-password" placeholder="Mínimo de 6 caracteres"></label>
       <div class="account-actions"><button id="account-login" class="primary" type="button">ENTRAR</button><button id="account-signup" type="button">CRIAR CONTA</button></div>
     </div>
@@ -247,7 +259,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js?v=1"></script>
-  <script src="account.js?v=6"></script>
+  <script src="account.js?v=7"></script>
   <script src="game-catalog.js?v=1"></script>
   <script src="network.js?v=40"></script>
   <script src="engine-core.js?v=31"></script>

@@ -14,6 +14,9 @@ assert.match(source, /onlineSpectators=\[\]/, 'o lobby deve manter a lista de es
 assert.match(source, /type:'spectator-list'/, 'a lista de espectadores deve ser sincronizada');
 assert.match(source, /function renderLobbyParticipants/, 'o lobby deve mostrar os perfis presentes');
 assert.match(source, /updatePointGoalControl/, 'a meta de pontos deve ser visível somente ao anfitrião');
+assert.match(source, /class="lobby-profile-icon"/, 'o ícone de cada jogador na sala deve separar o fundo do SVG');
+assert.match(source, /profileStyle\(safe\?\.profileColor\)/, 'a cor do perfil deve acompanhar o jogador no lobby');
+assert.doesNotMatch(source, /<article class="lobby-participant\$\{dim\?' spectator':''\}"><img/, 'o SVG do jogador não pode receber o fundo que o filtro clareia');
 
 function classList() {
   return { add() {}, remove() {}, toggle() {}, contains() { return true } };
