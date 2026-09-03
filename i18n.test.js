@@ -11,7 +11,9 @@ const core = fs.readFileSync('engine-core.js', 'utf8').split('let selectedDecks'
 const expansion = fs.readFileSync('engine-expansion.js', 'utf8').split('function archetypeVisual')[0];
 vm.runInContext(`${fs.readFileSync('game-catalog.js', 'utf8')}\n${core}\n${expansion}\nthis.catalog={defs,effects,archetypes};`, context);
 
-assert.match(page, /i18n\.js\?v=4/);
+assert.match(page, /i18n\.js\?v=5/);
+assert.match(page, /<title>Confluxo<\/title>/);
+assert.match(source, /document\.title='Confluxo'/);
 assert.match(page, /id="language-toggle"/);
 assert.match(source, /navigator\.language\?\.toLowerCase\(\)==='pt-br'\?'pt-BR':'en'/, 'somente pt-BR deve abrir em português por padrão');
 assert.match(source, /function translateRules\(/, 'o guia de regras deve possuir tradução própria');

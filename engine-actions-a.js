@@ -2,7 +2,7 @@ function adjacent(a,b){return Math.abs(a.row-b.row)+Math.abs(a.col-b.col)===1}
 function inferLogType(msg=''){if(/ativou a Arena|substituiu a Arena|Arena .*ativa|Reino de Xadria.*converg/i.test(msg))return'arena';if(/combin|convergindo|criou o SOL/i.test(msg))return'combine';if(/venceu|resistiu|Empate|combate|ataque predatório|Espada Maldita destruiu|sacrificou e negou/i.test(msg))return'combat';if(/entrou em campo|posicionou/i.test(msg))return'deploy';if(/usou|equipou|firmou|camuflou|concedeu|copiou|criou|abriu um Poço|Recuar!/i.test(msg))return'effect';if(/moveu|empurrou|entrou no túnel|saiu em|→/.test(msg))return'move';return'system'}
 function log(msg,type=''){state.log.unshift({turn:state.turn,msg,type:type||inferLogType(msg)});state.log=state.log.slice(0,40)}
 function hint(t){$('#hint').textContent=t}
-const BASE_TAB_TITLE='Confluxo — Jogo de Cartas Tático';
+const BASE_TAB_TITLE='Confluxo';
 function tabHumanPlayer(){if(onlineMode&&localPlayer)return localPlayer;if(botMode&&!botVsBot)return 1;return null}
 function updateTurnTabNotice(){let player=tabHumanPlayer(),active=state?.swordQueue?.[0]||(state?.placementPhase?state.placementPlayer:state?.current),playing=$('#setup')?.classList.contains('hidden'),yourTurn=!!(playing&&player&&active===player);document.title=document.hidden&&yourTurn?'SUA VEZ! · Confluxo':BASE_TAB_TITLE}
 document.addEventListener('visibilitychange',updateTurnTabNotice);
