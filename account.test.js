@@ -8,6 +8,7 @@ const engine = fs.readFileSync('engine-core.js','utf8');
 const ui = fs.readFileSync('engine-ui.js','utf8');
 const page = fs.readFileSync('index.html','utf8');
 const schema = fs.readFileSync('supabase/schema.sql','utf8');
+const responsive = fs.readFileSync('styles-responsive.css','utf8');
 
 for (const id of ['account-card','account-name','account-flux','account-avatar','account-record','account-dialog','profile-icon-dialog','public-profile-dialog','profile-color-grid','profile-view-history','leaderboard-list','account-login','account-signup','p1-record','p2-record']) assert.match(page,new RegExp(`id="${id}"`));
 assert.match(page, /@supabase\/supabase-js@2/);
@@ -32,6 +33,7 @@ assert.match(account, /get_player_profile/);
 assert.match(account, /recentWins\/matches\.length\*100/);
 assert.match(account, /profileColor/);
 assert.match(account, /applyProfileColor\(card,snapshot\?\.profileColor\)/);
+assert.match(responsive, /\.setup-header \.account-card \.account-avatar\{background:var\(--profile-color/);
 assert.match(account, /FLUX/);
 assert.doesNotMatch(account, /\bELO\b/i);
 assert.doesNotMatch(page, /\bELO\b/i);
