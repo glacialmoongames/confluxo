@@ -1,4 +1,4 @@
-var onlineMode=false,localPlayer=null,onlineRole=null,peerConnection=null,dataChannel=null,spectatorChannels=[],applyingRemote=false,remoteDeck=null,remoteName='',onlineNames={1:'Duelista 1',2:'Duelista 2'},networkSequence=0,networkRevision=0,roomCode='',reconnectTimer=null,heartbeatTimer=null,deckSyncTimer=null,stateRetryTimer=null,stateSyncTimer=null,remoteVisualTimer=null,reconnectAttempts=0,pendingStatePacket=null,lastPacketAt=0,stateChunks={};
+var onlineMode=false,localPlayer=null,onlineRole=null,peerConnection=null,dataChannel=null,spectatorChannels=[],applyingRemote=false,remoteDeck=null,remoteName='',onlineNames={1:'Duelista 1',2:'Duelista 2'},onlineAccounts={1:null,2:null},networkSequence=0,networkRevision=0,roomCode='',reconnectTimer=null,heartbeatTimer=null,deckSyncTimer=null,stateRetryTimer=null,stateSyncTimer=null,remoteVisualTimer=null,reconnectAttempts=0,pendingStatePacket=null,lastPacketAt=0,stateChunks={};
 const STATE_CHUNK_SIZE=8000;
 
 function networkStatus(text,kind=''){
@@ -9,7 +9,7 @@ function networkStatus(text,kind=''){
 }
 function cleanRoomCode(value){return String(value||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,12)}
 function cleanPlayerName(value){return String(value||'').replace(/[<>]/g,'').trim().replace(/\s+/g,' ').slice(0,24)}
-function getOnlineName(fallback='Duelista'){let input=document.querySelector('#online-name'),name=cleanPlayerName(input?.value);if(input)input.value=name;return name||fallback}
+function getOnlineName(fallback='Duelista'){let account=typeof accountPublicSnapshot==='function'?accountPublicSnapshot():null;if(account)return account.username;let input=document.querySelector('#online-name'),name=cleanPlayerName(input?.value);if(input)input.value=name;return name||fallback}
 function getRoomCode(){
  const input=document.querySelector('#room-code');roomCode=cleanRoomCode(input.value);input.value=roomCode;
  if(roomCode.length>=1&&roomCode.length<=12){input.classList.remove('invalid');return roomCode}
@@ -44,19 +44,20 @@ function handlePeerError(error){
 }
 function setLobbyBusy(busy){document.querySelector('#host-online').disabled=busy;document.querySelector('#join-online').disabled=busy;document.querySelector('#spectate-online').disabled=busy;document.querySelector('#generate-code').disabled=busy;document.querySelector('#room-code').disabled=busy;document.querySelector('#online-name').disabled=busy}
 function selectedLobbyDeck(){return document.querySelector('.choice-row[data-player="1"] .deck-choice.selected')?.dataset.deck||'xadria'}
-function sendDeckChoice(type='deck'){if(!localPlayer)return false;return sendPacket({type,deck:selectedDecks[localPlayer],name:onlineNames[localPlayer],player:localPlayer,pointGoal:onlineRole==='host'?selectedPointGoal():pointGoal})}
+function sendDeckChoice(type='deck'){if(!localPlayer)return false;onlineAccounts[localPlayer]=typeof accountPublicSnapshot==='function'?accountPublicSnapshot():null;return sendPacket({type,deck:selectedDecks[localPlayer],name:onlineNames[localPlayer],account:onlineAccounts[localPlayer],player:localPlayer,pointGoal:onlineRole==='host'?selectedPointGoal():pointGoal})}
 function stopDeckSync(){clearInterval(deckSyncTimer);deckSyncTimer=null}
 function startDeckSync(){
  stopDeckSync();sendDeckChoice();sendPacket({type:'deck-request'});
  deckSyncTimer=setInterval(()=>{if(!onlineMode||!dataChannel?.open)return stopDeckSync();if(remoteDeck)return stopDeckSync();sendDeckChoice();sendPacket({type:'deck-request'});networkStatus('Conectado - confirmando os decks...','connecting')},800)
 }
+function verifyRemoteAccount(player,value){if(typeof lookupAccountProfile!=='function')return;lookupAccountProfile(value).then(profile=>{onlineAccounts[player]=profile;if(profile)onlineNames[player]=profile.username;if(state?.players?.[player]){state.players[player].account=profile;if(profile)state.players[player].name=profile.username;render()}updateOnlineStart()})}
 function acceptRemoteDeck(packet){
- if(!packet.deck)return false;let other=localPlayer===1?2:1;remoteDeck=packet.deck;remoteName=cleanPlayerName(packet.name)||`Duelista ${other}`;onlineNames[other]=remoteName;selectedDecks[other]=packet.deck;if(onlineRole==='guest')setPointGoal(packet.pointGoal);stopDeckSync();updateOnlineStart();networkStatus(onlineRole==='host'?'Sala pronta — clique em Iniciar Partida Online':'Sala pronta — aguardando o anfitrião','connected');return true
+ if(!packet.deck)return false;let other=localPlayer===1?2:1;remoteDeck=packet.deck;onlineAccounts[other]=typeof safeAccountSnapshot==='function'?safeAccountSnapshot(packet.account):null;verifyRemoteAccount(other,packet.account);remoteName=onlineAccounts[other]?.username||cleanPlayerName(packet.name)||`Duelista ${other}`;onlineNames[other]=remoteName;selectedDecks[other]=packet.deck;if(onlineRole==='guest')setPointGoal(packet.pointGoal);stopDeckSync();updateOnlineStart();networkStatus(onlineRole==='host'?'Sala pronta — clique em Iniciar Partida Online':'Sala pronta — aguardando o anfitrião','connected');return true
 }
 function sendChannelPacket(channel,packet,prefix='spectator'){
  if(!channel?.open)return false;try{let serialized=packet?.type==='state'?JSON.stringify(packet):null;if(serialized&&serialized.length>STATE_CHUNK_SIZE){let total=Math.ceil(serialized.length/STATE_CHUNK_SIZE),id=`${prefix}-${packet.revision}-${packet.sequence||Date.now()}`;for(let index=0;index<total;index++)channel.send({type:'state-chunk',id,index,total,data:serialized.slice(index*STATE_CHUNK_SIZE,(index+1)*STATE_CHUNK_SIZE)});return true}channel.send(packet);return true}catch{return false}
 }
-function spectatorSnapshot(){return gameStarted()&&state?{type:'state',actor:0,sequence:networkSequence,revision:networkRevision,force:true,started:true,state:cloneNetworkValue(state),selectedDecks:cloneNetworkValue(selectedDecks)}:{type:'spectator-lobby',names:cloneNetworkValue(onlineNames),selectedDecks:cloneNetworkValue(selectedDecks),pointGoal:selectedPointGoal()}}
+function spectatorSnapshot(){return gameStarted()&&state?{type:'state',actor:0,sequence:networkSequence,revision:networkRevision,force:true,started:true,state:cloneNetworkValue(state),selectedDecks:cloneNetworkValue(selectedDecks)}:{type:'spectator-lobby',names:cloneNetworkValue(onlineNames),accounts:cloneNetworkValue(onlineAccounts),selectedDecks:cloneNetworkValue(selectedDecks),pointGoal:selectedPointGoal()}}
 function sendSpectatorSnapshot(channel){return sendChannelPacket(channel,spectatorSnapshot(),'watch')}
 function broadcastSpectators(packet){spectatorChannels=spectatorChannels.filter(channel=>channel?.open);spectatorChannels.forEach(channel=>sendChannelPacket(channel,packet,'watch'))}
 function attachSpectatorChannel(channel){spectatorChannels.push(channel);channel.on('open',()=>sendSpectatorSnapshot(channel));channel.on('data',packet=>{if(packet?.type==='heartbeat')return sendChannelPacket(channel,{type:'heartbeat',at:Date.now()});if(packet?.type==='spectate-request')sendSpectatorSnapshot(channel)});channel.on('close',()=>spectatorChannels=spectatorChannels.filter(item=>item!==channel));channel.on('error',()=>spectatorChannels=spectatorChannels.filter(item=>item!==channel))}
@@ -99,13 +100,13 @@ function ensureGuestPeer(recovering=false){
 }
 function createRoom(){
  const code=getRoomCode();if(!code)return;
- onlineMode=true;onlineRole='host';localPlayer=1;botVsBot=false;document.body.classList.remove('spectator-mode');selectedDecks[1]=selectedLobbyDeck();onlineNames[1]=getOnlineName('Duelista 1');chooseOwnDeckRow();setLobbyBusy(true);networkStatus('Criando a sala…','connecting');
+ onlineMode=true;onlineRole='host';localPlayer=1;botVsBot=false;document.body.classList.remove('spectator-mode');selectedDecks[1]=selectedLobbyDeck();onlineAccounts[1]=typeof accountPublicSnapshot==='function'?accountPublicSnapshot():null;onlineNames[1]=getOnlineName('Duelista 1');chooseOwnDeckRow();setLobbyBusy(true);networkStatus('Criando a sala…','connecting');
  closePeer();roomCode=code;const peer=ensureHostPeer();if(!peer)return;
  peer.on('open',()=>networkStatus(`Sala ${code} pronta — aguardando o Duelista 2`,'connecting'))
 }
 function joinRoom(){
  const code=getRoomCode();if(!code)return;
- onlineMode=true;onlineRole='guest';localPlayer=2;botVsBot=false;document.body.classList.remove('spectator-mode');selectedDecks[2]=selectedLobbyDeck();onlineNames[2]=getOnlineName('Duelista 2');chooseOwnDeckRow();setLobbyBusy(true);networkStatus('Procurando a sala…','connecting');
+ onlineMode=true;onlineRole='guest';localPlayer=2;botVsBot=false;document.body.classList.remove('spectator-mode');selectedDecks[2]=selectedLobbyDeck();onlineAccounts[2]=typeof accountPublicSnapshot==='function'?accountPublicSnapshot():null;onlineNames[2]=getOnlineName('Duelista 2');chooseOwnDeckRow();setLobbyBusy(true);networkStatus('Procurando a sala…','connecting');
  closePeer();roomCode=code;const peer=ensureGuestPeer();if(!peer)return;
  setTimeout(()=>{if(!dataChannel?.open&&document.querySelector('#setup').classList.contains('hidden')===false)handlePeerError({type:'peer-unavailable'})},12000)
 }
@@ -152,7 +153,7 @@ function receivePacket(raw){
  if(!packet||typeof packet!=='object')return;
  lastPacketAt=Date.now();
  if(packet.type==='heartbeat')return;
- if(packet.type==='spectator-lobby'){onlineNames=packet.names||onlineNames;selectedDecks=packet.selectedDecks||selectedDecks;setPointGoal(packet.pointGoal);networkStatus('Sala encontrada — aguardando o início da partida','connected');return}
+ if(packet.type==='spectator-lobby'){onlineNames=packet.names||onlineNames;onlineAccounts=packet.accounts||onlineAccounts;selectedDecks=packet.selectedDecks||selectedDecks;setPointGoal(packet.pointGoal);networkStatus('Sala encontrada — aguardando o início da partida','connected');return}
  if(packet.type==='state-chunk'){
   let index=Number(packet.index),total=Number(packet.total);if(!packet.id||!Number.isInteger(index)||!Number.isInteger(total)||index<0||index>=total||total>100||typeof packet.data!=='string')return;
   let transfer=stateChunks[packet.id];if(!transfer||transfer.total!==total)transfer=stateChunks[packet.id]={total,parts:Array(total),received:0};if(transfer.parts[index]===undefined){transfer.parts[index]=packet.data;transfer.received++}if(transfer.received===total){delete stateChunks[packet.id];try{receivePacket(JSON.parse(transfer.parts.join('')))}catch{sendPacket({type:'sync-request',revision:networkRevision})}}return

@@ -5,17 +5,23 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Confluxo — Jogo de Cartas Tático</title>
   <link rel="icon" type="image/svg+xml" href="assets/icons/confluxo-favicon.svg?v=1">
-    <link rel="stylesheet" href="styles-core.css?v=9">
+    <link rel="stylesheet" href="styles-core.css?v=10">
   <link rel="stylesheet" href="styles-game.css?v=13">
-  <link rel="stylesheet" href="styles-responsive.css?v=54">
+  <link rel="stylesheet" href="styles-responsive.css?v=55">
 </head>
 <body>
   <div id="setup" class="setup">
-    <span class="game-version">VERSÃO 179</span>
+    <span class="game-version">VERSÃO 180</span>
     <div class="setup-card">
       <span class="setup-mark"><img src="assets/icons/flower-twirl.svg" alt="Símbolo do Confluxo"></span>
       <small>CONFLUXO</small>
       <h1>Preparar duelo</h1>
+      <section id="account-card" class="account-card" aria-label="Conta do jogador">
+        <span class="account-avatar"><img src="assets/icons/flower-twirl.svg" alt=""></span>
+        <span class="account-summary"><small>PERFIL DO JOGADOR</small><b id="account-name">Jogar como convidado</b><em id="account-record">CONVIDADO · PARTIDAS NÃO CONTABILIZADAS</em></span>
+        <button id="account-open" type="button">ENTRAR OU CRIAR CONTA</button>
+        <button id="account-logout" class="account-logout hidden" type="button">SAIR</button>
+      </section>
       <div class="game-mode" role="group" aria-label="Modo de jogo">
         <button id="mode-local" class="mode-choice selected"><span>◈</span><b>NO MESMO DISPOSITIVO</b><small>Entregue a tela a cada turno</small></button>
         <button id="mode-bot" class="mode-choice"><span>◆</span><b>CONTRA O BOT</b><small>Enfrente um rival automático</small></button>
@@ -122,7 +128,7 @@
 
   <main>
     <section class="player-strip opponent" id="p2-strip">
-      <div class="player-id"><span id="p2-emblem" class="player-crown">✿</span><div><small>DUELISTA 2</small><b id="p2-name">Selvagem</b><em id="p2-deck">DECK SELVAGEM</em></div></div>
+      <div class="player-id"><span id="p2-emblem" class="player-crown">✿</span><div><small>DUELISTA 2</small><b id="p2-name">Selvagem</b><em id="p2-deck">DECK SELVAGEM</em><em id="p2-record" class="player-record"></em></div></div>
       <div class="score"><span id="p2-score">0</span><small id="p2-goal">/ 10 PONTOS</small></div>
       <div class="mini-stats"><span>Peões <b id="p2-field">3</b></span><span>Mão <b id="p2-hand-count">3</b></span></div>
     </section>
@@ -170,7 +176,7 @@
     </section>
 
     <section class="player-strip current" id="p1-strip">
-      <div class="player-id"><span id="p1-emblem" class="player-crown">◐</span><div><small>DUELISTA 1</small><b id="p1-name">Xadria</b><em id="p1-deck">DECK XADRIA</em></div></div>
+      <div class="player-id"><span id="p1-emblem" class="player-crown">◐</span><div><small>DUELISTA 1</small><b id="p1-name">Xadria</b><em id="p1-deck">DECK XADRIA</em><em id="p1-record" class="player-record"></em></div></div>
       <div class="score"><span id="p1-score">0</span><small id="p1-goal">/ 10 PONTOS</small></div>
       <div class="mini-stats"><span>Peões <b id="p1-field">3</b></span><span>Efeitos <b id="p1-hand-count">3</b></span><span>Peões na mão <b id="reserve-count">0</b></span></div>
     </section>
@@ -192,20 +198,38 @@
     </div>
   </dialog>
 
+  <dialog id="account-dialog" class="account-dialog">
+    <button class="dialog-close" aria-label="Fechar">×</button>
+    <span class="account-dialog-mark"><img src="assets/icons/flower-twirl.svg" alt=""></span>
+    <small>IDENTIDADE DE DUELISTA</small>
+    <h2 id="account-dialog-title">Sua conta Confluxo</h2>
+    <div id="account-fields" class="account-fields">
+      <label>NOME ÚNICO<input id="account-username" type="text" maxlength="18" autocomplete="nickname" placeholder="Ex.: Daniel Moon"></label>
+      <label>E-MAIL<input id="account-email" type="email" autocomplete="email" placeholder="voce@email.com"></label>
+      <label>SENHA<input id="account-password" type="password" minlength="6" autocomplete="current-password" placeholder="Mínimo de 6 caracteres"></label>
+      <div class="account-actions"><button id="account-login" class="primary" type="button">ENTRAR</button><button id="account-signup" type="button">CRIAR CONTA</button></div>
+    </div>
+    <p id="account-message" class="account-message" aria-live="polite"></p>
+    <p class="account-note">Vitórias e derrotas contam somente em partidas online entre duas contas.</p>
+  </dialog>
+
   <dialog id="winner-dialog">
     <div class="winner-crest">♛</div><small>A SOBERANIA É DE</small><h2 id="winner-name"></h2><p id="winner-score"></p><button id="winner-restart" class="primary">Jogar novamente</button>
   </dialog>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js?v=1"></script>
+  <script src="account.js?v=1"></script>
   <script src="game-catalog.js?v=1"></script>
-  <script src="network.js?v=37"></script>
-  <script src="engine-core.js?v=30"></script>
+  <script src="network.js?v=38"></script>
+  <script src="engine-core.js?v=31"></script>
   <script src="engine-expansion.js?v=27"></script>
   <script src="engine-celestial.js?v=9"></script>
-  <script src="engine-actions-a.js?v=31"></script>
+  <script src="engine-actions-a.js?v=32"></script>
   <script src="engine-actions-b.js?v=27"></script>
   <script src="engine-expansion-runtime.js?v=9"></script>
   <script src="engine-gold.js?v=5"></script>
-  <script src="engine-ui.js?v=45"></script>
+  <script src="engine-ui.js?v=46"></script>
 </body>
 </html>

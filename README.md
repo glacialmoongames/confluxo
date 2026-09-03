@@ -4,6 +4,19 @@ Para adicionar ou alterar cartas, consulte [`CATALOGO.md`](CATALOGO.md). As defi
 
 Protótipo web de um jogo tático para dois duelistas, com tabuleiro 6 × 8, turnos, combate, efeitos, arenas, Peões Combinados e modo online via WebRTC.
 
+## Contas e histórico online
+
+A versão 180 adiciona contas persistentes opcionais, nome público único e histórico de vitórias e derrotas. O modo convidado continua funcionando normalmente, mas não altera estatísticas. Somente partidas online entre duas contas podem ser contabilizadas; os dois navegadores precisam confirmar o mesmo resultado e cada duelo possui um identificador único para impedir contagem duplicada.
+
+Para ativar as contas em uma instalação nova:
+
+1. Crie um projeto no Supabase.
+2. Execute `supabase/schema.sql` no SQL Editor do projeto.
+3. Copie a URL do projeto e a chave pública (publishable ou anon) para `supabase-config.js`.
+4. Em Authentication, mantenha o provedor Email habilitado. Se a confirmação de e-mail estiver ativa, o jogador confirma a mensagem antes do primeiro login.
+
+As tabelas usam Row Level Security. O navegador pode ler perfis autenticados, mas não pode alterar diretamente vitórias e derrotas. O resultado é registrado pela função protegida `report_match_result` depois da confirmação de ambos os participantes.
+
 A partida também termina automaticamente quando somente um dos duelistas fica sem nenhum Peão normal disponível no campo, na mão ou na pilha. No modo contra o bot, ele evita voluntariamente casas ocupadas pelo Poço sem Fundo.
 
 Não existe limite total de Peões em campo; cada duelista ainda pode colocar somente um novo Peão por turno, quando houver uma casa válida em seu polo.

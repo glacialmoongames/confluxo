@@ -1,0 +1,30 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+process.chdir(__dirname);
+
+const account = fs.readFileSync('account.js','utf8');
+const network = fs.readFileSync('network.js','utf8');
+const engine = fs.readFileSync('engine-core.js','utf8');
+const ui = fs.readFileSync('engine-ui.js','utf8');
+const page = fs.readFileSync('index.html','utf8');
+const schema = fs.readFileSync('supabase/schema.sql','utf8');
+
+for (const id of ['account-card','account-name','account-record','account-dialog','account-login','account-signup','p1-record','p2-record']) assert.match(page,new RegExp(`id="${id}"`));
+assert.match(page, /@supabase\/supabase-js@2/);
+assert.match(page, /account\.js\?v=1/);
+assert.match(account, /persistSession:true/);
+assert.match(account, /function lookupAccountProfile/);
+assert.match(account, /report_match_result/);
+assert.match(account, /reportedOnlineMatches/);
+assert.match(network, /onlineAccounts=\{1:null,2:null\}/);
+assert.match(network, /account:onlineAccounts\[localPlayer\]/);
+assert.match(network, /verifyRemoteAccount\(other,packet\.account\)/);
+assert.match(engine, /matchId:onlineMode\?createMatchId\(\):null/);
+assert.match(engine, /account,archetype:key/);
+assert.match(ui, /reportOnlineMatchResult\(winner,reason\)/);
+assert.match(schema, /enable row level security/);
+assert.match(schema, /primary key \(match_id, reporter\)/);
+assert.match(schema, /on conflict \(match_id\) do nothing/);
+assert.match(schema, /wins = wins \+ 1/);
+assert.match(schema, /losses = losses \+ 1/);
+console.log('account and persistent record tests passed');
