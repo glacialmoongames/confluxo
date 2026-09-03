@@ -6,14 +6,14 @@ Protótipo web de um jogo tático para dois duelistas, com tabuleiro 6 × 8, tur
 
 ## Contas e histórico online
 
-A versão 180 adiciona contas persistentes opcionais, nome público único e histórico de vitórias e derrotas. O modo convidado continua funcionando normalmente, mas não altera estatísticas. Somente partidas online entre duas contas podem ser contabilizadas; os dois navegadores precisam confirmar o mesmo resultado e cada duelo possui um identificador único para impedir contagem duplicada.
+A versão 181 adiciona contas persistentes opcionais por nome único e senha, sem solicitar e-mail, além do histórico de vitórias e derrotas. O modo convidado continua funcionando normalmente, mas não altera estatísticas. Somente partidas online entre duas contas podem ser contabilizadas; os dois navegadores precisam confirmar o mesmo resultado e cada duelo possui um identificador único para impedir contagem duplicada. Como a conta não guarda um endereço real, a senha não possui recuperação automática.
 
 Para ativar as contas em uma instalação nova:
 
 1. Crie um projeto no Supabase.
 2. Execute `supabase/schema.sql` no SQL Editor do projeto.
 3. Copie a URL do projeto e a chave pública (publishable ou anon) para `supabase-config.js`.
-4. Em Authentication, mantenha o provedor Email habilitado. Se a confirmação de e-mail estiver ativa, o jogador confirma a mensagem antes do primeiro login.
+4. Em Authentication, mantenha o provedor Email habilitado e desative `Confirm email`. O jogo cria internamente um endereço técnico determinístico a partir do nome; esse detalhe nunca aparece para o jogador.
 
 As tabelas usam Row Level Security. O navegador pode ler perfis autenticados, mas não pode alterar diretamente vitórias e derrotas. O resultado é registrado pela função protegida `report_match_result` depois da confirmação de ambos os participantes.
 

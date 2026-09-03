@@ -11,7 +11,7 @@
 </head>
 <body>
   <div id="setup" class="setup">
-    <span class="game-version">VERSÃO 180</span>
+    <span class="game-version">VERSÃO 181</span>
     <div class="setup-card">
       <span class="setup-mark"><img src="assets/icons/flower-twirl.svg" alt="Símbolo do Confluxo"></span>
       <small>CONFLUXO</small>
@@ -205,12 +205,11 @@
     <h2 id="account-dialog-title">Sua conta Confluxo</h2>
     <div id="account-fields" class="account-fields">
       <label>NOME ÚNICO<input id="account-username" type="text" maxlength="18" autocomplete="nickname" placeholder="Ex.: Daniel Moon"></label>
-      <label>E-MAIL<input id="account-email" type="email" autocomplete="email" placeholder="voce@email.com"></label>
       <label>SENHA<input id="account-password" type="password" minlength="6" autocomplete="current-password" placeholder="Mínimo de 6 caracteres"></label>
       <div class="account-actions"><button id="account-login" class="primary" type="button">ENTRAR</button><button id="account-signup" type="button">CRIAR CONTA</button></div>
     </div>
     <p id="account-message" class="account-message" aria-live="polite"></p>
-    <p class="account-note">Vitórias e derrotas contam somente em partidas online entre duas contas.</p>
+    <p class="account-note">Vitórias e derrotas contam somente em partidas online entre duas contas. Guarde sua senha: sem e-mail, ela não pode ser recuperada automaticamente.</p>
   </dialog>
 
   <dialog id="winner-dialog">
@@ -220,7 +219,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js?v=1"></script>
-  <script src="account.js?v=1"></script>
+  <script src="account.js?v=2"></script>
   <script src="game-catalog.js?v=1"></script>
   <script src="network.js?v=38"></script>
   <script src="engine-core.js?v=31"></script>
