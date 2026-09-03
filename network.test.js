@@ -17,6 +17,9 @@ assert.match(source, /updatePointGoalControl/, 'a meta de pontos deve ser visív
 assert.match(source, /class="lobby-profile-icon"/, 'o ícone de cada jogador na sala deve separar o fundo do SVG');
 assert.match(source, /profileStyle\(safe\?\.profileColor\)/, 'a cor do perfil deve acompanhar o jogador no lobby');
 assert.doesNotMatch(source, /<article class="lobby-participant\$\{dim\?' spectator':''\}"><img/, 'o SVG do jogador não pode receber o fundo que o filtro clareia');
+assert.match(source, /function maybeStartQuickMatch\(/, 'a partida rápida deve iniciar automaticamente depois da sincronização');
+assert.match(source, /if\(\['host','guest','spectator'\]\.includes\(onlineRole\)/, 'criar ou entrar novamente deve sair da sala atual');
+assert.match(source, /packet\.type==='room-left'/, 'a saída da sala deve ser informada ao outro duelista');
 
 function classList() {
   return { add() {}, remove() {}, toggle() {}, contains() { return true } };
@@ -133,6 +136,19 @@ function makeClient(player, initialState) {
   watcher.receivePacket({type:'state',force:true,revision:0,started:true,state:playerState(2,'estado-observado'),selectedDecks:{1:'xadria',2:'wild'}});
   assert.equal(watcher.state.marker, 'estado-observado', 'o espectador deve aceitar o retrato completo mesmo na revisão inicial');
   assert.equal(watcher.state.current, 2);
+}
+
+{
+  const host = makeClient(1, playerState(1, 'partida-rapida'));
+  host.gameStarted = () => false;
+  host.quickMatchConnection = true;
+  host.remoteDeck = 'wild';
+  host.dataChannel = {open: true, send() {}};
+  let scheduled = false;
+  host.setTimeout = () => { scheduled = true; return 1 };
+  assert.equal(host.maybeStartQuickMatch(), true);
+  assert.equal(host.quickMatchStarting, true);
+  assert.equal(scheduled, true, 'o anfitrião encontrado deve agendar o início sem exigir outro clique');
 }
 
 function link(a, b, shouldDrop = () => false) {
