@@ -63,6 +63,28 @@ quindimContext.rewardQuindimKill(count,150);
 assert.equal(count.bonusAtk,450);
 assert.equal(count.pointValue,4,'cada nova derrota deve somar outro ponto ao valor do Conde');
 
+function cookieDemonScorer(victimOwner){
+  const demon={id:'demon',kind:'cookieDemon',name:'Demônio Biscoito',owner:1,row:3,col:2,bonusAtk:0};
+  const victim={id:'sweet',kind:'sweet',name:'Peão DOCE',owner:victimOwner,row:3,col:3,types:['DOCE']};
+  let alive=[demon,victim],scorer=null;
+  const context={
+    state:{players:{1:{name:'Dono'},2:{name:'Adversário'}},resolvingCandyContacts:false},
+    allUnits:()=>alive,
+    hasEffect:(unit,kind)=>unit.kind===kind,
+    isSweetUnit:unit=>unit.types?.includes('DOCE'),
+    adjacent:(a,b)=>Math.abs(a.row-b.row)+Math.abs(a.col-b.col)===1,
+    destroy:(unit,awardedTo)=>{scorer=awardedTo;alive=alive.filter(item=>item!==unit);return true},
+    log:()=>{}
+  };
+  vm.createContext(context);
+  vm.runInContext(runtime.match(/function resolveCandyContacts\([^\n]+/)[0],context);
+  context.resolveCandyContacts();
+  assert.equal(demon.bonusAtk,200,'o Demônio deve ganhar 200 ATK ao devorar');
+  return scorer;
+}
+assert.equal(cookieDemonScorer(1),2,'destruir Peão DOCE aliado deve dar os pontos ao adversário');
+assert.equal(cookieDemonScorer(2),1,'destruir Peão DOCE adversário deve dar os pontos ao dono do Demônio');
+
 const skeletonSpawnContext={
   state:{players:{1:{name:'Doce',units:[]},2:{name:'Rival',units:[]}}},
   at:()=>null,
