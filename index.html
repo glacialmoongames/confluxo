@@ -7,22 +7,22 @@
   <link rel="icon" type="image/svg+xml" href="assets/icons/confluxo-favicon.svg?v=1">
     <link rel="stylesheet" href="styles-core.css?v=10">
   <link rel="stylesheet" href="styles-game.css?v=16">
-  <link rel="stylesheet" href="styles-responsive.css?v=62">
+  <link rel="stylesheet" href="styles-responsive.css?v=63">
 </head>
 <body>
   <div id="setup" class="setup">
     <header class="setup-header">
-      <div class="setup-brand"><img src="assets/icons/flower-twirl.svg" alt=""><span><b>CONFLUXO</b><small>JOGO DE CARTAS TÁTICO</small></span></div>
+      <div class="setup-brand"><img src="assets/icons/flower-twirl.svg" alt=""><span><b>CONFLUXO</b></span></div>
       <section id="account-card" class="account-card" aria-label="Conta do jogador">
         <button id="account-avatar" class="account-avatar" type="button"><img id="account-avatar-image" src="assets/icons/flower-twirl.svg" alt="Ícone do perfil"></button>
-        <span class="account-summary"><small>PERFIL DO JOGADOR</small><b id="account-name">Jogar como convidado</b><strong id="account-flux">SEM FLUX</strong><em id="account-record">CONVIDADO · PARTIDAS NÃO CONTABILIZADAS</em></span>
+        <span class="account-summary"><b id="account-name">Jogar como convidado</b><strong id="account-flux">SEM FLUX</strong><em id="account-record">CONVIDADO · PARTIDAS NÃO CONTABILIZADAS</em></span>
         <button id="account-open" type="button">ENTRAR OU CRIAR CONTA</button>
         <button id="account-logout" class="account-logout hidden" type="button">SAIR</button>
       </section>
     </header>
     <div class="setup-shell">
       <aside class="leaderboard-panel">
-        <div class="leaderboard-title"><img src="assets/icons/queen-crown.svg" alt=""><span><small>RANKING GLOBAL</small><b>LEADERBOARD</b></span></div>
+        <div class="leaderboard-title"><img src="assets/icons/queen-crown.svg" alt=""><b>RANKING GLOBAL</b></div>
         <ol id="leaderboard-list"><li class="leaderboard-empty">Carregando ranking…</li></ol>
       </aside>
       <div class="setup-card">
@@ -69,30 +69,30 @@
         <section>
           <b id="player-one-label">DUELISTA 1</b>
           <div class="choice-row" data-player="1">
-            <button class="deck-choice selected" data-deck="xadria"><img src="assets/icons/empty-chessboard.svg" alt=""><strong>Xadria</strong><small>Luz + Trevas</small></button>
-            <button class="deck-choice" data-deck="wild"><img src="assets/icons/forest.svg" alt=""><strong>Selvagem</strong><small>Domínio natural</small></button>
-            <button class="deck-choice" data-deck="celestial"><img src="assets/icons/orbit.svg" alt=""><strong>Objeto Celeste</strong><small>Convergência astral</small></button>
-            <button class="deck-choice" data-deck="abyss"><img src="assets/icons/evil-eyes.svg" alt=""><strong>Terror Abissal</strong><small>Medo + armadilhas</small></button>
-            <button class="deck-choice" data-deck="candy"><img src="assets/icons/graveyard.svg" alt=""><strong>Mortos Doces</strong><small>Roubo de atributos</small></button>
-            <button class="deck-choice" data-deck="gold"><img src="assets/icons/gold-stack.svg" alt=""><strong>Era Dourada</strong><small>Ouro + poder bruto</small></button>
+            <button class="deck-choice selected" data-deck="xadria"><img src="assets/icons/empty-chessboard.svg" alt=""><strong>Xadria</strong></button>
+            <button class="deck-choice" data-deck="wild"><img src="assets/icons/forest.svg" alt=""><strong>Selvagem</strong></button>
+            <button class="deck-choice" data-deck="celestial"><img src="assets/icons/orbit.svg" alt=""><strong>Objeto Celeste</strong></button>
+            <button class="deck-choice" data-deck="abyss"><img src="assets/icons/evil-eyes.svg" alt=""><strong>Terror Abissal</strong></button>
+            <button class="deck-choice" data-deck="candy"><img src="assets/icons/graveyard.svg" alt=""><strong>Mortos Doces</strong></button>
+            <button class="deck-choice" data-deck="gold"><img src="assets/icons/gold-stack.svg" alt=""><strong>Era Dourada</strong></button>
           </div>
         </section>
         <section>
           <b id="player-two-label">DUELISTA 2</b>
           <div class="choice-row" data-player="2">
-            <button class="deck-choice" data-deck="xadria"><img src="assets/icons/empty-chessboard.svg" alt=""><strong>Xadria</strong><small>Luz + Trevas</small></button>
-            <button class="deck-choice selected" data-deck="wild"><img src="assets/icons/forest.svg" alt=""><strong>Selvagem</strong><small>Domínio natural</small></button>
-            <button class="deck-choice" data-deck="celestial"><img src="assets/icons/orbit.svg" alt=""><strong>Objeto Celeste</strong><small>Convergência astral</small></button>
-            <button class="deck-choice" data-deck="abyss"><img src="assets/icons/evil-eyes.svg" alt=""><strong>Terror Abissal</strong><small>Medo + armadilhas</small></button>
-            <button class="deck-choice" data-deck="candy"><img src="assets/icons/graveyard.svg" alt=""><strong>Mortos Doces</strong><small>Roubo de atributos</small></button>
-            <button class="deck-choice" data-deck="gold"><img src="assets/icons/gold-stack.svg" alt=""><strong>Era Dourada</strong><small>Ouro + poder bruto</small></button>
+            <button class="deck-choice" data-deck="xadria"><img src="assets/icons/empty-chessboard.svg" alt=""><strong>Xadria</strong></button>
+            <button class="deck-choice selected" data-deck="wild"><img src="assets/icons/forest.svg" alt=""><strong>Selvagem</strong></button>
+            <button class="deck-choice" data-deck="celestial"><img src="assets/icons/orbit.svg" alt=""><strong>Objeto Celeste</strong></button>
+            <button class="deck-choice" data-deck="abyss"><img src="assets/icons/evil-eyes.svg" alt=""><strong>Terror Abissal</strong></button>
+            <button class="deck-choice" data-deck="candy"><img src="assets/icons/graveyard.svg" alt=""><strong>Mortos Doces</strong></button>
+            <button class="deck-choice" data-deck="gold"><img src="assets/icons/gold-stack.svg" alt=""><strong>Era Dourada</strong></button>
           </div>
         </section>
       </div>
       <div class="setup-actions"><button id="setup-rules-btn" class="secondary">COMO JOGAR</button><button id="start-game" class="primary">INICIAR DUELO LOCAL</button></div>
       </div>
     </div>
-    <footer class="setup-footer"><span><img src="assets/icons/flower-twirl.svg" alt="">CONFLUXO</span><small class="game-version">VERSÃO 196</small></footer>
+    <footer class="setup-footer"><span><img src="assets/icons/flower-twirl.svg" alt="">CONFLUXO</span><small class="game-version">VERSÃO 197</small></footer>
   </div>
   <div id="turn-draw" class="turn-draw hidden">
     <div class="draw-choice-card">
@@ -129,7 +129,7 @@
   </div>
 
   <header class="topbar">
-    <button id="home-brand" class="brand brand-button" type="button" aria-label="Voltar à tela inicial"><span class="sigil"><img src="assets/icons/flower-twirl.svg" alt=""></span><span><b>CONFLUXO</b><small>Jogo de cartas tático</small></span></button>
+    <button id="home-brand" class="brand brand-button" type="button" aria-label="Voltar à tela inicial"><span class="sigil"><img src="assets/icons/flower-twirl.svg" alt=""></span><span><b>CONFLUXO</b></span></button>
     <div class="turn-panel">
       <span id="turn-count">TURNO 1</span>
       <strong id="turn-name">DUELISTA 1</strong>
@@ -219,9 +219,7 @@
 
   <dialog id="profile-icon-dialog" class="account-dialog profile-icon-dialog">
     <button class="dialog-close" aria-label="Fechar">×</button>
-    <small>PERSONALIZAR PERFIL</small>
     <h2>Personalize seu perfil</h2>
-    <p>Escolha uma cor de arquétipo e qualquer ícone disponível no jogo.</p>
     <div id="profile-color-grid" class="profile-color-grid"></div>
     <div id="profile-icon-grid" class="profile-icon-grid"></div>
   </dialog>
@@ -259,7 +257,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js?v=1"></script>
-  <script src="account.js?v=8"></script>
+  <script src="account.js?v=9"></script>
   <script src="game-catalog.js?v=1"></script>
   <script src="network.js?v=41"></script>
   <script src="engine-core.js?v=31"></script>
