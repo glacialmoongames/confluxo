@@ -43,7 +43,7 @@ registerArchetype('xadria',{name:'Xadria',emblem:'◐',pawns:['infantry','tower'
 registerArchetype('wild',{name:'Selvagem',emblem:'✿',pawns:['rabbit','rider','hawk'],fusions:['serpent','golem'],effects:['jungle','bow','retreat','burn','pit','push','peace']});
 registerArchetype('celestial',{name:'Objeto Celeste',emblem:'✺',pawns:['mercury','venus','earth','mars','jupiter','saturn','uranus','neptune','pluto'],fusions:['sun'],effects:['asteroid','project','burn','pit','push','peace'],pawnComposition:['mercury','mercury','venus','venus','earth','earth','mars','mars','jupiter','jupiter','saturn','saturn','uranus','uranus','neptune','neptune','pluto','sun']});
 let selectedDecks={1:'xadria',2:'wild'};
-let state,selected=null,selectedEffect=null,spectatorSelected=null,spectatorEffect=null,spectatorViewPlayer=1,mode=null,targets=[],attackTargets=[],pendingCard=null,pendingPushTarget=null,pendingAbilityTarget=null,castleFirst=null,fusionMaterials=[],initialPlacementResume=null,gameVersion=0,botMode=false,botVsBot=false,botPlayer=2,botTimer=null,botWatchdogTimer=null,lastArenaVisual='none',arenaAnimationTimer=null;
+let state,selected=null,selectedEffect=null,spectatorSelected=null,spectatorEffect=null,rangeSelectedUnitId=null,spectatorViewPlayer=1,mode=null,targets=[],attackTargets=[],pendingCard=null,pendingPushTarget=null,pendingAbilityTarget=null,castleFirst=null,fusionMaterials=[],initialPlacementResume=null,gameVersion=0,botMode=false,botVsBot=false,botPlayer=2,botTimer=null,botWatchdogTimer=null,lastArenaVisual='none',arenaAnimationTimer=null;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function uid(){return Math.random().toString(36).slice(2,9)}
 function unit(kind,owner){let d=defs[kind];return{id:uid(),kind,owner,row:null,col:null,origin:null,movedTurn:0,attackedTurn:0,equipment:[],abilityTurn:0,mounted:null,...d,types:[...(d.types||[])],baseTypes:[...(d.types||[])],pointValue:1}}
@@ -72,7 +72,7 @@ function createMatchId(){if(globalThis.crypto?.randomUUID)return crypto.randomUU
 function newGame(){
  let version=++gameVersion;
  if($('#winner-dialog')?.open)$('#winner-dialog').close();$('#winner-dialog')?.classList.remove('solar-victory');let winnerCrest=$('#winner-dialog .winner-crest');if(winnerCrest)winnerCrest.textContent='♛';
- selected=null;selectedEffect=null;spectatorSelected=null;spectatorEffect=null;initialPlacementResume=null;
+ selected=null;selectedEffect=null;spectatorSelected=null;spectatorEffect=null;rangeSelectedUnitId=null;initialPlacementResume=null;
  state={turn:1,current:1,pointGoal:selectedPointGoal(),matchId:onlineMode?createMatchId():null,players:{},obstacles:[],pits:[],graveyard:[],log:[],animating:false,initialDeal:true,awaitingDraw:false,arena:null,arenaOwner:null,arenaDefeatedStart:0,swordQueue:[],defeatedCount:0,goldDefeatedCount:0,placementPhase:true,placementPlayer:1,passPurpose:null,forfeitWinner:null,celestialWinner:null};
  clearTimeout(botTimer);botTimer=null;clearTimeout(botWatchdogTimer);botWatchdogTimer=null;clearTimeout(arenaAnimationTimer);arenaAnimationTimer=null;lastArenaVisual='none';
  for(let p=1;p<=2;p++){let key=selectedDecks[p],account=onlineMode&&typeof onlineAccounts!=='undefined'&&typeof safeAccountSnapshot==='function'?safeAccountSnapshot(onlineAccounts[p]):null,configuredName=account?.username||(onlineMode&&typeof onlineNames!=='undefined'?onlineNames[p]:null),player=state.players[p]={name:configuredName|| (botControls(p)?`Bot ${p}`:`Duelista ${p}`),account,archetype:key,score:0,units:[],initialUnits:[],hand:[],reserve:[],arena:null,drawn:true,deployed:false,moved:false,attackedThisTurn:false,attackLocked:false,neptuneAbilityTurn:0,lastLosses:0,lossesThisTurn:0,pawnDeck:makePawnDeck(p,key),effectDeck:makeEffectDeck(key)};for(let i=0;i<3;i++)player.hand.push(player.effectDeck.pop());drawRandomInitialPawns(player)}
@@ -100,5 +100,5 @@ function own(u){return u&&u.owner===state.current}
 function spectatingMatch(){return botVsBot||onlineMode&&typeof onlineRole!=='undefined'&&onlineRole==='spectator'}
 function viewPlayerNumber(){return spectatingMatch()?spectatorViewPlayer:botMode?1:onlineMode&&localPlayer?localPlayer:state.current}
 function perspectivePlayer(){return spectatingMatch()?spectatorViewPlayer:botMode?1:onlineMode&&localPlayer?localPlayer:state.current}
-function setSpectatorView(player){if(!spectatingMatch()||!state)return;spectatorViewPlayer=player===2?2:1;spectatorSelected=null;spectatorEffect=null;render()}
+function setSpectatorView(player){if(!spectatingMatch()||!state)return;spectatorViewPlayer=player===2?2:1;spectatorSelected=null;spectatorEffect=null;rangeSelectedUnitId=null;render()}
 function canLocalAct(){if(state?.animating||botVsBot)return false;if(botMode)return state.swordQueue?.length?state.swordQueue[0]!==botPlayer:state.current!==botPlayer;return !onlineMode||(state.swordQueue?.length?state.swordQueue[0]===localPlayer:state.current===localPlayer)}
