@@ -48,6 +48,7 @@ assert.doesNotMatch(account, /profile-color-grid[\s\S]*?<span>\$\{accountDeckNam
 assert.match(responsive, /\.profile-icon-grid\{grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
 assert.match(responsive, /@media\(max-width:760px\)\{\.setup-header\{min-height:0[\s\S]*?\.setup-header \.setup-brand\{display:none\}/, 'no celular o cabeçalho deve reservar espaço somente para a conta');
 assert.match(responsive, /:not\(\.board \*\)\{border-radius:5px\}/, 'o arredondamento global deve excluir tudo que estiver dentro da arena');
+assert.match(responsive, /\.setup-header \.account-summary strong\{grid-column:2;grid-row:1\/3;align-self:center;justify-self:center\}/, 'o Flux deve ficar centralizado na mesma altura do botão de conta');
 assert.match(account, /p_deck:state\.players\[localPlayer\]\?\.archetype/);
 assert.match(account, /reportedOnlineMatches/);
 assert.match(network, /onlineAccounts=\{1:null,2:null\}/);

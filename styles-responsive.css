@@ -345,3 +345,6 @@
 
 /* Versão 199: cantos discretos fora do tabuleiro. */
 :where(button,input,textarea,dialog,.setup-card,.online-lobby,.mode-choice,.lobby-role,.deck-choice,.account-card,.leaderboard-panel,.leaderboard-profile,.lobby-participant,.player-strip,.panel,.global-arena,.hand-zone,.unit-card,.effect-card,.reserve-piece,.pass-card,.draw-choice-card,.profile-view-stats span,.profile-match,.rules-grid section,.rules-quickstart,.setup-tabs,.log-entry):not(.board *){border-radius:5px}.account-avatar,.account-dialog-mark,.leaderboard-icon,.lobby-profile-icon,.profile-view-avatar{border-radius:50%}#winner-restart:disabled{background:#69646c;color:#c4bec7;box-shadow:none;filter:grayscale(1);opacity:.58;cursor:not-allowed}
+
+/* Versão 200: Flux alinhado verticalmente à ação da conta. */
+.setup-header .account-summary b{grid-column:1;grid-row:1}.setup-header .account-summary strong{grid-column:2;grid-row:1/3;align-self:center;justify-self:center}.setup-header .account-summary em{grid-column:1;grid-row:2}
