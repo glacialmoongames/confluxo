@@ -11,7 +11,7 @@ const schema = fs.readFileSync('supabase/schema.sql','utf8');
 
 for (const id of ['account-card','account-name','account-flux','account-avatar','account-record','account-dialog','profile-icon-dialog','public-profile-dialog','profile-color-grid','profile-view-history','leaderboard-list','account-login','account-signup','p1-record','p2-record']) assert.match(page,new RegExp(`id="${id}"`));
 assert.match(page, /@supabase\/supabase-js@2/);
-assert.match(page, /account\.js\?v=7/);
+assert.match(page, /account\.js\?v=8/);
 assert.match(account, /#account-dialog'\)\?\.close\(\)/);
 assert.match(page, /id="online-name-label"/);
 assert.match(account, /onlineName\.classList\.toggle\('hidden',!!snapshot\)/);
@@ -31,6 +31,7 @@ assert.match(account, /function openPublicProfile/);
 assert.match(account, /get_player_profile/);
 assert.match(account, /recentWins\/matches\.length\*100/);
 assert.match(account, /profileColor/);
+assert.match(account, /applyProfileColor\(card,snapshot\?\.profileColor\)/);
 assert.match(account, /FLUX/);
 assert.doesNotMatch(account, /\bELO\b/i);
 assert.doesNotMatch(page, /\bELO\b/i);
