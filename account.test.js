@@ -11,8 +11,10 @@ const schema = fs.readFileSync('supabase/schema.sql','utf8');
 
 for (const id of ['account-card','account-name','account-record','account-dialog','account-login','account-signup','p1-record','p2-record']) assert.match(page,new RegExp(`id="${id}"`));
 assert.match(page, /@supabase\/supabase-js@2/);
-assert.match(page, /account\.js\?v=3/);
+assert.match(page, /account\.js\?v=4/);
 assert.match(account, /#account-dialog'\)\?\.close\(\)/);
+assert.match(page, /id="online-name-label"/);
+assert.match(account, /onlineName\.classList\.toggle\('hidden',!!snapshot\)/);
 assert.match(account, /persistSession:true/);
 assert.match(account, /function accountLoginEmail/);
 assert.doesNotMatch(page, /id="account-email"/);

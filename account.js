@@ -15,9 +15,9 @@ function setAccountMessage(text,kind=''){let el=document.querySelector('#account
 function setAccountBusy(busy){document.querySelectorAll('#account-dialog input,#account-dialog button').forEach(el=>{if(!el.classList.contains('dialog-close'))el.disabled=busy})}
 
 function updateAccountUI(){
- let snapshot=accountPublicSnapshot(),card=document.querySelector('#account-card'),name=document.querySelector('#account-name'),record=document.querySelector('#account-record'),button=document.querySelector('#account-open'),logout=document.querySelector('#account-logout'),onlineName=document.querySelector('#online-name');
+ let snapshot=accountPublicSnapshot(),card=document.querySelector('#account-card'),name=document.querySelector('#account-name'),record=document.querySelector('#account-record'),button=document.querySelector('#account-open'),logout=document.querySelector('#account-logout'),onlineName=document.querySelector('#online-name'),onlineNameLabel=document.querySelector('#online-name-label');
  if(card)card.classList.toggle('signed-in',!!snapshot);if(name)name.textContent=snapshot?snapshot.username:'Jogar como convidado';if(record)record.textContent=accountRecordText(snapshot);if(button)button.textContent=snapshot?'VER CONTA':'ENTRAR OU CRIAR CONTA';if(logout)logout.classList.toggle('hidden',!snapshot);
- if(onlineName){if(snapshot){onlineName.value=snapshot.username;onlineName.readOnly=true;onlineName.title='O nome online está vinculado à sua conta.'}else{onlineName.readOnly=false;onlineName.title='';let saved=localStorage.getItem('confluxo-guest-name');if(!onlineName.value&&saved)onlineName.value=saved}}
+ if(onlineName){onlineName.classList.toggle('hidden',!!snapshot);onlineNameLabel?.classList.toggle('hidden',!!snapshot);if(snapshot){onlineName.value=snapshot.username;onlineName.readOnly=true;onlineName.title='O nome online está vinculado à sua conta.'}else{onlineName.readOnly=false;onlineName.title='';let saved=localStorage.getItem('confluxo-guest-name');if(!onlineName.value&&saved)onlineName.value=saved}}
  if(typeof onlineMode!=='undefined'&&onlineMode&&localPlayer&&typeof onlineAccounts!=='undefined'){onlineAccounts[localPlayer]=snapshot;if(snapshot)onlineNames[localPlayer]=snapshot.username;if(typeof sendDeckChoice==='function'&&dataChannel?.open)sendDeckChoice()}
 }
 async function loadCurrentProfile(){
