@@ -342,3 +342,6 @@
 
 /* Versão 198: cabeçalho móvel dedicado à conta. */
 @media(max-width:760px){.setup-header{min-height:0;padding:7px 8px;display:block}.setup-header .setup-brand{display:none}.setup-header .account-card{width:100%;max-width:none;margin:0;box-sizing:border-box;align-items:center}.setup-header .account-summary{min-width:0}.setup-header .account-summary em{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.setup-header .account-card:not(.signed-in){background:#211a25;border:1px solid #514758}}
+
+/* Versão 199: cantos discretos fora do tabuleiro. */
+:where(button,input,textarea,dialog,.setup-card,.online-lobby,.mode-choice,.lobby-role,.deck-choice,.account-card,.leaderboard-panel,.leaderboard-profile,.lobby-participant,.player-strip,.panel,.global-arena,.hand-zone,.unit-card,.effect-card,.reserve-piece,.pass-card,.draw-choice-card,.profile-view-stats span,.profile-match,.rules-grid section,.rules-quickstart,.setup-tabs,.log-entry):not(.board *){border-radius:5px}.account-avatar,.account-dialog-mark,.leaderboard-icon,.lobby-profile-icon,.profile-view-avatar{border-radius:50%}#winner-restart:disabled{background:#69646c;color:#c4bec7;box-shadow:none;filter:grayscale(1);opacity:.58;cursor:not-allowed}

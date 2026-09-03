@@ -20,6 +20,8 @@ assert.doesNotMatch(source, /<article class="lobby-participant\$\{dim\?' spectat
 assert.match(source, /function maybeStartQuickMatch\(/, 'a partida rápida deve iniciar automaticamente depois da sincronização');
 assert.match(source, /if\(\['host','guest','spectator'\]\.includes\(onlineRole\)/, 'criar ou entrar novamente deve sair da sala atual');
 assert.match(source, /packet\.type==='room-left'/, 'a saída da sala deve ser informada ao outro duelista');
+assert.match(source, /function updateRematchAvailability\(/, 'a conexão deve controlar se Jogar novamente continua disponível');
+assert.match(source, /dataChannel=null;updateRematchAvailability\(\)/, 'uma queda do adversário deve desativar imediatamente a revanche');
 
 function classList() {
   return { add() {}, remove() {}, toggle() {}, contains() { return true } };
