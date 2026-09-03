@@ -1,69 +1,8 @@
--- Execute este arquivo uma vez no SQL Editor de um projeto Supabase vazio.
-create table if not exists public.profiles (
-  id uuid primary key references auth.users(id) on delete cascade,
-  username text not null check (username ~ '^[A-Za-z0-9 ]{3,18}$'),
-  username_key text not null unique check (char_length(username_key) between 3 and 18),
-  wins bigint not null default 0 check (wins >= 0),
-  losses bigint not null default 0 check (losses >= 0),
-  deck_usage jsonb not null default '{}'::jsonb check (jsonb_typeof(deck_usage) = 'object'),
-  created_at timestamptz not null default now()
-);
-
+-- Versão 184: registra o arquétipo usado em cada partida online confirmada.
 alter table public.profiles add column if not exists deck_usage jsonb not null default '{}'::jsonb;
 alter table public.match_reports add column if not exists deck text;
 alter table public.completed_matches add column if not exists player_one_deck text;
 alter table public.completed_matches add column if not exists player_two_deck text;
-
-create table if not exists public.match_reports (
-  match_id uuid not null,
-  reporter uuid not null references public.profiles(id) on delete cascade,
-  opponent uuid not null references public.profiles(id) on delete cascade,
-  winner uuid not null references public.profiles(id) on delete cascade,
-  reason text not null default 'duelo',
-  created_at timestamptz not null default now(),
-  primary key (match_id, reporter),
-  check (reporter <> opponent),
-  check (winner = reporter or winner = opponent)
-);
-
-create table if not exists public.completed_matches (
-  match_id uuid primary key,
-  player_one uuid not null references public.profiles(id),
-  player_two uuid not null references public.profiles(id),
-  winner uuid not null references public.profiles(id),
-  reason text not null,
-  completed_at timestamptz not null default now(),
-  check (player_one <> player_two),
-  check (winner = player_one or winner = player_two)
-);
-
-alter table public.profiles enable row level security;
-alter table public.match_reports enable row level security;
-alter table public.completed_matches enable row level security;
-
-drop policy if exists "Perfis visiveis para jogadores" on public.profiles;
-create policy "Perfis visiveis para jogadores" on public.profiles for select to authenticated using (true);
-
-create or replace function public.handle_new_user()
-returns trigger
-language plpgsql
-security definer set search_path = ''
-as $$
-declare
-  requested_name text := trim(regexp_replace(coalesce(new.raw_user_meta_data ->> 'username', ''), '\s+', ' ', 'g'));
-  requested_key text;
-begin
-  requested_key := lower(regexp_replace(requested_name, '[^A-Za-z0-9]', '', 'g'));
-  if requested_name !~ '^[A-Za-z0-9 ]{3,18}$' or char_length(requested_key) < 3 then
-    raise exception 'invalid username';
-  end if;
-  insert into public.profiles (id, username, username_key) values (new.id, requested_name, requested_key);
-  return new;
-end;
-$$;
-
-drop trigger if exists on_auth_user_created on auth.users;
-create trigger on_auth_user_created after insert on auth.users for each row execute procedure public.handle_new_user();
 
 drop function if exists public.report_match_result(uuid,uuid,uuid,text);
 create or replace function public.report_match_result(p_match_id uuid, p_opponent uuid, p_winner uuid, p_reason text default 'duelo', p_deck text default null)
@@ -108,7 +47,5 @@ begin
 end;
 $$;
 
-revoke all on public.profiles, public.match_reports, public.completed_matches from anon, authenticated;
-grant select on public.profiles to authenticated;
 revoke all on function public.report_match_result(uuid,uuid,uuid,text,text) from public, anon;
 grant execute on function public.report_match_result(uuid,uuid,uuid,text,text) to authenticated;
