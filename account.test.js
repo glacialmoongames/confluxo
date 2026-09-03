@@ -34,6 +34,7 @@ assert.match(account, /recentWins\/matches\.length\*100/);
 assert.match(account, /profileColor/);
 assert.match(account, /applyProfileColor\(card,snapshot\?\.profileColor\)/);
 assert.match(responsive, /\.setup-header \.account-card \.account-avatar\{background:var\(--profile-color/);
+assert.match(responsive, /\.public-profile-dialog \.dialog-close\{color:#fff\}/);
 assert.match(account, /FLUX/);
 assert.doesNotMatch(account, /\bELO\b/i);
 assert.doesNotMatch(page, /\bELO\b/i);
