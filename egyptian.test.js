@@ -13,8 +13,13 @@ const migration=fs.readFileSync('supabase/migration-212-egyptian-flames.sql','ut
 for(const key of ['fireScarab','fireSlave','firePrince','grayMummy','ammit','anubis','ra'])assert.match(expansion,new RegExp(`${key}:\\{`));
 for(const key of ['burningDesert','emberMummify','flameTemple','quickHands'])assert.match(expansion,new RegExp(`${key}:\\{`));
 assert.match(page,/data-deck="egyptian"/);
-assert.match(page,/engine-egypt\.js\?v=1/);
-assert.match(page,/VERSÃO 212/);
+assert.match(page,/engine-egypt\.js\?v=2/);
+assert.match(page,/VERSÃO 213/);
+assert.match(expansion,/grayMummy:\{[^\n]+ao final do turno/);
+assert.match(expansion,/ra:\{[^\n]+não pode se tornar Múmia Cinzenta/);
+assert.match(egypt,/u\.kind==='ra'/);
+assert.match(egypt,/u\.mummyTransformPending=true/);
+assert.match(egypt,/u\.row!==null&&u\.mummyTransformPending/);
 assert.match(styles,/\.board\[data-arena=burningDesert\] \.cell\.light\{background:#a84c18\}/);
 assert.match(styles,/\.board\[data-arena=burningDesert\] \.cell\.dark\{background:#612509\}/);
 assert.match(styles,/\.cell\.flame-temple-range::after/);
@@ -39,5 +44,17 @@ assert.deepEqual([...quickContext.state.players[2].hand],[]);
 quickContext.state.players[1].hand=['quickHands'];
 quickContext.play(1,0);
 assert.equal(quickContext.state.players[2].effectLockPending,true);
+
+const mummyMessages=[];
+const mummyContext={defs:{grayMummy:{name:'Múmia Cinzenta',atk:150,movement:[],types:['FOGO','ZUMBI'],glyph:'☠'}},log(message){mummyMessages.push(message)},hasEffect:(unit,key)=>unit.kind===key};
+vm.createContext(mummyContext);
+vm.runInContext(`${egypt.match(/function transformIntoGrayMummy[^\n]+/)[0]}\n${egypt.match(/function prepareMummyCombat[^\n]+/)[0]}\nthis.transform=transformIntoGrayMummy;this.prepare=prepareMummyCombat`,mummyContext);
+const mummy={kind:'grayMummy',row:2},ally={kind:'fireSlave',row:2},ra={kind:'ra',row:2},defender={kind:'firePrince',row:3};
+mummyContext.prepare([mummy,ally,ra],defender);
+assert.equal(ally.kind,'fireSlave','o combate deve ser resolvido antes da transformação');
+assert.equal(ally.mummyTransformPending,true);
+assert.equal(defender.mummyTransformPending,true);
+assert.equal(ra.mummyTransformPending,undefined,'Rá não deve ser marcado para virar Múmia');
+assert.equal(mummyContext.transform(ra),false,'Rá é imune a qualquer transformação em Múmia Cinzenta');
 
 console.log('Egyptian Flames tests passed');

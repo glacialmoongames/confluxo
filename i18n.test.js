@@ -5,13 +5,15 @@ process.chdir(__dirname);
 
 const page = fs.readFileSync('index.html', 'utf8');
 const source = fs.readFileSync('i18n.js', 'utf8');
+assert.match(source,/pawnEn\.grayMummy=\[[^\n]+at the end of the turn/);
+assert.match(source,/pawnEn\.ra=\[[^\n]+cannot become a Gray Mummy/);
 const context = {};
 vm.createContext(context);
 const core = fs.readFileSync('engine-core.js', 'utf8').split('let selectedDecks')[0];
 const expansion = fs.readFileSync('engine-expansion.js', 'utf8').split('function archetypeVisual')[0];
 vm.runInContext(`${fs.readFileSync('game-catalog.js', 'utf8')}\n${core}\n${expansion}\nthis.catalog={defs,effects,archetypes};`, context);
 
-assert.match(page, /i18n\.js\?v=10/);
+assert.match(page, /i18n\.js\?v=11/);
 assert.match(page, /<title>Confluxo<\/title>/);
 assert.match(source, /document\.title='Confluxo'/);
 assert.match(page, /id="language-toggle"/);
