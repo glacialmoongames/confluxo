@@ -14,7 +14,9 @@ for(const key of ['fireScarab','fireSlave','firePrince','grayMummy','ammit','anu
 for(const key of ['burningDesert','emberMummify','flameTemple','quickHands'])assert.match(expansion,new RegExp(`${key}:\\{`));
 assert.match(page,/data-deck="egyptian"/);
 assert.match(page,/engine-egypt\.js\?v=2/);
-assert.match(page,/VERSÃO 213/);
+assert.match(page,/VERSÃO 214/);
+assert.match(page,/data-deck="egyptian"><img src="assets\/icons\/hills\.svg"/);
+assert.match(expansion,/registerArchetype\('egyptian',\{[^\n]+emblemArt:icon\('hills'\)/);
 assert.match(expansion,/grayMummy:\{[^\n]+ao final do turno/);
 assert.match(expansion,/ra:\{[^\n]+não pode se tornar Múmia Cinzenta/);
 assert.match(egypt,/u\.kind==='ra'/);

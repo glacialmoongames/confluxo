@@ -88,7 +88,7 @@ updateArchetype('celestial',{emblem:'✺',emblemArt:icon('orbit'),effects:['aste
 registerArchetype('abyss',{name:'Terror Abissal',emblem:'◉',emblemArt:icon('evil-eyes'),pawns:['creature','devotee','raven'],fusions:['amalgam','repugnium','anssiedium'],effects:['abyss','noEscape','eyes','pit','push','peace']});
 registerArchetype('candy',{name:'Mortos Doces',emblem:'♱',emblemArt:icon('graveyard'),pawns:['candyZombie','chocolateSkeleton','gumGhost','jellyWitch'],fusions:['quindimCount','cookieDemon','iceWerewolf'],effects:['candyRebuild','trickTreat','mausoleum','candyRecipe','burn','pit','push','peace']});
 registerArchetype('gold',{name:'Era Dourada',emblem:'◆',emblemArt:icon('gold-stack'),pawns:['goldWorshipper','goldGoblin','goldPriest'],fusions:['goldBlacksmith','goldGolem','goldDragon'],effects:['goldenAge','goldArmor','camouflagedVest','richer','gild','allOrNothing','burn','pit','push','peace']});
-registerArchetype('egyptian',{name:'Chamas Egípcias',emblem:'☀',emblemArt:icon('horus'),pawns:['fireScarab','fireSlave','firePrince'],fusions:['ammit','anubis','ra'],effects:['burningDesert','emberMummify','flameTemple','burn','pit','push','peace','quickHands']});
+registerArchetype('egyptian',{name:'Chamas Egípcias',emblem:'☀',emblemArt:icon('hills'),pawns:['fireScarab','fireSlave','firePrince'],fusions:['ammit','anubis','ra'],effects:['burningDesert','emberMummify','flameTemple','burn','pit','push','peace','quickHands']});
 Object.values(archetypes).forEach(deck=>{if(!deck.effects.includes('quickHands'))deck.effects.push('quickHands')});
 validateGameCatalog();
 

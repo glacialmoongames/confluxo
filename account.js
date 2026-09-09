@@ -1,6 +1,6 @@
 var accountClient=null,currentAccount=null,accountSession=null,accountInitialized=false;
 const reportedOnlineMatches=new Set();
-const profileIconDefaults=['flower-twirl','empty-chessboard','forest','orbit','evil-eyes','graveyard','gold-stack','horus'];
+const profileIconDefaults=['flower-twirl','empty-chessboard','forest','orbit','evil-eyes','graveyard','gold-stack','hills'];
 const profileColors={xadria:'#7f4c91',wild:'#3f7b50',celestial:'#357aa4',abyss:'#8b315e',candy:'#c24f78',gold:'#b98b27',egyptian:'#d66720'};
 
 function accountConfig(){return window.CONFLUXO_SUPABASE||{}}
