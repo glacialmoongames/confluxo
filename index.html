@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/icons/confluxo-favicon.svg?v=1">
     <link rel="stylesheet" href="styles-core.css?v=10">
   <link rel="stylesheet" href="styles-game.css?v=16">
-    <link rel="stylesheet" href="styles-responsive.css?v=74">
+    <link rel="stylesheet" href="styles-responsive.css?v=75">
 </head>
 <body>
   <div id="setup" class="setup">
@@ -71,7 +71,7 @@
           <div class="choice-row" data-player="1">
             <button class="deck-choice selected" data-deck="xadria"><img src="assets/icons/empty-chessboard.svg" alt=""><strong>Xadria</strong></button>
             <button class="deck-choice" data-deck="wild"><img src="assets/icons/forest.svg" alt=""><strong>Selvagem</strong></button>
-            <button class="deck-choice" data-deck="celestial"><img src="assets/icons/orbit.svg" alt=""><strong>Objeto Celeste</strong></button>
+            <button class="deck-choice" data-deck="insects"><img src="assets/icons/amber-mosquito.svg" alt=""><strong>Insetos Calamitosos</strong></button>
             <button class="deck-choice" data-deck="abyss"><img src="assets/icons/evil-eyes.svg" alt=""><strong>Terror Abissal</strong></button>
             <button class="deck-choice" data-deck="candy"><img src="assets/icons/graveyard.svg" alt=""><strong>Mortos Doces</strong></button>
             <button class="deck-choice" data-deck="gold"><img src="assets/icons/gold-stack.svg" alt=""><strong>Era Dourada</strong></button>
@@ -83,7 +83,7 @@
           <div class="choice-row" data-player="2">
             <button class="deck-choice" data-deck="xadria"><img src="assets/icons/empty-chessboard.svg" alt=""><strong>Xadria</strong></button>
             <button class="deck-choice selected" data-deck="wild"><img src="assets/icons/forest.svg" alt=""><strong>Selvagem</strong></button>
-            <button class="deck-choice" data-deck="celestial"><img src="assets/icons/orbit.svg" alt=""><strong>Objeto Celeste</strong></button>
+            <button class="deck-choice" data-deck="insects"><img src="assets/icons/amber-mosquito.svg" alt=""><strong>Insetos Calamitosos</strong></button>
             <button class="deck-choice" data-deck="abyss"><img src="assets/icons/evil-eyes.svg" alt=""><strong>Terror Abissal</strong></button>
             <button class="deck-choice" data-deck="candy"><img src="assets/icons/graveyard.svg" alt=""><strong>Mortos Doces</strong></button>
             <button class="deck-choice" data-deck="gold"><img src="assets/icons/gold-stack.svg" alt=""><strong>Era Dourada</strong></button>
@@ -94,7 +94,7 @@
       <div class="setup-actions"><button id="setup-rules-btn" class="secondary">COMO JOGAR</button><button id="start-game" class="primary">INICIAR DUELO LOCAL</button></div>
       </div>
     </div>
-    <footer class="setup-footer"><span><img src="assets/icons/flower-twirl.svg" alt="">CONFLUXO</span><small class="game-version">VERSÃO 221</small><button id="language-toggle" class="language-toggle" type="button">EN</button></footer>
+    <footer class="setup-footer"><span><img src="assets/icons/flower-twirl.svg" alt="">CONFLUXO</span><small class="game-version">VERSÃO 222</small><button id="language-toggle" class="language-toggle" type="button">EN</button></footer>
   </div>
   <div id="turn-draw" class="turn-draw hidden">
     <div class="draw-choice-card">
@@ -259,24 +259,25 @@
   </dialog>
 
   <dialog id="winner-dialog">
-    <div class="winner-crest">♛</div><small>A SOBERANIA É DE</small><h2 id="winner-name"></h2><p id="winner-score"></p><div class="winner-actions"><button id="winner-restart" class="primary">Jogar novamente</button><button id="winner-menu" class="secondary">Voltar ao menu</button></div>
+    <div class="winner-crest">♛</div><small>A SOBERANIA É DE</small><h2 id="winner-name"></h2><p id="winner-score"></p><p id="winner-flux" class="winner-flux"></p><p id="rematch-status" class="rematch-status"></p><div class="winner-actions"><button id="winner-restart" class="primary">Jogar novamente</button><button id="winner-menu" class="secondary">Voltar ao menu</button></div>
   </dialog>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js?v=1"></script>
-  <script src="account.js?v=15"></script>
+  <script src="account.js?v=16"></script>
   <script src="game-catalog.js?v=1"></script>
-  <script src="network.js?v=47"></script>
-  <script src="engine-core.js?v=34"></script>
-  <script src="engine-expansion.js?v=33"></script>
+  <script src="network.js?v=48"></script>
+  <script src="engine-core.js?v=35"></script>
+  <script src="engine-expansion.js?v=34"></script>
   <script src="engine-celestial.js?v=10"></script>
   <script src="engine-gold.js?v=8"></script>
-  <script src="engine-egypt.js?v=3"></script>
+  <script src="engine-egypt.js?v=4"></script>
   <script src="engine-actions-a.js?v=41"></script>
   <script src="engine-actions-b.js?v=32"></script>
   <script src="engine-expansion-runtime.js?v=11"></script>
-  <script src="engine-ui.js?v=55"></script>
+  <script src="engine-ui.js?v=56"></script>
   <script src="i18n.js?v=13"></script>
+  <script src="engine-insects.js?v=2"></script>
 </body>
 </html>

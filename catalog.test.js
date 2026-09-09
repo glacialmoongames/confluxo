@@ -23,10 +23,11 @@ const integrated = {console};
 vm.createContext(integrated);
 vm.runInContext(`${definitions}\nthis.summary=validateGameCatalog();this.defs=defs;this.effects=effects;this.archetypes=archetypes`, integrated);
 
-assert.deepEqual({...integrated.summary},{pawns:56,effects:35,archetypes:7});
+assert.deepEqual({...integrated.summary},{pawns:67,effects:47,archetypes:7});
 assert.equal(integrated.archetypes.xadria.pawns.length,6);
 assert.equal(integrated.archetypes.wild.pawns.length,5);
-assert.equal(integrated.archetypes.celestial.pawnComposition.length,18);
+assert.equal(integrated.archetypes.celestial,undefined);
+assert.equal(integrated.archetypes.insects.pawns.length,6);
 assert.equal(integrated.archetypes.abyss.fusions.length,3);
 assert.equal(integrated.archetypes.candy.pawns.length,4);
 assert.equal(integrated.archetypes.candy.fusions.length,3);

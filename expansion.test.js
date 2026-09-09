@@ -33,9 +33,9 @@ assert.match(ui, /beginMonkeyDestination/);
 assert.match(ui, /grantImpolutoPower/);
 assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
-assert.match(page, /engine-expansion\.js\?v=33/);
+assert.match(page, /engine-expansion\.js\?v=34/);
 assert.doesNotMatch(expansion, /Object\.assign\((?:defs|effects|archetypes)/, 'o catálogo não deve ser alterado diretamente');
-assert.match(page, /VERSÃO 221/);
+assert.match(page, /VERSÃO 222/);
 assert.match(runtime, /playUnitAnimation\(u,'goldPriestPulse'\)/, 'efeito do Sacerdote não deve reiniciar a cada renderização');
 assert.match(runtime, /playUnitAnimation\(u,'goldDrainTo'\)/, 'partículas de Tudo ou Nada não devem reiniciar a cada renderização');
 assert.match(expansion, /impoluto:\{[^\n]+types:\['LUZ'\]/, 'Impoluto deve ser do tipo LUZ conforme Cartas.md');
@@ -53,7 +53,7 @@ assert.doesNotMatch(expansion, /Justiça[^\n]+100 ATK/);
 for (const exactName of ['Criatura Abissal','Devoto Abissal','Corvo da floresta Abissal','Amalgama Abissal','Ser Abissal: Repugnium','Ser Abissal: Anssiedium','Não há escapatoria','Eu vejo os olhos']) {
   assert.ok(expansion.includes(`name:'${exactName}'`), `nome Abissal alterado: ${exactName}`);
 }
-assert.match(expansion, /\['archer','horse','babel','terror','atra'\]\.includes\(key\)\?'black':'white'/);
+assert.match(expansion, /\['archer','horse','babel','terror','atra','amberTragedy'/);
 assert.match(expansion, /repugnium:'haunting'/);
 assert.doesNotMatch(expansion, /repugnium:'evil-eyes'/);
 assert.match(expansion, /Pode incluir peões adversários que toquem um Devoto/);
