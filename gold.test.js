@@ -23,13 +23,13 @@ for(const icon of ['tarot-17-the-star','goblin','sun-priest','blacksmith','rock-
  assert.doesNotMatch(fs.readFileSync(`assets/icons/${icon}.svg`,'utf8'),/<path d="M0 0h512v512H0z"\/>/,`Ícone ${icon} não pode ter fundo sólido`);
 }
 assert.match(page,/data-deck="gold"/);
-assert.match(page,/engine-gold\.js\?v=7/);
+assert.match(page,/engine-gold\.js\?v=8/);
 assert.match(styles,/deck-gold/);
 assert.match(styles,/data-arena=goldenAge/);
 
 const helperContext={state:{arena:null,goldDefeatedCount:0},hasEffect:(u,key)=>u.kind===key,allUnits:()=>[],inMovementRadius:()=>false,effectiveAtk:u=>u.atk+(u.bonusAtk||0),log:()=>{},renderBoard:()=>{},gameVersion:1,onlineMode:false,syncOnlineState:()=>{},setTimeout:()=>{}};
 vm.createContext(helperContext);
-for(const name of ['isGoldUnit','materialMatchesRequirement','goldUnitHasReducedAttack','goldPriestBonus','goldDragonAttack','reduceGoldAttack','consumeGoldArmor','equipCamouflagedVest','removeCamouflagedTypes','transferGoldAttack','gildUnit','resolveAllOrNothing'])vm.runInContext(gold.match(new RegExp(`function ${name}\\([^\\n]+`))[0],helperContext);
+for(const name of ['isGoldUnit','materialMatchesRequirement','goldUnitHasReducedAttack','goldPriestBonus','goldDragonAttack','reduceGoldAttack','consumeGoldArmor','equipCamouflagedVest','removeCamouflagedTypes','resolveGoldenGoblin','transferGoldAttack','gildUnit','resolveAllOrNothing'])vm.runInContext(gold.match(new RegExp(`function ${name}\\([^\\n]+`))[0],helperContext);
 const combined={kind:'goldGolem',types:['OURO'],fusion:2},normal={kind:'goldGoblin',types:['OURO']};
 assert.equal(helperContext.materialMatchesRequirement(combined,{type:'OURO',combined:true}),true);
 assert.equal(helperContext.materialMatchesRequirement(normal,{type:'OURO',combined:true}),false);
@@ -68,6 +68,11 @@ const ramonA={id:'ramon-a',kind:'goldDragon',types:['OURO'],atk:500,bonusAtk:0},
 helperContext.allUnits=()=>[ramonA,ramonB,extraGold];
 assert.equal(helperContext.goldDragonAttack(ramonA),700,'Dois Ramons devem usar o ATK-base um do outro sem recursão');
 assert.equal(helperContext.goldDragonAttack(ramonB),700,'O cálculo de dois Ramons deve ser simétrico');
+const goblinVictim={kind:'goldGoblin',atk:100,bonusAtk:0,row:2},dragonKiller={kind:'goldDragon',atk:500,bonusAtk:700,goldAttackReduced:50,row:1};
+assert.equal(helperContext.resolveGoldenGoblin(goblinVictim,dragonKiller),true);
+assert.equal(dragonKiller.atk,100);
+assert.equal(dragonKiller.bonusAtk,0);
+assert.equal(dragonKiller.goldGoblinAtkOverride,true,'Goblin deve cancelar permanentemente o cálculo dinâmico de ATK do Dragão');
 
 const suppression={state:{arena:'goldenAge'}};
 vm.createContext(suppression);
@@ -79,7 +84,7 @@ assert.match(actionsB,/consumeGoldArmor\(u\)/);
 assert.match(actionsB,/reason==='poço'\)\{state\.pits=state\.pits\.filter\(pit=>pit\.row!==u\.row\|\|pit\.col!==u\.col\)/,'Armadura de Ouro deve destruir o Poço ao salvar o peão');
 assert.match(actionsB,/resolveGoldenGoblin\(defender,attacker\)/);
 assert.match(actionsB,/goldDefeatedCount/);
-assert.match(actionsB,/hasEffect\(u,'goldDragon'\)/);
+assert.match(actionsB,/hasEffect\(u,'goldDragon'\)&&!u\.goldGoblinAtkOverride/,'o Dragão não deve recalcular seu ATK depois de herdar o ATK do Goblin');
 assert.match(actionsB,/goldDefeatedAtEntry/,'Ferreiro deve contar apenas derrotas posteriores à entrada');
 assert.match(core,/u\.kind==='goldBlacksmith'.*goldDefeatedAtEntry/);
 assert.match(styles,/goldParticleTransfer/);

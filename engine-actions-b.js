@@ -20,7 +20,7 @@ function drawRoseReward(owner,delay=0){let p=state.players[owner],available=[];i
 function awardPoints(owner,count){if(!owner||count<=0)return;state.players[owner].score+=count;log(`${state.players[owner].name} recebeu ${count} ponto${count>1?'s':''}.`,'points');if(state.arena==='blackRoses'||state.arena==='kingdom')for(let i=0;i<count;i++)drawRoseReward(owner,i*180)}
 function effectiveAtk(u,defending,dynamicDepth=0){
  let atk=u.atk+(u.bonusAtk||0);
- if(hasEffect(u,'goldDragon')&&!dynamicDepth)atk=goldDragonAttack(u);
+ if(hasEffect(u,'goldDragon')&&!u.goldGoblinAtkOverride&&!dynamicDepth)atk=goldDragonAttack(u);
  if(hasEffect(u,'iceWerewolf')&&!dynamicDepth){let strongest=Math.max(0,...allUnits().filter(v=>v.id!==u.id&&v.row!==null&&isSweetUnit(v)).map(v=>effectiveAtk(v,false,dynamicDepth+1)));atk=strongest+100}
  if(hasEffect(u,'terror'))atk+=state.players[u.owner===1?2:1].units.filter(x=>x.row!==null).length*100;
  if(hasEffect(u,'goldBlacksmith'))atk+=Math.max(0,(state.goldDefeatedCount||0)-(u.goldDefeatedAtEntry??(state.goldDefeatedCount||0)))*150;
