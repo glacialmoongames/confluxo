@@ -12,7 +12,7 @@ function validAccountName(value){return /^[A-Za-z0-9 ]{3,18}$/.test(normalizeAcc
 const accountDeckNames={xadria:'XADRIA',wild:'SELVAGEM',celestial:'OBJETO CELESTE',abyss:'TERROR ABISSAL',candy:'MORTOS DOCES',gold:'ERA DOURADA',egyptian:'CHAMAS EGÍPCIAS'};
 function escapeProfileText(value){return String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]))}
 function safeProfileIcon(value){let icon=String(value||'flower-twirl').toLowerCase();return /^[a-z0-9-]{1,40}$/.test(icon)?icon:'flower-twirl'}
-function profileIconUrl(value){return`assets/icons/${safeProfileIcon(value)}.svg`}
+function profileIconUrl(value){return`assets/icons/${safeProfileIcon(value)}.svg?v=2`}
 function iconNameFromArt(value){let match=String(value||'').match(/assets\/icons\/([a-z0-9-]+)\.svg/i);return match?.[1]||null}
 function availableProfileIcons(){let icons=new Set(profileIconDefaults);if(typeof cardIcons!=='undefined')Object.values(cardIcons).forEach(icon=>icons.add(icon));if(typeof effectIcons!=='undefined')Object.values(effectIcons).forEach(icon=>icons.add(icon));if(typeof defs!=='undefined')Object.values(defs).forEach(card=>{let icon=iconNameFromArt(card?.art);if(icon)icons.add(icon)});if(typeof effects!=='undefined')Object.values(effects).forEach(card=>{let icon=iconNameFromArt(card?.art);if(icon)icons.add(icon)});return[...icons].sort()}
 function safeProfileColor(value){return Object.hasOwn(profileColors,value)?value:'xadria'}

@@ -1,6 +1,6 @@
 /* Conteúdo sincronizado com a documentação do Obsidian em 26/08/2026. */
 const GAME_ICON_CREDIT='Game-icons.net · CC BY 3.0';
-const icon=name=>`assets/icons/${name}.svg`;
+const icon=name=>`assets/icons/${name}.svg?v=2`;
 function setCardIcon(card,name,tone='white'){Object.assign(card,{art:icon(name),artCrop:{scale:76,x:0,y:0},artCredit:GAME_ICON_CREDIT,iconTone:tone})}
 
 registerPawns({

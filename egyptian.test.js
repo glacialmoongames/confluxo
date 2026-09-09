@@ -14,9 +14,10 @@ for(const key of ['fireScarab','fireSlave','firePrince','grayMummy','ammit','anu
 for(const key of ['burningDesert','emberMummify','flameTemple','quickHands'])assert.match(expansion,new RegExp(`${key}:\\{`));
 assert.match(page,/data-deck="egyptian"/);
 assert.match(page,/engine-egypt\.js\?v=2/);
-assert.match(page,/VERSÃO 214/);
-assert.match(page,/data-deck="egyptian"><img src="assets\/icons\/hills\.svg"/);
+assert.match(page,/VERSÃO 215/);
+assert.match(page,/data-deck="egyptian"><img src="assets\/icons\/hills\.svg\?v=2"/);
 assert.match(expansion,/registerArchetype\('egyptian',\{[^\n]+emblemArt:icon\('hills'\)/);
+for(const icon of ['anubis','bandaged','card-pickup','egyptian-profile','great-pyramid','hills','horus','mummy-head','scarab-beetle','slavery-whip','soul'])assert.doesNotMatch(fs.readFileSync(`assets/icons/${icon}.svg`,'utf8'),/<path d="M0 0h512v512H0z"\/>/,`${icon} deve ter fundo transparente`);
 assert.match(expansion,/grayMummy:\{[^\n]+ao final do turno/);
 assert.match(expansion,/ra:\{[^\n]+não pode se tornar Múmia Cinzenta/);
 assert.match(egypt,/u\.kind==='ra'/);
