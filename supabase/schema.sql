@@ -1,7 +1,7 @@
 -- Execute este arquivo uma vez no SQL Editor de um projeto Supabase vazio.
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
-  username text not null check (username ~ '^[A-Za-z0-9 ]{3,18}$'),
+  username text not null check (username ~ '^[A-Za-zÀ-ÖØ-öø-ÿ0-9 ]{3,18}$'),
   username_key text not null unique check (char_length(username_key) between 3 and 18),
   wins bigint not null default 0 check (wins >= 0),
   losses bigint not null default 0 check (losses >= 0),
@@ -59,8 +59,8 @@ declare
   requested_name text := trim(regexp_replace(coalesce(new.raw_user_meta_data ->> 'username', ''), '\s+', ' ', 'g'));
   requested_key text;
 begin
-  requested_key := lower(regexp_replace(requested_name, '[^A-Za-z0-9]', '', 'g'));
-  if requested_name !~ '^[A-Za-z0-9 ]{3,18}$' or char_length(requested_key) < 3 then
+  requested_key := lower(regexp_replace(translate(requested_name, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöùúûüýÿ', 'AAAAAACEEEEIIIINOOOOOUUUUYaaaaaaceeeeiiiinooooouuuuyy'), '[^A-Za-z0-9]', '', 'g'));
+  if requested_name !~ '^[A-Za-zÀ-ÖØ-öø-ÿ0-9 ]{3,18}$' or char_length(requested_key) < 3 then
     raise exception 'invalid username';
   end if;
   insert into public.profiles (id, username, username_key) values (new.id, requested_name, requested_key);

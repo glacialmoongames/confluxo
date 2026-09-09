@@ -12,7 +12,9 @@ const responsive = fs.readFileSync('styles-responsive.css','utf8');
 
 for (const id of ['account-card','account-name','account-flux','account-avatar','account-record','account-dialog','profile-icon-dialog','public-profile-dialog','profile-color-grid','profile-style-message','profile-view-history','leaderboard-list','account-login','account-signup','p1-record','p2-record']) assert.match(page,new RegExp(`id="${id}"`));
 assert.match(page, /@supabase\/supabase-js@2/);
-assert.match(page, /account\.js\?v=16/);
+assert.match(page, /account\.js\?v=17/);
+assert.match(account, /normalize\('NFD'\)/, 'nomes com acentos devem gerar uma chave de login estável');
+assert.match(account, /A-Za-zÀ-ÖØ-öø-ÿ0-9/, 'a validação deve aceitar letras latinas acentuadas');
 assert.match(account, /#account-dialog'\)\?\.close\(\)/);
 assert.match(page, /id="online-name-label"/);
 assert.match(account, /onlineName\.classList\.toggle\('hidden',!!snapshot\)/);

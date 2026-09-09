@@ -6,9 +6,9 @@ const profileColors={xadria:'#7f4c91',wild:'#3f7b50',celestial:'#357aa4',abyss:'
 function accountConfig(){return window.CONFLUXO_SUPABASE||{}}
 function accountConfigured(){let config=accountConfig();return /^https:\/\/.+\.supabase\.co$/i.test(config.url||'')&&!!config.publishableKey}
 function normalizeAccountName(value){return String(value||'').trim().replace(/\s+/g,' ').slice(0,18)}
-function accountNameKey(value){return normalizeAccountName(value).toLowerCase().replace(/[^a-z0-9]/g,'')}
+function accountNameKey(value){return normalizeAccountName(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'')}
 function accountLoginEmail(value){return`${accountNameKey(value)}@players.confluxo.invalid`}
-function validAccountName(value){return /^[A-Za-z0-9 ]{3,18}$/.test(normalizeAccountName(value))&&accountNameKey(value).length>=3}
+function validAccountName(value){return /^[A-Za-zÀ-ÖØ-öø-ÿ0-9 ]{3,18}$/.test(normalizeAccountName(value))&&accountNameKey(value).length>=3}
 const accountDeckNames={xadria:'XADRIA',wild:'SELVAGEM',celestial:'OBJETO CELESTE',abyss:'TERROR ABISSAL',candy:'MORTOS DOCES',gold:'ERA DOURADA',egyptian:'CHAMAS EGÍPCIAS',insects:'INSETOS CALAMITOSOS'};
 function escapeProfileText(value){return String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]))}
 function safeProfileIcon(value){let icon=String(value||'flower-twirl').toLowerCase();return /^[a-z0-9-]{1,40}$/.test(icon)?icon:'flower-twirl'}
