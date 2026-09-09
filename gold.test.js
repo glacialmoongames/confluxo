@@ -15,19 +15,21 @@ const styles=['styles-core.css','styles-game.css','styles-responsive.css'].map(f
 
 for(const pawn of ['goldWorshipper','goldGoblin','goldPriest','goldBlacksmith','goldGolem','goldDragon'])assert.match(expansion,new RegExp(`${pawn}:\\{`),`Peão Era Dourada ausente: ${pawn}`);
 assert.match(expansion,/goldDragon:\{name:'O Dragão Banhado a Ouro: Ramon',atk:500,movement:\[\[-3,0\],\[-2,-1\],\[-2,0\],\[-2,1\],\[-1,-3\],\[-1,-2\],\[-1,-1\],\[-1,0\],\[-1,1\],\[-1,2\],\[-1,3\],\[0,-1\],\[0,1\],\[1,-2\],\[1,-1\],\[1,0\],\[1,1\],\[1,2\],\[2,-2\],\[2,2\]\]/,'O alcance de Ramon deve corresponder à tabela 7x7 do Cartas.md');
+assert.match(expansion,/goldBlacksmith:\{[^\n]+movement:\[\[-2,0\],\[-1,-1\],\[-1,0\],\[-1,1\],\[0,-2\],\[0,-1\],\[0,1\],\[0,2\],\[1,-1\],\[1,0\],\[1,1\]\]/,'O alcance do Ferreiro deve corresponder à tabela do Cartas.md');
+assert.match(expansion,/goldGolem:\{[^\n]+movement:\[\[-1,-3\],\[-1,-2\],\[-1,-1\],\[-1,0\],\[-1,1\],\[-1,2\],\[-1,3\],\[0,-3\],\[0,-2\],\[0,-1\],\[0,1\],\[0,2\],\[0,3\],\[1,0\]\]/,'O alcance do Golem de Ouro deve corresponder à tabela do Cartas.md');
 for(const effect of ['goldenAge','goldArmor','camouflagedVest','richer','gild','allOrNothing'])assert.match(expansion,new RegExp(`${effect}:\\{`),`Efeito Era Dourada ausente: ${effect}`);
 for(const icon of ['tarot-17-the-star','goblin','sun-priest','blacksmith','rock-golem','wyvern','gold-stack','abdominal-armor','hidden','coins-pile','gold-nuggets','slot-machine']){
  assert.ok(fs.existsSync(`assets/icons/${icon}.svg`),`Ícone dourado ausente: ${icon}`);
  assert.doesNotMatch(fs.readFileSync(`assets/icons/${icon}.svg`,'utf8'),/<path d="M0 0h512v512H0z"\/>/,`Ícone ${icon} não pode ter fundo sólido`);
 }
 assert.match(page,/data-deck="gold"/);
-assert.match(page,/engine-gold\.js\?v=5/);
+assert.match(page,/engine-gold\.js\?v=6/);
 assert.match(styles,/deck-gold/);
 assert.match(styles,/data-arena=goldenAge/);
 
 const helperContext={state:{arena:null,goldDefeatedCount:0},hasEffect:(u,key)=>u.kind===key,allUnits:()=>[],inMovementRadius:()=>false,effectiveAtk:u=>u.atk+(u.bonusAtk||0),log:()=>{},renderBoard:()=>{},gameVersion:1,onlineMode:false,syncOnlineState:()=>{},setTimeout:()=>{}};
 vm.createContext(helperContext);
-for(const name of ['isGoldUnit','materialMatchesRequirement','goldDragonAttack','reduceGoldAttack','consumeGoldArmor','equipCamouflagedVest','removeCamouflagedTypes','transferGoldAttack','gildUnit','resolveAllOrNothing'])vm.runInContext(gold.match(new RegExp(`function ${name}\\([^\\n]+`))[0],helperContext);
+for(const name of ['isGoldUnit','materialMatchesRequirement','goldUnitHasReducedAttack','goldPriestBonus','goldDragonAttack','reduceGoldAttack','consumeGoldArmor','equipCamouflagedVest','removeCamouflagedTypes','transferGoldAttack','gildUnit','resolveAllOrNothing'])vm.runInContext(gold.match(new RegExp(`function ${name}\\([^\\n]+`))[0],helperContext);
 const combined={kind:'goldGolem',types:['OURO'],fusion:2},normal={kind:'goldGoblin',types:['OURO']};
 assert.equal(helperContext.materialMatchesRequirement(combined,{type:'OURO',combined:true}),true);
 assert.equal(helperContext.materialMatchesRequirement(normal,{type:'OURO',combined:true}),false);
@@ -37,6 +39,11 @@ assert.equal(helperContext.reduceGoldAttack(worshipper,100),0,'Adorador não pod
 const goldPawn={kind:'goldGoblin',types:['OURO'],atk:100,bonusAtk:0};
 assert.equal(helperContext.reduceGoldAttack(goldPawn,100),100);
 assert.equal(goldPawn.bonusAtk,-100);
+const priest={kind:'goldPriest',types:['OURO'],atk:200,bonusAtk:0,row:1};
+goldPawn.row=2;
+helperContext.allUnits=()=>[priest,goldPawn];
+assert.equal(helperContext.goldPriestBonus(priest),200,'Sacerdote deve ganhar 200 ATK enquanto existir um Peão Ouro com ATK diminuído');
+assert.equal(helperContext.goldPriestBonus(goldPawn),0,'o bônus deve pertencer apenas ao Sacerdote');
 const richA={id:'a',kind:'goldGoblin',types:['OURO'],atk:100,bonusAtk:0},richB={id:'b',kind:'goldPriest',types:['OURO'],atk:200,bonusAtk:0};
 assert.equal(helperContext.transferGoldAttack(richA,richB),true);
 assert.equal(richA.atk,0);
@@ -85,8 +92,8 @@ assert.match(runtime,/syncGoldPriestVisuals\(\)/);
 assert.match(styles,/goldPriestPulse 1\.15s ease-in-out 1/,'A pulsação dourada deve terminar após uma execução');
 assert.doesNotMatch(styles,/goldPriestPulse[^;}]*infinite/,'O efeito visual dourado não pode pulsar infinitamente');
 assert.match(actionsB,/hasEquipment\(u,'camouflagedVest'\)\)atk\+=100/);
-assert.match(actionsB,/goldUnitHasReducedAttack\(u\)&&allUnits\(\)\.some\(priest=>priest\.row!==null&&hasEffect\(priest,'goldPriest'\)\)\)atk\*=2/,'Sacerdote deve dobrar o Peão Ouro que teve ATK reduzido');
-assert.doesNotMatch(actionsB,/hasEffect\(u,'goldPriest'\)&&allUnits\(\)\.some\(goldUnitHasReducedAttack\)/,'Sacerdote não deve dobrar o próprio ATK apenas porque outro peão foi reduzido');
+assert.match(actionsB,/atk\+=goldPriestBonus\(u\)/,'o cálculo de combate deve aplicar o bônus atualizado do Sacerdote');
+assert.doesNotMatch(actionsB,/goldUnitHasReducedAttack\(u\).*atk\*=2/,'Sacerdote não deve mais dobrar o ATK do Peão diminuído');
 assert.match(ui,/transferGoldAttack\(pendingAbilityTarget,u\)/);
 assert.match(ui,/resolveAllOrNothing\(u\)/);
 assert.match(ui,/gildUnit\(u\)/);

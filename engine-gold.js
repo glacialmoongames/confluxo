@@ -1,6 +1,7 @@
 function isGoldUnit(u){return !!u?.types?.includes('OURO')}
 function materialMatchesRequirement(u,req){return !!u&&(!req.kind||u.kind===req.kind)&&(!req.type||u.types?.includes(req.type))&&(!req.combined||!!u.fusion)&&(!req.normal||!u.fusion)}
 function goldUnitHasReducedAttack(u){if(!isGoldUnit(u)||hasEffect(u,'goldWorshipper'))return false;if((u.goldAttackReduced||0)>0)return true;return allUnits().some(b=>b.owner!==u.owner&&hasEffect(b,'babel')&&inMovementRadius(b,u))}
+function goldPriestBonus(u){return hasEffect(u,'goldPriest')&&allUnits().some(target=>target.row!==null&&goldUnitHasReducedAttack(target))?200:0}
 let lastGoldPriestActivePairs=new Set;
 function goldPriestIsActive(u){return !!u?.goldPriestPulse}
 function syncGoldPriestVisuals(){let priests=allUnits().filter(u=>u.row!==null&&hasEffect(u,'goldPriest')),reduced=allUnits().filter(u=>u.row!==null&&goldUnitHasReducedAttack(u)),activePairs=new Set(priests.flatMap(priest=>reduced.map(target=>`${priest.id}>${target.id}`))),activatedPriests=priests.filter(priest=>reduced.some(target=>!lastGoldPriestActivePairs.has(`${priest.id}>${target.id}`)));lastGoldPriestActivePairs=activePairs;if(!activatedPriests.length)return;let version=gameVersion;activatedPriests.forEach(priest=>{let pulse=(priest.goldPriestPulse||0)+1;priest.goldPriestPulse=pulse;setTimeout(()=>{if(version!==gameVersion||priest.goldPriestPulse!==pulse)return;delete priest.goldPriestPulse;renderBoard()},1200)})}
