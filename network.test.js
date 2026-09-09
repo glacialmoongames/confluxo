@@ -25,6 +25,11 @@ assert.match(source, /dataChannel=null;updateRematchAvailability\(\)/, 'uma qued
 assert.match(source, /function cancelQuickMatch\(\)/, 'a procura rápida deve poder ser cancelada');
 assert.match(source, /busy&&!quickMatchSearching/, 'o botão da partida rápida deve continuar ativo durante a procura');
 assert.match(source, /ticket!==quickMatchTicket\|\|!quickMatchSearching/, 'uma resposta tardia não deve reabrir uma busca cancelada');
+assert.match(source, /const DISCONNECT_FORFEIT_MS=90000/, 'a tolerância de desconexão deve ser de 90 segundos');
+assert.match(source, /function startMatchPresence\(/, 'a partida deve manter presença independente do canal P2P');
+assert.match(source, /touch_match_presence/, 'a presença deve ser atualizada no servidor');
+assert.match(source, /claim_disconnect_win/, 'a vitória deve ser reivindicada somente após confirmar a ausência do rival');
+assert.match(source, /startDisconnectForfeit\(\);scheduleReconnect\(\)/, 'a queda deve iniciar o prazo sem interromper as tentativas de reconexão');
 
 function classList() {
   return { add() {}, remove() {}, toggle() {}, contains() { return true } };

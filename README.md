@@ -12,6 +12,7 @@ Para ativar as contas em uma instalação nova:
 
 1. Crie um projeto no Supabase.
 2. Execute `supabase/schema.sql` no SQL Editor do projeto.
+   - Em um projeto já configurado, execute somente `supabase/migration-210-disconnect-and-variable-flux.sql` para habilitar presença, derrota após 90 segundos e Flux variável.
 3. Copie a URL do projeto e a chave pública (publishable ou anon) para `supabase-config.js`.
 4. Em Authentication, mantenha o provedor Email habilitado e desative `Confirm email`. O jogo cria internamente um endereço técnico determinístico a partir do nome; esse detalhe nunca aparece para o jogador.
 
