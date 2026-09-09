@@ -31,6 +31,8 @@ assert.match(source, /function startMatchPresence\(/, 'a partida deve manter pre
 assert.match(source, /touch_match_presence/, 'a presença deve ser atualizada no servidor');
 assert.match(source, /claim_disconnect_win/, 'a vitória deve ser reivindicada somente após confirmar a ausência do rival');
 assert.match(source, /startDisconnectForfeit\(\);scheduleReconnect\(\)/, 'a queda deve iniciar o prazo sem interromper as tentativas de reconexão');
+assert.match(source, /function announceOnlineMatchResult\(/, 'o resultado deve ser confirmado em um pacote independente do estado da jogada');
+assert.match(source, /packet\.type==='match-result'/, 'o adversário deve receber a confirmação explícita do resultado');
 
 function classList() {
   return { add() {}, remove() {}, toggle() {}, contains() { return true } };
@@ -38,6 +40,7 @@ function classList() {
 
 function playerState(current, marker) {
   return {
+    matchId: '11111111-1111-4111-8111-111111111111',
     turn: 2,
     current,
     marker,
@@ -99,6 +102,10 @@ function makeClient(player, initialState) {
     allUnits() { return [] },
     confirm() { return false }
   };
+  context.resultReports = [];
+  context.safeAccountSnapshot = value => value?.id ? structuredClone(value) : null;
+  context.accountPublicSnapshot = () => ({id:`account-${player}`,username:`Player ${player}`});
+  context.reportOnlineMatchResult = (winner, reason) => context.resultReports.push({winner, reason});
   context.spectatingMatch = () => context.onlineRole === 'spectator';
   context.selectedPointGoal = () => context.pointGoal;
   context.setPointGoal = value => context.pointGoal = Math.max(1, Math.min(99, Math.round(Number(value)) || 10));
@@ -110,6 +117,18 @@ function makeClient(player, initialState) {
   context.updateOnlineStart = () => {};
   context.gameStarted = () => true;
   return context;
+}
+
+{
+  const host = makeClient(1, playerState(1, 'resultado-host'));
+  const guest = makeClient(2, playerState(1, 'resultado-guest'));
+  link(host, guest);
+  assert.equal(host.announceOnlineMatchResult(1, 'points'), true);
+  assert.deepEqual(guest.resultReports, [{winner:1, reason:'points'}], 'o outro cliente deve confirmar o mesmo resultado no banco');
+  assert.deepEqual(host.resultReports, [{winner:1, reason:'points'}], 'o destinatário deve responder e confirmar o resultado também no cliente original');
+  assert.equal(guest.onlineAccounts[1].id, 'account-1', 'o pacote deve recuperar a identidade verificada do adversário');
+  assert.equal(host.onlineAccounts[2].id, 'account-2', 'a resposta deve recuperar a identidade do segundo jogador');
+  assert.equal(host.announceOnlineMatchResult(1, 'points'), false, 'o mesmo resultado não deve ser anunciado duas vezes');
 }
 
 {

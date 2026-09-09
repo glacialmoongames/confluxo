@@ -12,7 +12,7 @@ const responsive = fs.readFileSync('styles-responsive.css','utf8');
 
 for (const id of ['account-card','account-name','account-flux','account-avatar','account-record','account-dialog','profile-icon-dialog','public-profile-dialog','profile-color-grid','profile-style-message','profile-view-history','leaderboard-list','account-login','account-signup','p1-record','p2-record']) assert.match(page,new RegExp(`id="${id}"`));
 assert.match(page, /@supabase\/supabase-js@2/);
-assert.match(page, /account\.js\?v=14/);
+assert.match(page, /account\.js\?v=15/);
 assert.match(account, /#account-dialog'\)\?\.close\(\)/);
 assert.match(page, /id="online-name-label"/);
 assert.match(account, /onlineName\.classList\.toggle\('hidden',!!snapshot\)/);
@@ -21,6 +21,9 @@ assert.match(account, /function accountLoginEmail/);
 assert.doesNotMatch(page, /id="account-email"/);
 assert.match(account, /function lookupAccountProfile/);
 assert.match(account, /report_match_result/);
+assert.match(account, /knownAccounts=typeof onlineAccounts!=='undefined'/, 'o resultado deve reutilizar os perfis verificados no lobby');
+assert.match(account, /winner===localPlayer\?mine:other/, 'o vencedor deve ser convertido para o id de conta correto');
+assert.match(account, /!other&&!state\.onlineResultIdentity\?\.\[otherNumber\]/, 'uma identidade ainda em trânsito não deve ser registrada como convidado');
 assert.match(account, /MAIS USADO:/);
 assert.match(account, /function loadLeaderboard/);
 assert.match(account, /set_profile_style/);
