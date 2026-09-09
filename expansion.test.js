@@ -35,7 +35,7 @@ assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
 assert.match(page, /engine-expansion\.js\?v=32/);
 assert.doesNotMatch(expansion, /Object\.assign\((?:defs|effects|archetypes)/, 'o catálogo não deve ser alterado diretamente');
-assert.match(page, /VERSÃO 215/);
+assert.match(page, /VERSÃO 216/);
 assert.match(expansion, /impoluto:\{[^\n]+types:\['LUZ'\]/, 'Impoluto deve ser do tipo LUZ conforme Cartas.md');
 assert.match(expansion, /candyRebuild:'concrete-bag'/);
 assert.match(expansion, /trickTreat:'wrapped-sweet'/);

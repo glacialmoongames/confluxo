@@ -13,6 +13,7 @@ Para ativar as contas em uma instalação nova:
 1. Crie um projeto no Supabase.
 2. Execute `supabase/schema.sql` no SQL Editor do projeto.
    - Em um projeto já configurado, execute `supabase/migration-212-egyptian-flames.sql` para liberar Chamas Egípcias nos perfis, resultados e matchmaking.
+   - Se a cor laranja do perfil ainda for recusada, execute também `supabase/migration-216-egyptian-profile-color.sql`.
 3. Copie a URL do projeto e a chave pública (publishable ou anon) para `supabase-config.js`.
 4. Em Authentication, mantenha o provedor Email habilitado e desative `Confirm email`. O jogo cria internamente um endereço técnico determinístico a partir do nome; esse detalhe nunca aparece para o jogador.
 

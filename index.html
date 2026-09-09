@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/icons/confluxo-favicon.svg?v=1">
     <link rel="stylesheet" href="styles-core.css?v=10">
   <link rel="stylesheet" href="styles-game.css?v=16">
-    <link rel="stylesheet" href="styles-responsive.css?v=72">
+    <link rel="stylesheet" href="styles-responsive.css?v=73">
 </head>
 <body>
   <div id="setup" class="setup">
@@ -94,7 +94,7 @@
       <div class="setup-actions"><button id="setup-rules-btn" class="secondary">COMO JOGAR</button><button id="start-game" class="primary">INICIAR DUELO LOCAL</button></div>
       </div>
     </div>
-    <footer class="setup-footer"><span><img src="assets/icons/flower-twirl.svg" alt="">CONFLUXO</span><small class="game-version">VERSÃO 215</small><button id="language-toggle" class="language-toggle" type="button">EN</button></footer>
+    <footer class="setup-footer"><span><img src="assets/icons/flower-twirl.svg" alt="">CONFLUXO</span><small class="game-version">VERSÃO 216</small><button id="language-toggle" class="language-toggle" type="button">EN</button></footer>
   </div>
   <div id="turn-draw" class="turn-draw hidden">
     <div class="draw-choice-card">
@@ -224,6 +224,7 @@
     <h2>Personalize seu perfil</h2>
     <div id="profile-color-grid" class="profile-color-grid"></div>
     <div id="profile-icon-grid" class="profile-icon-grid"></div>
+    <p id="profile-style-message" class="profile-style-message" aria-live="polite"></p>
   </dialog>
 
   <dialog id="public-profile-dialog" class="account-dialog public-profile-dialog">
@@ -259,7 +260,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js?v=1"></script>
-  <script src="account.js?v=13"></script>
+  <script src="account.js?v=14"></script>
   <script src="game-catalog.js?v=1"></script>
   <script src="network.js?v=45"></script>
   <script src="engine-core.js?v=33"></script>
@@ -271,6 +272,6 @@
   <script src="engine-actions-b.js?v=31"></script>
   <script src="engine-expansion-runtime.js?v=10"></script>
   <script src="engine-ui.js?v=53"></script>
-  <script src="i18n.js?v=11"></script>
+  <script src="i18n.js?v=12"></script>
 </body>
 </html>
