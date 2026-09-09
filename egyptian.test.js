@@ -13,10 +13,11 @@ const migration=fs.readFileSync('supabase/migration-212-egyptian-flames.sql','ut
 for(const key of ['fireScarab','fireSlave','firePrince','grayMummy','ammit','anubis','ra'])assert.match(expansion,new RegExp(`${key}:\\{`));
 for(const key of ['burningDesert','emberMummify','flameTemple','quickHands'])assert.match(expansion,new RegExp(`${key}:\\{`));
 assert.match(page,/data-deck="egyptian"/);
-assert.match(page,/engine-egypt\.js\?v=2/);
-assert.match(page,/VERSÃO 220/);
+assert.match(page,/engine-egypt\.js\?v=3/);
+assert.match(page,/VERSÃO 221/);
 assert.match(page,/data-deck="egyptian"><img src="assets\/icons\/hills\.svg\?v=2"/);
 assert.match(expansion,/registerArchetype\('egyptian',\{[^\n]+emblemArt:icon\('hills'\)/);
+assert.match(egypt,/v\.owner===u\.owner[^\n]+hasEffect\(v,'ra'\)/, 'Rá deve igualar somente o ATK de peões aliados adjacentes');
 for(const icon of ['anubis','bandaged','card-pickup','egyptian-profile','great-pyramid','hills','horus','mummy-head','scarab-beetle','slavery-whip','soul'])assert.doesNotMatch(fs.readFileSync(`assets/icons/${icon}.svg`,'utf8'),/<path d="M0 0h512v512H0z"\/>/,`${icon} deve ter fundo transparente`);
 assert.match(expansion,/grayMummy:\{[^\n]+ao final do turno/);
 assert.match(expansion,/ra:\{[^\n]+não pode se tornar Múmia Cinzenta/);
