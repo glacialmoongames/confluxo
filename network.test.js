@@ -9,7 +9,8 @@ assert.match(source, /replace\(\/\[\^A-Z0-9\]\/g,''\)\.slice\(0,12\)/, 'códigos
 assert.match(source, /selectedDecks\[2\]=selectedLobbyDeck\(\)/, 'quem entra na sala deve usar o deck exibido na primeira seleção como J2');
 assert.match(source, /channel\.metadata\?\.role==='spectator'/, 'o anfitrião deve separar espectadores do canal do adversário');
 assert.match(source, /spectatorChannels\.forEach\(channel=>sendChannelPacket/, 'o estado deve ser distribuído para vários espectadores');
-assert.match(source, /if\(packet\?\.type==='heartbeat'\)[^\n]+if\(packet\?\.type==='spectate-request'\)/, 'o canal espectador deve aceitar somente presença e solicitação de leitura');
+assert.match(source, /if\(packet\?\.type==='heartbeat'\)[^\n]+if\(packet\?\.type==='spectate-request'\)[^\n]+if\(packet\?\.type==='chat'\)/, 'o canal espectador deve aceitar presença, leitura e mensagens');
+assert.match(source, /raw\?\.type==='chat'[^\n]+broadcastSpectators\(packet\)/, 'mensagens dos jogadores devem ser validadas e retransmitidas aos espectadores');
 assert.match(source, /onlineSpectators=\[\]/, 'o lobby deve manter a lista de espectadores');
 assert.match(source, /type:'spectator-list'/, 'a lista de espectadores deve ser sincronizada');
 assert.match(source, /function renderLobbyParticipants/, 'o lobby deve mostrar os perfis presentes');
@@ -44,7 +45,8 @@ function playerState(current, marker) {
     placementPhase: false,
     passPurpose: null,
     swordQueue: [],
-    players: { 1: { units: [] }, 2: { units: [] } }
+    players: { 1: { units: [] }, 2: { units: [] } },
+    log: []
   };
 }
 
@@ -93,6 +95,7 @@ function makeClient(player, initialState) {
     canLocalAct() { return context.state.current === context.localPlayer },
     updateOnlineStart() {},
     clearAnimationMarks() {},
+    appendChatMessage(packet) { if (!context.state.log.some(entry => entry.chatId === packet.id)) context.state.log.unshift({chatId: packet.id, msg: packet.message, sender: packet.sender, type: 'chat', turn: packet.turn}); },
     allUnits() { return [] },
     confirm() { return false }
   };
@@ -107,6 +110,15 @@ function makeClient(player, initialState) {
   context.updateOnlineStart = () => {};
   context.gameStarted = () => true;
   return context;
+}
+
+{
+  const host = makeClient(1, playerState(1, 'chat-host'));
+  const guest = makeClient(2, playerState(1, 'chat-guest'));
+  link(host, guest);
+  host.sendPacket({type:'chat',id:'chat-1',sender:'Ana',message:'Boa partida!',turn:1});
+  assert.equal(guest.state.log[0].msg, 'Boa partida!', 'a mensagem deve chegar ao outro jogador sem sincronizar todo o estado');
+  assert.equal(guest.state.log[0].sender, 'Ana');
 }
 
 {

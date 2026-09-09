@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/icons/confluxo-favicon.svg?v=1">
     <link rel="stylesheet" href="styles-core.css?v=10">
   <link rel="stylesheet" href="styles-game.css?v=16">
-    <link rel="stylesheet" href="styles-responsive.css?v=73">
+    <link rel="stylesheet" href="styles-responsive.css?v=74">
 </head>
 <body>
   <div id="setup" class="setup">
@@ -94,7 +94,7 @@
       <div class="setup-actions"><button id="setup-rules-btn" class="secondary">COMO JOGAR</button><button id="start-game" class="primary">INICIAR DUELO LOCAL</button></div>
       </div>
     </div>
-    <footer class="setup-footer"><span><img src="assets/icons/flower-twirl.svg" alt="">CONFLUXO</span><small class="game-version">VERSÃO 218</small><button id="language-toggle" class="language-toggle" type="button">EN</button></footer>
+    <footer class="setup-footer"><span><img src="assets/icons/flower-twirl.svg" alt="">CONFLUXO</span><small class="game-version">VERSÃO 219</small><button id="language-toggle" class="language-toggle" type="button">EN</button></footer>
   </div>
   <div id="turn-draw" class="turn-draw hidden">
     <div class="draw-choice-card">
@@ -191,6 +191,11 @@
         <div class="arena-row global-arena" title="Clique para ver o efeito da Arena"><span>ARENA DO DUELO</span><b id="arena-global">SLOT VAZIO</b><em id="arena-owner"></em></div>
         <div class="panel-title log-title">CRÔNICA DO COMBATE</div>
         <div id="log" class="log"></div>
+        <form id="chat-form" class="chat-compose" autocomplete="off">
+          <label class="sr-only" for="chat-input">Mensagem para a partida</label>
+          <input id="chat-input" type="text" maxlength="160" placeholder="Digite uma mensagem…" aria-label="Mensagem para a partida">
+          <button id="chat-send" type="submit" aria-label="Enviar mensagem" title="Enviar mensagem">➤</button>
+        </form>
         <div class="chronicle-actions"><button id="end-turn" class="primary end-turn">ENCERRAR TURNO <span>→</span></button></div>
       </aside>
     </section>
@@ -262,16 +267,16 @@
   <script src="supabase-config.js?v=1"></script>
   <script src="account.js?v=14"></script>
   <script src="game-catalog.js?v=1"></script>
-  <script src="network.js?v=45"></script>
+  <script src="network.js?v=46"></script>
   <script src="engine-core.js?v=34"></script>
   <script src="engine-expansion.js?v=32"></script>
   <script src="engine-celestial.js?v=10"></script>
   <script src="engine-gold.js?v=8"></script>
   <script src="engine-egypt.js?v=2"></script>
-  <script src="engine-actions-a.js?v=40"></script>
+  <script src="engine-actions-a.js?v=41"></script>
   <script src="engine-actions-b.js?v=32"></script>
   <script src="engine-expansion-runtime.js?v=11"></script>
-  <script src="engine-ui.js?v=53"></script>
-  <script src="i18n.js?v=12"></script>
+  <script src="engine-ui.js?v=54"></script>
+  <script src="i18n.js?v=13"></script>
 </body>
 </html>
