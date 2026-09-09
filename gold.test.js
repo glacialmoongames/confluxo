@@ -23,7 +23,7 @@ for(const icon of ['tarot-17-the-star','goblin','sun-priest','blacksmith','rock-
  assert.doesNotMatch(fs.readFileSync(`assets/icons/${icon}.svg`,'utf8'),/<path d="M0 0h512v512H0z"\/>/,`Ícone ${icon} não pode ter fundo sólido`);
 }
 assert.match(page,/data-deck="gold"/);
-assert.match(page,/engine-gold\.js\?v=6/);
+assert.match(page,/engine-gold\.js\?v=7/);
 assert.match(styles,/deck-gold/);
 assert.match(styles,/data-arena=goldenAge/);
 

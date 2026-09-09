@@ -40,6 +40,7 @@ Para alterar uma definição já registrada, use `updatePawn`, `updateEffect` ou
 - O catálogo base está no início de `engine-core.js`.
 - Cartas adicionadas após a primeira versão estão agrupadas no início de `engine-expansion.js`.
 - Regras reutilizáveis pertencem aos arquivos `engine-*.js`, não à definição visual da carta.
+- As regras próprias de Chamas Egípcias estão isoladas em `engine-egypt.js`.
 - Ícones e créditos são aplicados em `engine-expansion.js`.
 
 ## Campos de peão
@@ -54,6 +55,7 @@ Para alterar uma definição já registrada, use `updatePawn`, `updateEffect` ou
 | `text` | sim | efeito mostrado nos detalhes |
 | `fusion` | combinados | quantidade mínima de materiais |
 | `materials` | combinados | tipos, chaves ou arquétipo aceitos |
+| `materials.typeAny` | combinados flexíveis | lista de tipos alternativos aceitos por material |
 | `activated` | habilidades manuais | mostra botão nos detalhes |
 | `abilityLabel` | habilidades manuais | texto do botão |
 | `condition` | condicional | condição especial para combinar |
@@ -67,6 +69,7 @@ Para alterar uma definição já registrada, use `updatePawn`, `updateEffect` ou
 | `text` | sim | regra completa |
 | `equipOnly` | não | restringe o alvo a uma chave de peão |
 | `undrawable` | não | impede inclusão normal no deck |
+| `generic` | não | identifica uma carta disponível a todos os arquétipos |
 
 ## Validação
 

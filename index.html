@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/icons/confluxo-favicon.svg?v=1">
     <link rel="stylesheet" href="styles-core.css?v=10">
   <link rel="stylesheet" href="styles-game.css?v=16">
-  <link rel="stylesheet" href="styles-responsive.css?v=69">
+    <link rel="stylesheet" href="styles-responsive.css?v=71">
 </head>
 <body>
   <div id="setup" class="setup">
@@ -75,6 +75,7 @@
             <button class="deck-choice" data-deck="abyss"><img src="assets/icons/evil-eyes.svg" alt=""><strong>Terror Abissal</strong></button>
             <button class="deck-choice" data-deck="candy"><img src="assets/icons/graveyard.svg" alt=""><strong>Mortos Doces</strong></button>
             <button class="deck-choice" data-deck="gold"><img src="assets/icons/gold-stack.svg" alt=""><strong>Era Dourada</strong></button>
+            <button class="deck-choice" data-deck="egyptian"><img src="assets/icons/horus.svg" alt=""><strong>Chamas Egípcias</strong></button>
           </div>
         </section>
         <section>
@@ -86,13 +87,14 @@
             <button class="deck-choice" data-deck="abyss"><img src="assets/icons/evil-eyes.svg" alt=""><strong>Terror Abissal</strong></button>
             <button class="deck-choice" data-deck="candy"><img src="assets/icons/graveyard.svg" alt=""><strong>Mortos Doces</strong></button>
             <button class="deck-choice" data-deck="gold"><img src="assets/icons/gold-stack.svg" alt=""><strong>Era Dourada</strong></button>
+            <button class="deck-choice" data-deck="egyptian"><img src="assets/icons/horus.svg" alt=""><strong>Chamas Egípcias</strong></button>
           </div>
         </section>
       </div>
       <div class="setup-actions"><button id="setup-rules-btn" class="secondary">COMO JOGAR</button><button id="start-game" class="primary">INICIAR DUELO LOCAL</button></div>
       </div>
     </div>
-    <footer class="setup-footer"><span><img src="assets/icons/flower-twirl.svg" alt="">CONFLUXO</span><small class="game-version">VERSÃO 211</small><button id="language-toggle" class="language-toggle" type="button">EN</button></footer>
+    <footer class="setup-footer"><span><img src="assets/icons/flower-twirl.svg" alt="">CONFLUXO</span><small class="game-version">VERSÃO 212</small><button id="language-toggle" class="language-toggle" type="button">EN</button></footer>
   </div>
   <div id="turn-draw" class="turn-draw hidden">
     <div class="draw-choice-card">
@@ -257,17 +259,18 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js?v=1"></script>
-  <script src="account.js?v=10"></script>
+  <script src="account.js?v=11"></script>
   <script src="game-catalog.js?v=1"></script>
   <script src="network.js?v=45"></script>
-  <script src="engine-core.js?v=32"></script>
-  <script src="engine-expansion.js?v=28"></script>
-  <script src="engine-celestial.js?v=9"></script>
-  <script src="engine-actions-a.js?v=36"></script>
-  <script src="engine-actions-b.js?v=29"></script>
+  <script src="engine-core.js?v=33"></script>
+  <script src="engine-expansion.js?v=29"></script>
+  <script src="engine-celestial.js?v=10"></script>
+  <script src="engine-gold.js?v=7"></script>
+  <script src="engine-egypt.js?v=1"></script>
+  <script src="engine-actions-a.js?v=38"></script>
+  <script src="engine-actions-b.js?v=30"></script>
   <script src="engine-expansion-runtime.js?v=10"></script>
-  <script src="engine-gold.js?v=6"></script>
-  <script src="engine-ui.js?v=51"></script>
-  <script src="i18n.js?v=9"></script>
+  <script src="engine-ui.js?v=52"></script>
+  <script src="i18n.js?v=10"></script>
 </body>
 </html>

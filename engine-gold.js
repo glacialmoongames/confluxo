@@ -1,5 +1,5 @@
 function isGoldUnit(u){return !!u?.types?.includes('OURO')}
-function materialMatchesRequirement(u,req){return !!u&&(!req.kind||u.kind===req.kind)&&(!req.type||u.types?.includes(req.type))&&(!req.combined||!!u.fusion)&&(!req.normal||!u.fusion)}
+function materialMatchesRequirement(u,req){return !!u&&(!req.kind||u.kind===req.kind)&&(!req.type||u.types?.includes(req.type))&&(!req.typeAny||req.typeAny.some(type=>u.types?.includes(type)))&&(!req.combined||!!u.fusion)&&(!req.normal||!u.fusion)}
 function goldUnitHasReducedAttack(u){if(!isGoldUnit(u)||hasEffect(u,'goldWorshipper'))return false;if((u.goldAttackReduced||0)>0)return true;return allUnits().some(b=>b.owner!==u.owner&&hasEffect(b,'babel')&&inMovementRadius(b,u))}
 function goldPriestBonus(u){return hasEffect(u,'goldPriest')&&allUnits().some(target=>target.row!==null&&goldUnitHasReducedAttack(target))?200:0}
 let lastGoldPriestActivePairs=new Set;

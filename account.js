@@ -1,7 +1,7 @@
 var accountClient=null,currentAccount=null,accountSession=null,accountInitialized=false;
 const reportedOnlineMatches=new Set();
-const profileIconDefaults=['flower-twirl','empty-chessboard','forest','orbit','evil-eyes','graveyard','gold-stack'];
-const profileColors={xadria:'#7f4c91',wild:'#3f7b50',celestial:'#357aa4',abyss:'#8b315e',candy:'#c24f78',gold:'#b98b27'};
+const profileIconDefaults=['flower-twirl','empty-chessboard','forest','orbit','evil-eyes','graveyard','gold-stack','horus'];
+const profileColors={xadria:'#7f4c91',wild:'#3f7b50',celestial:'#357aa4',abyss:'#8b315e',candy:'#c24f78',gold:'#b98b27',egyptian:'#d66720'};
 
 function accountConfig(){return window.CONFLUXO_SUPABASE||{}}
 function accountConfigured(){let config=accountConfig();return /^https:\/\/.+\.supabase\.co$/i.test(config.url||'')&&!!config.publishableKey}
@@ -9,7 +9,7 @@ function normalizeAccountName(value){return String(value||'').trim().replace(/\s
 function accountNameKey(value){return normalizeAccountName(value).toLowerCase().replace(/[^a-z0-9]/g,'')}
 function accountLoginEmail(value){return`${accountNameKey(value)}@players.confluxo.invalid`}
 function validAccountName(value){return /^[A-Za-z0-9 ]{3,18}$/.test(normalizeAccountName(value))&&accountNameKey(value).length>=3}
-const accountDeckNames={xadria:'XADRIA',wild:'SELVAGEM',celestial:'OBJETO CELESTE',abyss:'TERROR ABISSAL',candy:'MORTOS DOCES',gold:'ERA DOURADA'};
+const accountDeckNames={xadria:'XADRIA',wild:'SELVAGEM',celestial:'OBJETO CELESTE',abyss:'TERROR ABISSAL',candy:'MORTOS DOCES',gold:'ERA DOURADA',egyptian:'CHAMAS EGÍPCIAS'};
 function escapeProfileText(value){return String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]))}
 function safeProfileIcon(value){let icon=String(value||'flower-twirl').toLowerCase();return /^[a-z0-9-]{1,40}$/.test(icon)?icon:'flower-twirl'}
 function profileIconUrl(value){return`assets/icons/${safeProfileIcon(value)}.svg`}
