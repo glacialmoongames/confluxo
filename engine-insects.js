@@ -48,9 +48,11 @@ function resolveInsectEndTurn(){
  allUnits().filter(ruin=>ruin.row!==null&&ruin.kind==='ruinCentipede').forEach(ruin=>allUnits().filter(u=>u.owner!==ruin.owner&&u.row!==null&&inMovementRadius(ruin,u)).forEach(u=>{let lost=reduceGoldAttack(u,50);if(lost)log(`${u.name} perdeu ${lost} ATK no raio de ${ruin.name}.`,'effect')}));
  mutantContactSpread();
 }
+function typhoonHazardAt(u,r,c){if(pitAt(r,c))return'pit';let waste=nuclearWasteAt(r,c);return waste&&!u.types.includes('RADIOATIVO')?'nuclear':null}
+function typhoonDestination(u){let dr=u.owner===1?1:-1,row=u.row,col=u.col;for(let next=row+dr;next>=0&&next<ROWS;next+=dr){if(at(next,col))break;let hazard=typhoonHazardAt(u,next,col);if(hazard)return{row:next,col,hazard};if(featureAt(next,col))break;row=next}return{row,col,hazard:null}}
 function resolveTyphoonPush(){
  if(state.arena!=='unstableTyphoon')return;
- let moved=[];allUnits().filter(u=>u.row!==null&&!u.types.includes('AR')).sort((a,b)=>a.owner===1?b.row-a.row:a.row-b.row).forEach(u=>{let dr=u.owner===1?1:-1,row=u.row+dr,col=u.col;if(row>=0&&row<ROWS&&!at(row,col)&&!featureAt(row,col)&&!pitAt(row,col)){let from=boardCoordinate(u.row,u.col);u.row=row;moved.push(`${u.name}: ${from}→${boardCoordinate(row,col)}`)}});if(moved.length)log(`O Tufão Instavel empurrou ${moved.join(' · ')}.`,'arena')
+ let moved=[],affected=allUnits().filter(u=>u.row!==null&&!u.types.includes('AR')).sort((a,b)=>a.owner-b.owner||(a.owner===1?b.row-a.row:a.row-b.row));affected.forEach(u=>{let destination=typhoonDestination(u);if(destination.row===u.row&&!destination.hazard)return;let name=u.name,from=boardCoordinate(u.row,u.col),to=boardCoordinate(destination.row,destination.col);u.row=destination.row;u.col=destination.col;if(destination.hazard){let reason=destination.hazard==='pit'?'poço':'lixo nuclear';destroy(u,u.owner===1?2:1,reason);moved.push(`${name}: ${from}→${to} e caiu ${destination.hazard==='pit'?'no Poço sem Fundo':'no lixo nuclear'}`)}else moved.push(`${name}: ${from}→${to}`)});if(moved.length)log(`O Tufão Instavel empurrou os peões o mais para trás possível: ${moved.join(' · ')}.`,'arena')
 }
 function playBadOmen(player,index){
  let p=state.players[player],available=p.units.filter(u=>u.row!==null&&CALAMITY_FOR[u.kind]).map(u=>CALAMITY_FOR[u.kind]);p.hand.splice(index,1);
