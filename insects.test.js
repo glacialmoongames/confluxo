@@ -16,6 +16,7 @@ const migration=fs.readFileSync(path.join(root,'supabase','migration-222-insects
 
 for(const key of ['amberTragedy','direLadybug','direCockroach','direCaterpillar','direAnt','direCentipede','volcanicLadybug','radiantCockroach','stormButterfly','vastAnt','ruinCentipede'])assert.match(expansion,new RegExp(`${key}:\\{`),`peão ausente: ${key}`);
 for(const key of ['calamityEruption','calamityNuclear','calamityHurricane','calamityTsunami','calamityQuake','volcanicHeat','nuclearWinter','unstableTyphoon','endlessOcean','tremblingEarth','badOmen','wildCage'])assert.match(expansion,new RegExp(`${key}:\\{`),`efeito ausente: ${key}`);
+assert.match(expansion,/calamityHurricane:\{name:'Calamidade: Furacão'[^\n]+atkBonus:350[^\n]+dá 350 ATK/,'Calamidade: Furacão deve conceder exatamente 350 ATK');
 assert.match(expansion,/registerArchetype\('insects'/);
 for(const key of ['volcanicHeat','nuclearWinter','unstableTyphoon','endlessOcean','tremblingEarth'])assert.match(expansion,new RegExp(`${key}:\\{[^\\n]+undrawable:true`),`${key} não deve entrar na pilha de compra`);
 assert.match(core,/effects\[effectKey\]\?\.undrawable/,'o construtor da pilha deve remover Arenas que só são invocadas');
