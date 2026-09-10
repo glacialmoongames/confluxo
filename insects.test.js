@@ -18,6 +18,8 @@ for(const key of ['amberTragedy','direLadybug','direCockroach','direCaterpillar'
 for(const key of ['calamityEruption','calamityNuclear','calamityHurricane','calamityTsunami','calamityQuake','volcanicHeat','nuclearWinter','unstableTyphoon','endlessOcean','tremblingEarth','badOmen','wildCage'])assert.match(expansion,new RegExp(`${key}:\\{`),`efeito ausente: ${key}`);
 assert.match(expansion,/calamityHurricane:\{name:'Calamidade: Furacão'[^\n]+atkBonus:350[^\n]+dá 350 ATK/,'Calamidade: Furacão deve conceder exatamente 350 ATK');
 assert.match(expansion,/radiantCockroach:\{name:'Barata Calamitosa: Radianta'[^\n]+Perde 50 ATK ao fim de cada turno até ter 100 ATK/,'o efeito de perda gradual da Radianta deve aparecer nos detalhes');
+assert.match(expansion,/nuclearWinter:\{name:'Inverno Nuclear'[^\n]+por 2 turnos/,'a duração do lixo nuclear deve aparecer nos detalhes');
+assert.match(insects,/type:'NUCLEAR',source:'nuclearWinter',expiresAfterStep:\(state\.insectEndStep\|\|0\)\+2/,'todo lixo criado deve receber duração de dois turnos');
 assert.match(expansion,/registerArchetype\('insects'/);
 for(const key of ['volcanicHeat','nuclearWinter','unstableTyphoon','endlessOcean','tremblingEarth'])assert.match(expansion,new RegExp(`${key}:\\{[^\\n]+undrawable:true`),`${key} não deve entrar na pilha de compra`);
 assert.match(core,/effects\[effectKey\]\?\.undrawable/,'o construtor da pilha deve remover Arenas que só são invocadas');
@@ -84,6 +86,16 @@ assert.equal(radiantContext.effectiveAtk(radiant),500);
 for(let turn=0;turn<12;turn++)radiantContext.decayRadiantAttack(radiant);
 assert.equal(radiantContext.effectiveAtk(radiant),100,'a Radianta não pode perder ATK abaixo de 100 por seu próprio efeito');
 assert.equal(radiantContext.decayRadiantAttack(radiant),0);
+
+const wasteLogs=[];
+const wasteContext={state:{insectEndStep:0,obstacles:[{row:1,col:2,type:'NUCLEAR',expiresAfterStep:2},{row:3,col:4,type:'NATURAL'}]},boardCoordinate:(row,col)=>`${col},${row}`,log:message=>wasteLogs.push(message)};
+vm.createContext(wasteContext);
+vm.runInContext(insects.match(/function expireNuclearWaste\([^\n]+/)[0],wasteContext);
+assert.equal(wasteContext.expireNuclearWaste(),0);
+assert.equal(wasteContext.state.obstacles.length,2,'o lixo deve continuar após o primeiro turno');
+assert.equal(wasteContext.expireNuclearWaste(),1);
+assert.deepEqual(wasteContext.state.obstacles.map(item=>item.type),['NATURAL'],'somente o lixo nuclear deve desaparecer no segundo turno');
+assert.equal(wasteLogs.length,1,'a expiração deve gerar um único registro visual');
 assert.match(expansion,/delete archetypes\.celestial/);
 assert.doesNotMatch(html,/data-deck="celestial"/);
 assert.equal((html.match(/data-deck="insects"/g)||[]).length,2);

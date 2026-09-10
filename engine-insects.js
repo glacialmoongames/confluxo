@@ -38,14 +38,16 @@ function revertCalamity(u){
 function nuclearWasteAt(r,c){return(state.obstacles||[]).find(item=>item.type==='NUCLEAR'&&item.row===r&&item.col===c)}
 function createNuclearWaste(u){
  if(state.arena!=='nuclearWinter'||!u)return;state.obstacles??=[];
- rawMovementOffsets(u).forEach(([dr,dc])=>{let row=u.row+dr*(u.owner===2?-1:1),col=u.col+dc;if(row<0||row>=ROWS||col<0||col>=COLS||at(row,col)||pitAt(row,col)||flameTempleAt(row,col))return;if(!nuclearWasteAt(row,col))state.obstacles.push({row,col,type:'NUCLEAR',source:'nuclearWinter'})});
+ rawMovementOffsets(u).forEach(([dr,dc])=>{let row=u.row+dr*(u.owner===2?-1:1),col=u.col+dc;if(row<0||row>=ROWS||col<0||col>=COLS||at(row,col)||pitAt(row,col)||flameTempleAt(row,col))return;if(!nuclearWasteAt(row,col))state.obstacles.push({row,col,type:'NUCLEAR',source:'nuclearWinter',expiresAfterStep:(state.insectEndStep||0)+2})});
 }
+function expireNuclearWaste(){let step=state.insectEndStep=(state.insectEndStep||0)+1,expired=[];(state.obstacles||[]).forEach(item=>{if(item.type!=='NUCLEAR')return;if(!Number.isFinite(item.expiresAfterStep))item.expiresAfterStep=step+1;if(item.expiresAfterStep<=step)expired.push(item)});if(!expired.length)return 0;state.obstacles=state.obstacles.filter(item=>!expired.includes(item));log(`${expired.length} lixo${expired.length===1?' nuclear desapareceu':'s nucleares desapareceram'} após 2 turnos: ${expired.map(item=>boardCoordinate(item.row,item.col)).join(', ')}.`,'arena');return expired.length}
 function mutantContactSpread(){
  let mutants=allUnits().filter(u=>u.row!==null&&u.types?.length===1&&u.types[0]==='MUTANTE');mutants.forEach(source=>allUnits().filter(u=>u.id!==source.id&&u.row!==null&&adjacent(source,u)&&!(u.types?.length===1&&u.types[0]==='MUTANTE')).forEach(u=>{u.types=['MUTANTE'];u.baseTypes=['MUTANTE'];log(`${u.name} tornou-se MUTANTE pelo contato.`,'effect')}));
 }
 function insectWaterUnit(u){return u?.types?.includes('ÁGUA')||u?.kind==='direAnt'&&allUnits().some(v=>v.owner===u.owner&&v.row!==null&&v.kind==='vastAnt')}
 function decayRadiantAttack(u){let current=effectiveAtk(u,false),lost=Math.min(50,Math.max(0,current-100));if(!lost)return 0;u.bonusAtk=(u.bonusAtk||0)-lost;return lost}
 function resolveInsectEndTurn(){
+ expireNuclearWaste();
  allUnits().filter(u=>u.row!==null&&u.kind==='radiantCockroach').forEach(u=>{let lost=decayRadiantAttack(u);if(lost)log(`${u.name} perdeu ${lost} ATK e agora possui ${effectiveAtk(u,false)} ATK.`,'effect')});
  allUnits().filter(ruin=>ruin.row!==null&&ruin.kind==='ruinCentipede').forEach(ruin=>allUnits().filter(u=>u.owner!==ruin.owner&&u.row!==null&&inMovementRadius(ruin,u)).forEach(u=>{let lost=reduceGoldAttack(u,50);if(lost)log(`${u.name} perdeu ${lost} ATK no raio de ${ruin.name}.`,'effect')}));
  mutantContactSpread();

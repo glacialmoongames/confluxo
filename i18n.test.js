@@ -13,7 +13,7 @@ const core = fs.readFileSync('engine-core.js', 'utf8').split('let selectedDecks'
 const expansion = fs.readFileSync('engine-expansion.js', 'utf8').split('function archetypeVisual')[0];
 vm.runInContext(`${fs.readFileSync('game-catalog.js', 'utf8')}\n${core}\n${expansion}\nthis.catalog={defs,effects,archetypes};`, context);
 
-assert.match(page, /i18n\.js\?v=19/);
+assert.match(page, /i18n\.js\?v=20/);
 assert.match(source, /\['Digite uma mensagem…','Type a message…'\]/);
 assert.match(source,/The color could not be saved/);
 assert.match(page, /<title>Confluxo<\/title>/);
@@ -47,6 +47,7 @@ assert.equal(logContext.translateLog('Infantry moveu de A1 para A2 sem gastar a 
 assert.equal(logContext.translateLog('Infantry venceu (300 × 100). · Duelist 1 +1 ponto'),'Infantry won (300 × 100). · Duelist 1 +1 point');
 assert.equal(logContext.translateLog('Duelist 2 ganhou 1 ponto porque o adversário não colocou um Peão na Jaula Selvagem.'),'Duelist 2 gained 1 point because the opponent did not deploy a Pawn in the Wild Cage.');
 assert.equal(logContext.translateLog('Radiant perdeu 50 ATK e agora possui 500 ATK.'),'Radiant lost 50 ATK and now has 500 ATK.');
+assert.equal(logContext.translateLog('2 lixos nucleares desapareceram após 2 turnos: A1, B2.'),'2 nuclear waste tiles disappeared after 2 turns: A1, B2.');
 for (const key of Object.keys(context.catalog.defs)) assert.match(source, new RegExp(`\\b${key}:\\[`), `tradução ausente para o peão ${key}`);
 for (const key of Object.keys(context.catalog.effects)) assert.match(source, new RegExp(`\\b${key}:\\[`), `tradução ausente para o efeito ${key}`);
 for (const key of Object.keys(context.catalog.archetypes)) assert.match(source, new RegExp(`\\b${key}:'`), `tradução ausente para o arquétipo ${key}`);
