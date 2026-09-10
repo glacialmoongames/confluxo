@@ -27,7 +27,7 @@ function calamityArenaFromAttack(u){return({volcanicLadybug:'volcanicHeat',storm
 function transformCalamity(u,key){
  let effect=effects[key],target=defs[effect?.calamityTarget];if(!u||!target||u.kind!==effect.equipOnly)return false;
  let old=u.name,originKind=u.kind,origin={name:u.name,atk:u.atk,movement:[...u.movement],types:[...u.types],baseTypes:[...(u.baseTypes||u.types)],glyph:u.glyph,art:u.art,artCrop:u.artCrop,artCredit:u.artCredit,iconTone:u.iconTone,text:u.text};
- Object.assign(u,target,{owner:u.owner,id:u.id,row:u.row,col:u.col,origin:u.origin,equipment:[...u.equipment,key],calamityOriginKind:originKind,calamityOrigin:origin,pointValue:2,types:[...target.types],baseTypes:[...target.types]});
+ Object.assign(u,target,{kind:effect.calamityTarget,owner:u.owner,id:u.id,row:u.row,col:u.col,origin:u.origin,equipment:[...u.equipment,key],calamityOriginKind:originKind,calamityOrigin:origin,pointValue:2,types:[...target.types],baseTypes:[...target.types]});
  log(`${old} recebeu ${effect.name} e tornou-se ${target.name}.`,'combine');return true
 }
 function revertCalamity(u){
@@ -55,7 +55,7 @@ function resolveTyphoonPush(){
 function playBadOmen(player,index){
  let p=state.players[player],available=p.units.filter(u=>u.row!==null&&CALAMITY_FOR[u.kind]).map(u=>CALAMITY_FOR[u.kind]);p.hand.splice(index,1);
  if(available.length){let key=available[Math.floor(Math.random()*available.length)];p.hand.push(key);log(`${p.name} usou Mal preságio e recebeu ${effects[key].name}.`,'effect')}
- else{let arenas=INSECT_ARENAS.filter(key=>p.effectDeck.includes(key));if(arenas.length){let key=arenas[Math.floor(Math.random()*arenas.length)],deckIndex=p.effectDeck.lastIndexOf(key);p.effectDeck.splice(deckIndex,1);p.hand.push(key);log(`${p.name} usou Mal preságio e comprou ${effects[key].name}.`,'effect')}else log(`${p.name} usou Mal preságio, mas não havia Arena disponível.`,'effect')}
+ else log(`${p.name} usou Mal preságio, mas não havia Peão Funesto compatível em campo.`,'effect')
 }
 
 const baseInsectOnUnitDeployed=onUnitDeployed;
@@ -112,7 +112,7 @@ doAttack=function(attacker,defender){
 const baseInsectBotDraw=botDraw;
 botDraw=function(){if(state.arena!=='wildCage')return baseInsectBotDraw();let p=state.players[state.current],pawn=takePawnFromDeck(p);if(pawn)p.reserve.push(pawn);p.drawn=true;log(`${p.name} comprou um Peão por causa da Jaula Selvagem.`);return pawn};
 const baseInsectBotPlayEffect=botPlayEffect;
-botPlayEffect=function(){let p=state.players[botActor()],omen=p?.hand?.indexOf('badOmen');if(omen>=0){playBadOmen(botActor(),omen);render();return true}let result=baseInsectBotPlayEffect();if(result)allUnits().forEach(u=>{let key=(u.equipment||[]).find(item=>effects[item]?.calamityTarget&&u.kind===effects[item].equipOnly);if(key){u.equipment=u.equipment.filter(item=>item!==key);transformCalamity(u,key)}});return result};
+botPlayEffect=function(){let p=state.players[botActor()],omen=p?.hand?.indexOf('badOmen');if(omen>=0&&p.units.some(u=>u.row!==null&&CALAMITY_FOR[u.kind])){playBadOmen(botActor(),omen);render();return true}let calamitiesBefore=new Map(allUnits().filter(u=>u.calamityOrigin).map(u=>[u.id,u]));let result=baseInsectBotPlayEffect();if(result){allUnits().forEach(u=>{let key=(u.equipment||[]).find(item=>effects[item]?.calamityTarget&&u.kind===effects[item].equipOnly);if(key){u.equipment=u.equipment.filter(item=>item!==key);transformCalamity(u,key)}});calamitiesBefore.forEach(u=>{if(allUnits().some(piece=>piece.id===u.id)&&u.calamityOrigin&&!u.equipment.some(key=>effects[key]?.calamityTarget))revertCalamity(u)})}return result};
 const baseInsectEndTurn=endTurn;
 endTurn=function(){
  let pointWon=state&&[1,2].some(n=>state.players[n].score>=(state.pointGoal||10)),valid=state&&!state.animating&&!state.placementPhase&&!state.awaitingDraw&&!pointWon&&!state.forfeitWinner&&!state.celestialWinner&&!state.insectWinner,owner=state?.current;

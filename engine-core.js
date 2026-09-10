@@ -67,7 +67,7 @@ function ownedFusionKinds(player){return new Set([...(player?.reserve||[]),...(p
 function ownsEveryUniqueFusion(player){let unique=archetypes[player?.archetype]?.fusions||[];if(!unique.length)return false;let owned=ownedFusionKinds(player);return unique.every(kind=>owned.has(kind))}
 function takePawnFromDeck(player){if(!player?.pawnDeck?.length)return null;let index=player.pawnDeck.length-1;if(ownsEveryUniqueFusion(player)){for(let i=index;i>=0;i--)if(!player.pawnDeck[i].fusion){index=i;break}}return player.pawnDeck.splice(index,1)[0]}
 function drawRandomInitialPawns(player,count=3){for(let i=0;i<count;i++){let index=player.pawnDeck.findIndex(u=>!u.fusion&&!u.condition);if(index<0)break;let u=player.pawnDeck.splice(index,1)[0];u.initial=true;player.initialUnits.push(u)}}
-function makeEffectDeck(key){let pool=archetypes[key].effects;return shuffle(Array.from({length:40},(_,i)=>pool[i%pool.length]))}
+function makeEffectDeck(key){let pool=archetypes[key].effects.filter(effectKey=>!effects[effectKey]?.undrawable);return shuffle(Array.from({length:40},(_,i)=>pool[i%pool.length]))}
 function createMatchId(){if(globalThis.crypto?.randomUUID)return crypto.randomUUID();let bytes=new Uint8Array(16);crypto.getRandomValues(bytes);bytes[6]=bytes[6]&15|64;bytes[8]=bytes[8]&63|128;let hex=[...bytes].map(value=>value.toString(16).padStart(2,'0')).join('');return`${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20)}`}
 function newGame(){
  let version=++gameVersion;

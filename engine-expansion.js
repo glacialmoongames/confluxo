@@ -90,12 +90,12 @@ registerEffects({
  ,calamityHurricane:{name:'Calamidade: Furação',type:'EQUIPAMENTO',icon:'↯',equipOnly:'direCaterpillar',calamityTarget:'stormButterfly',atkBonus:600,text:'Transforma Lagarta Funésta em Borboleta Calamitosa: Tormenta e dá 600 ATK.'}
  ,calamityTsunami:{name:'Calamidade: Tsunami',type:'EQUIPAMENTO',icon:'≋',equipOnly:'direAnt',calamityTarget:'vastAnt',atkBonus:200,text:'Transforma Formiga Funésta em Formiga Calamitosa: Vastidão e dá 200 ATK.'}
  ,calamityQuake:{name:'Calamidade: Terremoto',type:'EQUIPAMENTO',icon:'⌁',equipOnly:'direCentipede',calamityTarget:'ruinCentipede',atkBonus:250,text:'Transforma Centopeia Funésta em Centopeia Calamitosa: Ruina e dá 250 ATK.'}
- ,volcanicHeat:{name:'Calor Vulcanico',type:'ARENA',icon:'♨',text:'Peões que não sejam FOGO perdem 100 ATK ao atacar; se tiverem menos de 100 ATK, são destruídos.'}
- ,nuclearWinter:{name:'Inverno Nuclear',type:'ARENA',icon:'☢',text:'Peões destruídos criam lixo nuclear nas casas de seu alcance. Um peão não RADIOATIVO que pisa nesse lixo é destruído. Ao trocar a Arena, todo o lixo desaparece.'}
- ,unstableTyphoon:{name:'Tufão Instavel',type:'ARENA',icon:'↻',text:'Ao fim de um combate, todos os peões que não sejam AR são empurrados para trás.'}
- ,endlessOcean:{name:'Oceano sem fim',type:'ARENA',icon:'≋',text:'Peões que não sejam ÁGUA perdem 50 ATK ao se mover; peões ÁGUA ganham 50 ATK ao se mover.'}
- ,tremblingEarth:{name:'Terra Tremula',type:'ARENA',icon:'⌁',text:'Quando um peão ataca, todos os peões em seu raio participam do ataque conjunto, aliados ou adversários.'}
- ,badOmen:{name:'Mal preságio',type:'UTILIDADE',icon:'☠',instant:true,text:'Adiciona à mão uma Calamidade compatível com um Peão Funesto aliado em campo. Se não houver um Funesto em campo, compra uma Arena aleatória deste deck.'}
+ ,volcanicHeat:{name:'Calor Vulcanico',type:'ARENA',icon:'♨',undrawable:true,text:'Não pode ser comprada. É ativada pela Joaninha Calamitosa ao atacar. Peões que não sejam FOGO perdem 100 ATK ao atacar; se tiverem menos de 100 ATK, são destruídos.'}
+ ,nuclearWinter:{name:'Inverno Nuclear',type:'ARENA',icon:'☢',undrawable:true,text:'Não pode ser comprada. É ativada quando a Barata Calamitosa é destruída. Peões destruídos criam lixo nuclear nas casas de seu alcance. Um peão não RADIOATIVO que pisa nesse lixo é destruído. Ao trocar a Arena, todo o lixo desaparece.'}
+ ,unstableTyphoon:{name:'Tufão Instavel',type:'ARENA',icon:'↻',undrawable:true,text:'Não pode ser comprada. É ativada pela Borboleta Calamitosa ao atacar. Ao fim de um combate, todos os peões que não sejam AR são empurrados para trás.'}
+ ,endlessOcean:{name:'Oceano sem fim',type:'ARENA',icon:'≋',undrawable:true,text:'Não pode ser comprada. É ativada pela Formiga Calamitosa ao atacar. Peões que não sejam ÁGUA perdem 50 ATK ao se mover; peões ÁGUA ganham 50 ATK ao se mover.'}
+ ,tremblingEarth:{name:'Terra Tremula',type:'ARENA',icon:'⌁',undrawable:true,text:'Não pode ser comprada. É ativada pela Centopeia Calamitosa ao atacar. Quando um peão ataca, todos os peões em seu raio participam do ataque conjunto, aliados ou adversários.'}
+ ,badOmen:{name:'Mal preságio',type:'UTILIDADE',icon:'☠',instant:true,text:'Adiciona à mão uma Calamidade compatível com um Peão Funesto aliado em campo. Sem um Peão Funesto compatível em campo, a carta não encontra uma Calamidade.'}
 });
 updateEffect('roses',{text:'Sempre que um jogador perde um peão, compra uma carta aleatória entre as pilhas de Peões e Efeitos.'});
 updateEffect('bow',{name:'Arco Primitivo',text:'O equipado pode atacar peões nas casas do seu próprio alcance de movimento, sem precisar estar em contato.'});
@@ -122,7 +122,7 @@ function archetypeOfUnit(u){return state?.players?.[u?.owner]?.archetype||Object
 function makePawnDeck(owner,key){let arc=archetypes[key];if(arc.pawnComposition)return shuffle([...arc.pawnComposition,...arc.pawnComposition].map(kind=>unit(kind,owner)));let fusionSlots=Math.min(12,arc.fusions.length*4),commonSlots=36-fusionSlots,cards=Array.from({length:commonSlots},(_,i)=>unit(arc.pawns[i%arc.pawns.length],owner));for(let i=0;i<fusionSlots;i++)cards.push(unit(arc.fusions[i%arc.fusions.length],owner));return shuffle(cards)}
 
 fusionRequirementVisual=function(card){
- if(!card?.fusion)return'';
+ if(!card?.fusion||card.calamityFrom)return'';
  let field=state?.players?.[card.owner]?.units?.filter(u=>u.row!==null)||[],requirements=card.materials?.requirements||null;
  if(requirements){let chips=requirements.map(req=>{let found=field.some(u=>materialMatchesRequirement(u,req)),label=req.kind?defs[req.kind].name:req.combined?`PEÃO ${req.type} COMBINADO`:req.normal?`PEÃO ${req.type} NORMAL`:`PEÃO ${req.type}`;return`<span class="material-chip ${found?'ready':'missing'}"><i>${req.kind?defs[req.kind].glyph:req.type==='TREVAS'?'◐':req.type==='OURO'?'◆':'✦'}</i><b>${label}</b><em>${found?'EM CAMPO':'FALTA'}</em></span>`}).join('');return`<div class="fusion-requirements"><small>PEÕES NECESSÁRIOS</small><div>${chips}</div><p>Aproxime os materiais indicados para combinar.</p></div>`}
  if(card.materials?.archetype){let count=field.filter(u=>archetypeOfUnit(u)===card.materials.archetype).length,chips=Array.from({length:card.fusion},(_,i)=>`<span class="material-chip ${i<count?'ready':'missing'}"><i>◉</i><b>PEÃO ABISSAL</b><em>${i<count?'EM CAMPO':'FALTA'}</em></span>`).join('');return`<div class="fusion-requirements"><small>PEÕES NECESSÁRIOS</small><div>${chips}</div><p>${Math.min(count,card.fusion)}/${card.fusion} materiais no campo.</p></div>`}

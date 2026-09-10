@@ -144,6 +144,33 @@ begin
 end;
 $$;
 
+create or replace function public.rename_player_account(p_username text)
+returns jsonb
+language plpgsql
+security definer set search_path = ''
+as $$
+declare
+  clean_name text := trim(regexp_replace(coalesce(p_username, ''), '\s+', ' ', 'g'));
+  clean_key text;
+  login_email text;
+  result jsonb;
+begin
+  if auth.uid() is null then raise exception 'not authenticated'; end if;
+  clean_key := lower(regexp_replace(translate(clean_name, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöùúûüýÿ', 'AAAAAACEEEEIIIINOOOOOUUUUYaaaaaaceeeeiiiinooooouuuuyy'), '[^A-Za-z0-9]', '', 'g'));
+  if clean_name !~ '^[A-Za-zÀ-ÖØ-öø-ÿ0-9 ]{3,18}$' or char_length(clean_key) < 3 then raise exception 'invalid username'; end if;
+  login_email := clean_key || '@players.confluxo.invalid';
+  if exists(select 1 from public.profiles where username_key=clean_key and id<>auth.uid())
+    or exists(select 1 from auth.users where email=login_email and id<>auth.uid()) then
+    raise exception 'username already taken' using errcode='23505';
+  end if;
+  update public.profiles set username=clean_name,username_key=clean_key where id=auth.uid();
+  update auth.users set email=login_email,raw_user_meta_data=jsonb_set(coalesce(raw_user_meta_data,'{}'::jsonb),'{username}',to_jsonb(clean_name),true),updated_at=now() where id=auth.uid();
+  update auth.identities set identity_data=jsonb_set(coalesce(identity_data,'{}'::jsonb),'{email}',to_jsonb(login_email),true),updated_at=now() where user_id=auth.uid() and provider='email';
+  select jsonb_build_object('id',p.id,'username',p.username,'wins',p.wins,'losses',p.losses,'rating',p.rating,'profileIcon',p.profile_icon,'profileColor',p.profile_color,'deckUsage',p.deck_usage,'createdAt',p.created_at) into result from public.profiles p where p.id=auth.uid();
+  return result;
+end;
+$$;
+
 create or replace function public.get_player_profile(p_user uuid)
 returns jsonb
 language sql
@@ -154,7 +181,7 @@ as $$
     'profile', jsonb_build_object(
       'id', p.id, 'username', p.username, 'wins', p.wins, 'losses', p.losses,
       'rating', p.rating, 'profileIcon', p.profile_icon, 'profileColor', p.profile_color,
-      'deckUsage', p.deck_usage
+      'deckUsage', p.deck_usage, 'createdAt', p.created_at
     ),
     'matches', coalesce((
       select jsonb_agg(recent.payload order by recent.completed_at desc)
@@ -185,6 +212,8 @@ revoke all on function public.set_profile_icon(text) from public, anon;
 grant execute on function public.set_profile_icon(text) to authenticated;
 revoke all on function public.set_profile_style(text,text) from public, anon;
 grant execute on function public.set_profile_style(text,text) to authenticated;
+revoke all on function public.rename_player_account(text) from public, anon;
+grant execute on function public.rename_player_account(text) to authenticated;
 revoke all on function public.get_player_profile(uuid) from public;
 grant execute on function public.get_player_profile(uuid) to anon, authenticated;
 

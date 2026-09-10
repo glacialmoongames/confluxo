@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/icons/confluxo-favicon.svg?v=1">
     <link rel="stylesheet" href="styles-core.css?v=10">
   <link rel="stylesheet" href="styles-game.css?v=16">
-    <link rel="stylesheet" href="styles-responsive.css?v=75">
+  <link rel="stylesheet" href="styles-responsive.css?v=77">
 </head>
 <body>
   <div id="setup" class="setup">
@@ -94,7 +94,7 @@
       <div class="setup-actions"><button id="setup-rules-btn" class="secondary">COMO JOGAR</button><button id="start-game" class="primary">INICIAR DUELO LOCAL</button></div>
       </div>
     </div>
-    <footer class="setup-footer"><span><img src="assets/icons/flower-twirl.svg" alt="">CONFLUXO</span><small class="game-version">VERSÃO 223</small><button id="language-toggle" class="language-toggle" type="button">EN</button></footer>
+    <footer class="setup-footer"><span><img src="assets/icons/flower-twirl.svg" alt="">CONFLUXO</span><small class="game-version">VERSÃO 225</small><button id="language-toggle" class="language-toggle" type="button">EN</button></footer>
   </div>
   <div id="turn-draw" class="turn-draw hidden">
     <div class="draw-choice-card">
@@ -227,6 +227,11 @@
   <dialog id="profile-icon-dialog" class="account-dialog profile-icon-dialog">
     <button class="dialog-close" aria-label="Fechar">×</button>
     <h2>Personalize seu perfil</h2>
+    <div class="profile-name-editor">
+      <label for="profile-name-input">NOME DE DUELISTA</label>
+      <div><input id="profile-name-input" type="text" maxlength="18" autocomplete="nickname"><button id="profile-name-save" type="button">SALVAR NOME</button></div>
+      <small>O novo nome será usado para entrar na conta.</small>
+    </div>
     <div id="profile-color-grid" class="profile-color-grid"></div>
     <div id="profile-icon-grid" class="profile-icon-grid"></div>
     <p id="profile-style-message" class="profile-style-message" aria-live="polite"></p>
@@ -238,7 +243,7 @@
       <span id="profile-view-avatar" class="profile-view-avatar"><img id="profile-view-icon" src="assets/icons/flower-twirl.svg" alt="Ícone do perfil"></span>
       <span><small>PERFIL DE DUELISTA</small><h2 id="profile-view-name">Carregando perfil…</h2><strong id="profile-view-flux">— FLUX</strong></span>
     </div>
-    <div class="profile-view-stats"><span><small>CARREIRA</small><b id="profile-view-record">—</b></span><span><small>VITÓRIAS NAS ÚLTIMAS 10</small><b id="profile-view-rate">—</b></span><span><small>DECK MAIS USADO</small><b id="profile-view-deck">—</b></span></div>
+    <div class="profile-view-stats"><span><small>CARREIRA</small><b id="profile-view-record">—</b></span><span><small>VITÓRIAS NAS ÚLTIMAS 10</small><b id="profile-view-rate">—</b></span><span><small>DECK MAIS USADO</small><b id="profile-view-deck">—</b></span><span><small>CONTA CRIADA EM</small><b id="profile-view-created">—</b></span></div>
     <button id="profile-customize" class="profile-customize hidden" type="button">PERSONALIZAR PERFIL</button>
     <div class="profile-history-title"><small>HISTÓRICO RECENTE</small><b>ÚLTIMAS 10 PARTIDAS</b></div>
     <ol id="profile-view-history" class="profile-history"><li class="profile-history-empty">Buscando partidas recentes…</li></ol>
@@ -265,19 +270,19 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js?v=1"></script>
-  <script src="account.js?v=17"></script>
+  <script src="account.js?v=18"></script>
   <script src="game-catalog.js?v=1"></script>
   <script src="network.js?v=48"></script>
-  <script src="engine-core.js?v=35"></script>
-  <script src="engine-expansion.js?v=34"></script>
+  <script src="engine-core.js?v=36"></script>
+  <script src="engine-expansion.js?v=35"></script>
   <script src="engine-celestial.js?v=10"></script>
   <script src="engine-gold.js?v=8"></script>
   <script src="engine-egypt.js?v=4"></script>
-  <script src="engine-actions-a.js?v=41"></script>
+  <script src="engine-actions-a.js?v=42"></script>
   <script src="engine-actions-b.js?v=32"></script>
   <script src="engine-expansion-runtime.js?v=11"></script>
-  <script src="engine-ui.js?v=56"></script>
-  <script src="i18n.js?v=13"></script>
-  <script src="engine-insects.js?v=2"></script>
+  <script src="engine-ui.js?v=57"></script>
+  <script src="i18n.js?v=15"></script>
+  <script src="engine-insects.js?v=3"></script>
 </body>
 </html>
