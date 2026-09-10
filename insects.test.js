@@ -96,6 +96,14 @@ assert.equal(wasteContext.state.obstacles.length,2,'o lixo deve continuar após 
 assert.equal(wasteContext.expireNuclearWaste(),1);
 assert.deepEqual(wasteContext.state.obstacles.map(item=>item.type),['NATURAL'],'somente o lixo nuclear deve desaparecer no segundo turno');
 assert.equal(wasteLogs.length,1,'a expiração deve gerar um único registro visual');
+
+const blastContext={};
+vm.createContext(blastContext);
+vm.runInContext(insects.match(/function volcanicBlastScorer\([^\n]+/)[0],blastContext);
+const ladybug={owner:1};
+assert.equal(blastContext.volcanicBlastScorer(ladybug,{owner:2}),1,'inimigos atingidos pela erupção devem pontuar para a Joaninha');
+assert.equal(blastContext.volcanicBlastScorer(ladybug,{owner:1}),2,'aliados e a própria Joaninha devem conceder pontos ao adversário');
+assert.match(insects,/logCombatResult\(`A erupção de \$\{volcanicName\} destruiu/,'as vítimas e os pontos da erupção devem aparecer na crônica');
 assert.match(expansion,/delete archetypes\.celestial/);
 assert.doesNotMatch(html,/data-deck="celestial"/);
 assert.equal((html.match(/data-deck="insects"/g)||[]).length,2);

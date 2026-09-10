@@ -94,10 +94,11 @@ destroy=function(u,scorer,reason='combate'){
  return true
 };
 const baseInsectResolveCombat=resolveCombat;
+function volcanicBlastScorer(attacker,victim){return victim.owner===attacker.owner?(attacker.owner===1?2:1):attacker.owner}
 resolveCombat=function(attacker,defender,allies,atk,defAtk,tower,version){
- let volcanic=attacker?.kind==='volcanicLadybug',blast=allUnits().filter(u=>u.id!==defender?.id&&u.row!==null&&adjacent(u,defender));
+ let volcanic=attacker?.kind==='volcanicLadybug',volcanicName=attacker?.name,blast=allUnits().filter(u=>u.id!==defender?.id&&u.row!==null&&adjacent(u,defender));
  baseInsectResolveCombat(attacker,defender,allies,atk,defAtk,tower,version);
- if(volcanic&&!allUnits().some(u=>u.id===defender.id))blast.filter(u=>allUnits().some(v=>v.id===u.id)).forEach(u=>destroy(u,attacker.owner,'erupção vulcânica'));
+ if(volcanic&&!allUnits().some(u=>u.id===defender.id)){let before={1:state.players[1].score,2:state.players[2].score},casualties=[];blast.filter(u=>allUnits().some(v=>v.id===u.id)).forEach(u=>{let name=u.name;if(destroy(u,volcanicBlastScorer(attacker,u),'erupção vulcânica'))casualties.push(name)});if(casualties.length)logCombatResult(`A erupção de ${volcanicName} destruiu ${casualties.join(' e ')}.`,before)}
  resolveTyphoonPush();render();checkWin()
 };
 const baseInsectDoAttack=doAttack;

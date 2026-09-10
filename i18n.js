@@ -38,6 +38,7 @@
   [/^(.+?) moveu (.+?) de ([A-F][1-8]) para ([A-F][1-8])\./,'$1 moved $2 from $3 to $4.'],
   [/^(.+?) empurrou (.+?) de ([A-F][1-8]) para ([A-F][1-8])( e o lançou no Poço sem Fundo)?\./,(_,source,target,from,to,pit)=>`${source} pushed ${target} from ${from} to ${to}${pit?' and sent it into the Bottomless Pit':''}.`],
   [/^(.+?) foi empurrado de ([A-F][1-8]) para ([A-F][1-8])( e caiu no Poço sem Fundo)?\./,(_,pawn,from,to,pit)=>`${pawn} was pushed from ${from} to ${to}${pit?' and fell into the Bottomless Pit':''}.`],
+  [/^A erupção de (.+?) destruiu (.+?)\./,(_,source,victims)=>`The eruption caused by ${source} destroyed ${victims.replace(/ e /g,' and ')}.`],
   [/^(.+?) escolheu a pilha de Peões\./,'$1 chose the Pawn deck.'],
   [/^(.+?) escolheu a pilha de Efeitos\./,'$1 chose the Effect deck.'],
   [/^(.+?) comprou um Peão( procurando materiais para combinar)?\./,(_,player,materials)=>`${player} drew a Pawn${materials?' while looking for combination materials':''}.`],
