@@ -44,7 +44,9 @@ function mutantContactSpread(){
  let mutants=allUnits().filter(u=>u.row!==null&&u.types?.length===1&&u.types[0]==='MUTANTE');mutants.forEach(source=>allUnits().filter(u=>u.id!==source.id&&u.row!==null&&adjacent(source,u)&&!(u.types?.length===1&&u.types[0]==='MUTANTE')).forEach(u=>{u.types=['MUTANTE'];u.baseTypes=['MUTANTE'];log(`${u.name} tornou-se MUTANTE pelo contato.`,'effect')}));
 }
 function insectWaterUnit(u){return u?.types?.includes('ÁGUA')||u?.kind==='direAnt'&&allUnits().some(v=>v.owner===u.owner&&v.row!==null&&v.kind==='vastAnt')}
+function decayRadiantAttack(u){let current=effectiveAtk(u,false),lost=Math.min(50,Math.max(0,current-100));if(!lost)return 0;u.bonusAtk=(u.bonusAtk||0)-lost;return lost}
 function resolveInsectEndTurn(){
+ allUnits().filter(u=>u.row!==null&&u.kind==='radiantCockroach').forEach(u=>{let lost=decayRadiantAttack(u);if(lost)log(`${u.name} perdeu ${lost} ATK e agora possui ${effectiveAtk(u,false)} ATK.`,'effect')});
  allUnits().filter(ruin=>ruin.row!==null&&ruin.kind==='ruinCentipede').forEach(ruin=>allUnits().filter(u=>u.owner!==ruin.owner&&u.row!==null&&inMovementRadius(ruin,u)).forEach(u=>{let lost=reduceGoldAttack(u,50);if(lost)log(`${u.name} perdeu ${lost} ATK no raio de ${ruin.name}.`,'effect')}));
  mutantContactSpread();
 }

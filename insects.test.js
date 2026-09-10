@@ -17,6 +17,7 @@ const migration=fs.readFileSync(path.join(root,'supabase','migration-222-insects
 for(const key of ['amberTragedy','direLadybug','direCockroach','direCaterpillar','direAnt','direCentipede','volcanicLadybug','radiantCockroach','stormButterfly','vastAnt','ruinCentipede'])assert.match(expansion,new RegExp(`${key}:\\{`),`peão ausente: ${key}`);
 for(const key of ['calamityEruption','calamityNuclear','calamityHurricane','calamityTsunami','calamityQuake','volcanicHeat','nuclearWinter','unstableTyphoon','endlessOcean','tremblingEarth','badOmen','wildCage'])assert.match(expansion,new RegExp(`${key}:\\{`),`efeito ausente: ${key}`);
 assert.match(expansion,/calamityHurricane:\{name:'Calamidade: Furacão'[^\n]+atkBonus:350[^\n]+dá 350 ATK/,'Calamidade: Furacão deve conceder exatamente 350 ATK');
+assert.match(expansion,/radiantCockroach:\{name:'Barata Calamitosa: Radianta'[^\n]+Perde 50 ATK ao fim de cada turno até ter 100 ATK/,'o efeito de perda gradual da Radianta deve aparecer nos detalhes');
 assert.match(expansion,/registerArchetype\('insects'/);
 for(const key of ['volcanicHeat','nuclearWinter','unstableTyphoon','endlessOcean','tremblingEarth'])assert.match(expansion,new RegExp(`${key}:\\{[^\\n]+undrawable:true`),`${key} não deve entrar na pilha de compra`);
 assert.match(core,/effects\[effectKey\]\?\.undrawable/,'o construtor da pilha deve remover Arenas que só são invocadas');
@@ -73,6 +74,16 @@ cageContext.state.turn=3;cageContext.state.players[1].deployed=true;
 assert.equal(cageContext.resolveWildCagePenalty(1),false);
 assert.equal(cageContext.state.players[2].score,1,'quem colocou peão não deve sofrer a penalidade');
 assert.equal(cageMessages.length,1,'a penalidade deve produzir somente um registro de pontuação');
+
+const radiantContext={effectiveAtk:u=>u.atk+(u.bonusAtk||0)+300};
+vm.createContext(radiantContext);
+vm.runInContext(insects.match(/function decayRadiantAttack\([^\n]+/)[0],radiantContext);
+const radiant={atk:250,bonusAtk:0};
+assert.equal(radiantContext.decayRadiantAttack(radiant),50);
+assert.equal(radiantContext.effectiveAtk(radiant),500);
+for(let turn=0;turn<12;turn++)radiantContext.decayRadiantAttack(radiant);
+assert.equal(radiantContext.effectiveAtk(radiant),100,'a Radianta não pode perder ATK abaixo de 100 por seu próprio efeito');
+assert.equal(radiantContext.decayRadiantAttack(radiant),0);
 assert.match(expansion,/delete archetypes\.celestial/);
 assert.doesNotMatch(html,/data-deck="celestial"/);
 assert.equal((html.match(/data-deck="insects"/g)||[]).length,2);
