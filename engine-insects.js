@@ -116,9 +116,11 @@ botDraw=function(){if(state.arena!=='wildCage')return baseInsectBotDraw();let p=
 const baseInsectBotPlayEffect=botPlayEffect;
 botPlayEffect=function(){let p=state.players[botActor()],omen=p?.hand?.indexOf('badOmen');if(omen>=0&&p.units.some(u=>u.row!==null&&CALAMITY_FOR[u.kind])){playBadOmen(botActor(),omen);render();return true}let calamitiesBefore=new Map(allUnits().filter(u=>u.calamityOrigin).map(u=>[u.id,u]));let result=baseInsectBotPlayEffect();if(result){allUnits().forEach(u=>{let key=(u.equipment||[]).find(item=>effects[item]?.calamityTarget&&u.kind===effects[item].equipOnly);if(key){u.equipment=u.equipment.filter(item=>item!==key);transformCalamity(u,key)}});calamitiesBefore.forEach(u=>{if(allUnits().some(piece=>piece.id===u.id)&&u.calamityOrigin&&!u.equipment.some(key=>effects[key]?.calamityTarget))revertCalamity(u)})}return result};
 const baseInsectEndTurn=endTurn;
+function wildCageTurnKey(owner){return`${state.matchId||'local'}:${state.turn}:${owner}`}
+function resolveWildCagePenalty(owner){if(state.arena!=='wildCage')return false;let key=wildCageTurnKey(owner);if(state.wildCagePenaltyTurn===key)return false;state.wildCagePenaltyTurn=key;if(state.players[owner].deployed)return false;let rival=owner===1?2:1;awardPoints(rival,1,`${state.players[rival].name} ganhou 1 ponto porque o adversário não colocou um Peão na Jaula Selvagem.`);return true}
 endTurn=function(){
  let pointWon=state&&[1,2].some(n=>state.players[n].score>=(state.pointGoal||10)),valid=state&&!state.animating&&!state.placementPhase&&!state.awaitingDraw&&!pointWon&&!state.forfeitWinner&&!state.celestialWinner&&!state.insectWinner,owner=state?.current;
- if(valid){resolveInsectEndTurn();if(state.arena==='wildCage'&&!state.players[owner].deployed){let rival=owner===1?2:1;awardPoints(rival,1);log(`${state.players[rival].name} ganhou 1 ponto porque o adversário não colocou um Peão na Jaula Selvagem.`,'arena')}}
+ if(valid){resolveInsectEndTurn();resolveWildCagePenalty(owner)}
  return baseInsectEndTurn()
 };
 const baseInsectRenderHeader=renderHeader;

@@ -48,6 +48,7 @@
   [/^(.+?) não tinha Peões para comprar por (.+?)\./,'$1 had no Pawns to draw because of $2.'],
   [/^(.+?) comprou um Peão por (.+?)\./,'$1 drew a Pawn because of $2.'],
   [/^(.+?) gerou 2 Cinturões de Asteroides na mão\./,'$1 generated 2 Asteroid Belts in hand.'],
+  [/^(.+?) ganhou 1 ponto porque o adversário não colocou um Peão na Jaula Selvagem\./,'$1 gained 1 point because the opponent did not deploy a Pawn in the Wild Cage.'],
   [/^(.+?) recebeu (\d+) pontos?\./,(_,player,count)=>`${player} gained ${count} ${count==='1'?'point':'points'}.`],
   [/^(.+?) substituiu a Arena por (.+?)\./,'$1 replaced the Arena with $2.'],
   [/^(.+?) ativou a Arena (.+?)\./,'$1 activated the $2 Arena.'],
