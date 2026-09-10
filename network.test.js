@@ -6,6 +6,8 @@ process.chdir(__dirname);
 const source = fs.readFileSync('network.js', 'utf8');
 assert.match(source, /document\.addEventListener\('click',[^\n]+\},false\)/, 'o estado online deve ser sincronizado depois que o clique alterar a jogada');
 assert.match(source, /replace\(\/\[\^A-Z0-9\]\/g,''\)\.slice\(0,12\)/, 'códigos devem aceitar letras e números até 12 caracteres');
+assert.match(source, /function quickRoomCode\(value=roomCode\)/, 'salas geradas pela Partida Rápida devem ser reconhecidas pelo prefixo Q');
+assert.match(source, /quickSpectatorRetry[\s\S]+reconnectAttempts<6/, 'quem procura uma sala rápida para assistir deve tolerar o atraso de registro do anfitrião');
 assert.match(source, /selectedDecks\[2\]=selectedLobbyDeck\(\)/, 'quem entra na sala deve usar o deck exibido na primeira seleção como J2');
 assert.match(source, /channel\.metadata\?\.role==='spectator'/, 'o anfitrião deve separar espectadores do canal do adversário');
 assert.match(source, /spectatorChannels\.forEach\(channel=>sendChannelPacket/, 'o estado deve ser distribuído para vários espectadores');
@@ -156,6 +158,11 @@ function makeClient(player, initialState) {
   assert.equal(client.cleanRoomCode('a-1_b2'), 'A1B2');
   assert.equal(client.cleanRoomCode('1234567890ABCDE'), '1234567890AB');
   assert.equal(client.cleanPlayerName('  Ana   <Lua>  '), 'Ana Lua');
+  assert.equal(client.quickRoomCode('q1234567890a'), true);
+  assert.equal(client.quickRoomCode('sala-normal'), false);
+  client.onlineRole='guest';client.roomCode='Q1234567890A';client.reconnectAttempts=0;client.reconnectTimer=null;
+  client.handlePeerError({type:'peer-unavailable'});
+  assert.equal(client.reconnectTimer,1,'uma sala rápida ainda em registro deve continuar tentando em vez de falhar imediatamente');
 }
 
 {

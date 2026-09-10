@@ -35,7 +35,7 @@ assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
 assert.match(page, /engine-expansion\.js\?v=40/);
 assert.doesNotMatch(expansion, /Object\.assign\((?:defs|effects|archetypes)/, 'o catálogo não deve ser alterado diretamente');
-assert.match(page, /VERSÃO 239/);
+assert.match(page, /VERSÃO 240/);
 assert.match(runtime, /playUnitAnimation\(u,'goldPriestPulse'\)/, 'efeito do Sacerdote não deve reiniciar a cada renderização');
 assert.match(runtime, /playUnitAnimation\(u,'goldDrainTo'\)/, 'partículas de Tudo ou Nada não devem reiniciar a cada renderização');
 assert.match(expansion, /impoluto:\{[^\n]+types:\['LUZ'\]/, 'Impoluto deve ser do tipo LUZ conforme Cartas.md');

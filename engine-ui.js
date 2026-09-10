@@ -143,6 +143,7 @@ $('#choice-pawn').onclick=()=>drawPawn($('#choice-pawn'));$('#choice-effect').on
 $('.global-arena').onclick=inspectArena;
 $('#setup-rules-btn').onclick=()=>$('#rules-dialog').showModal();
 $('#home-brand').onclick=()=>{if(!confirm('Voltar ao menu inicial? A partida atual será encerrada.'))return;clearTimeout(botTimer);botTimer=null;clearTimeout(botWatchdogTimer);botWatchdogTimer=null;$('#winner-dialog')?.close();document.querySelectorAll('#turn-draw,#pass,#sword-transfer,#network-badge').forEach(element=>element.classList.add('hidden'));document.body.classList.remove('online-waiting','connection-lost');selectGameMode('local');$('#setup').classList.remove('hidden')};
+$('#match-room-code').onclick=copyRoomCode;
 $('#winner-menu').onclick=()=>$('#home-brand').click();
 $$('#spectator-controls button').forEach(button=>button.onclick=()=>setSpectatorView(+button.dataset.view));
 $$('.deck-choice').forEach(button=>button.onclick=()=>{let row=button.closest('.choice-row'),rowPlayer=+row.dataset.player;if(onlineMode&&rowPlayer!==1)return;let player=onlineMode&&localPlayer?localPlayer:rowPlayer;selectedDecks[player]=button.dataset.deck;row.querySelectorAll('.deck-choice').forEach(b=>b.classList.toggle('selected',b===button));onlineDeckChanged(player,button.dataset.deck)});
