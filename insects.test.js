@@ -160,6 +160,18 @@ assert.match(insects,/delete u\.vastAntWater/,'o tipo temporário deve sair quan
 assert.match(styles,/\.piece\.deck-insects\.kind-amberTragedy[^\n]+#d5aa27/,'a Tragédia Âmbar deve ter fundo amarelo');
 assert.match(insects,/counter\.className=`doom-counter/,'a Tragédia Âmbar deve mostrar seus contadores na Arena');
 assert.match(styles,/\.doom-counter\{/,'os contadores da Tragédia Âmbar devem possuir estilo visual');
+const doomsdayContext={ROWS:8,COLS:6};
+vm.createContext(doomsdayContext);
+vm.runInContext(insects.match(/function randomDoomsdayOrder\([^\n]+/)[0],doomsdayContext);
+const doomsdayOrder=Array.from(doomsdayContext.randomDoomsdayOrder());
+assert.equal(doomsdayOrder.length,48,'a vitória deve incluir todos os 48 slots da Arena');
+assert.equal(new Set(doomsdayOrder).size,48,'cada slot deve explodir uma única vez');
+assert.deepEqual([...doomsdayOrder].sort((a,b)=>a-b),[...Array(48).keys()]);
+assert.match(insects,/burst\.style\.setProperty\('--doom-delay',`\$\{index\*38\}ms`\)/,'as explosões devem seguir a ordem aleatória com atrasos individuais');
+assert.match(insects,/setTimeout\(\(\)=>\{doomsdayVictoryTimer=null;[^\n]+\},2600\)/,'a vitória só deve ser declarada depois da sequência de explosões');
+assert.match(insects,/if\(!state\.insectVictoryReady\)\{startDoomsdayVictoryAnimation\(\);return true\}/,'o resultado deve aguardar a animação terminar');
+assert.match(styles,/\.doomsday-burst\{/,'cada slot deve receber uma explosão visível');
+assert.match(styles,/@keyframes doomsdaySlotBurst/);
 assert.match(expansion,/delete archetypes\.celestial/);
 assert.doesNotMatch(html,/data-deck="celestial"/);
 assert.equal((html.match(/data-deck="insects"/g)||[]).length,2);

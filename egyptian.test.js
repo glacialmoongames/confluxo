@@ -14,7 +14,7 @@ for(const key of ['fireScarab','fireSlave','firePrince','grayMummy','ammit','anu
 for(const key of ['burningDesert','emberMummify','flameTemple','quickHands'])assert.match(expansion,new RegExp(`${key}:\\{`));
 assert.match(page,/data-deck="egyptian"/);
 assert.match(page,/engine-egypt\.js\?v=4/);
-assert.match(page,/VERSÃO 234/);
+assert.match(page,/VERSÃO 235/);
 assert.match(page,/data-deck="egyptian"><img src="assets\/icons\/hills\.svg\?v=2"/);
 assert.match(expansion,/registerArchetype\('egyptian',\{[^\n]+emblemArt:icon\('hills'\)/);
 assert.match(egypt,/v\.owner===u\.owner[^\n]+hasEffect\(v,'ra'\)/, 'Rá deve igualar somente o ATK de peões aliados adjacentes');
