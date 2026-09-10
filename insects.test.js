@@ -13,6 +13,7 @@ const styles=fs.readFileSync(path.join(root,'styles-responsive.css'),'utf8');
 const network=fs.readFileSync(path.join(root,'network.js'),'utf8');
 const schema=fs.readFileSync(path.join(root,'supabase','schema.sql'),'utf8');
 const migration=fs.readFileSync(path.join(root,'supabase','migration-222-insects.sql'),'utf8');
+const quickMatchMigration=fs.readFileSync(path.join(root,'supabase','migration-239-insects-quick-match.sql'),'utf8');
 
 for(const key of ['amberTragedy','direLadybug','direCockroach','direCaterpillar','direAnt','direCentipede','volcanicLadybug','radiantCockroach','stormButterfly','vastAnt','ruinCentipede'])assert.match(expansion,new RegExp(`${key}:\\{`),`peão ausente: ${key}`);
 for(const key of ['calamityEruption','calamityNuclear','calamityHurricane','calamityTsunami','calamityQuake','volcanicHeat','nuclearWinter','unstableTyphoon','endlessOcean','tremblingEarth','badOmen','wildCage'])assert.match(expansion,new RegExp(`${key}:\\{`),`efeito ausente: ${key}`);
@@ -183,6 +184,9 @@ assert.match(network,/packet\.type==='rematch-ready'/);
 assert.match(network,/state\.matchId!==previousMatchId\)resetRematchState/);
 assert.match(schema,/egyptian','insects'/);
 assert.match(migration,/migration-222-insects|insects/i);
+assert.match(quickMatchMigration,/create or replace function public\.join_quick_match/,'a correção deve recriar explicitamente a função ativa');
+assert.match(quickMatchMigration,/p_deck not in \([\s\S]*'egyptian',[\s\S]*'insects'/,'a Partida Rápida deve aceitar os dois decks adicionados depois da versão 196');
+assert.doesNotMatch(quickMatchMigration,/pg_get_functiondef|\breplace\s*\(/i,'a migração não deve depender da formatação interna do PostgreSQL');
 
 const newIcons=['algae','amber-mosquito','ant','big-wave','bird-cage','butterfly','caterpillar','centipede','death-note','earth-crack','earth-spit','fire-zone','ladybug','long-antennae-bug','mushroom-cloud','nuclear','stomp-tornado','tornado','volcano'];
 for(const name of newIcons){const svg=fs.readFileSync(path.join(root,'assets','icons',`${name}.svg`),'utf8');assert.doesNotMatch(svg,/<path\s+d="M0 0h512v512H0z"/i,`${name}.svg ainda possui fundo sólido`);assert.match(svg,/<svg\b/i,`${name}.svg inválido`)}
