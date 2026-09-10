@@ -91,11 +91,17 @@ const wasteLogs=[];
 const wasteContext={state:{insectEndStep:0,obstacles:[{row:1,col:2,type:'NUCLEAR',expiresAfterStep:2},{row:3,col:4,type:'NATURAL'}]},boardCoordinate:(row,col)=>`${col},${row}`,log:message=>wasteLogs.push(message)};
 vm.createContext(wasteContext);
 vm.runInContext(insects.match(/function expireNuclearWaste\([^\n]+/)[0],wasteContext);
+vm.runInContext(insects.match(/function nuclearWasteTurnsLeft\([^\n]+/)[0],wasteContext);
+const timedWaste=wasteContext.state.obstacles[0];
+assert.equal(wasteContext.nuclearWasteTurnsLeft(timedWaste),2,'o contador deve começar em 2');
 assert.equal(wasteContext.expireNuclearWaste(),0);
 assert.equal(wasteContext.state.obstacles.length,2,'o lixo deve continuar após o primeiro turno');
+assert.equal(wasteContext.nuclearWasteTurnsLeft(timedWaste),1,'o contador deve cair para 1 após um turno');
 assert.equal(wasteContext.expireNuclearWaste(),1);
 assert.deepEqual(wasteContext.state.obstacles.map(item=>item.type),['NATURAL'],'somente o lixo nuclear deve desaparecer no segundo turno');
 assert.equal(wasteLogs.length,1,'a expiração deve gerar um único registro visual');
+assert.match(insects,/counter\.className='nuclear-waste-counter'/,'o lixo nuclear deve renderizar o contador na Arena');
+assert.match(styles,/\.nuclear-waste-counter\{/,'o contador deve possuir estilo próprio e legível');
 
 const blastContext={};
 vm.createContext(blastContext);

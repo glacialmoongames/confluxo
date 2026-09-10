@@ -330,6 +330,7 @@
 .global-arena[data-arena=endlessOcean]{--arena-bloom:#25669a;background:#0d2e49;border-color:#62add9}.board[data-arena=endlessOcean] .cell.light{background:#235477}.board[data-arena=endlessOcean] .cell.dark{background:#102f47}
 .global-arena[data-arena=tremblingEarth]{--arena-bloom:#ad8152;background:#513a24;border-color:#d8a96d}.board[data-arena=tremblingEarth] .cell.light{background:#80603e}.board[data-arena=tremblingEarth] .cell.dark{background:#47321f}
 .nuclear-waste{position:absolute;inset:16%;z-index:3;display:grid;place-items:center;border-radius:50%;background:#b8dc2f;color:#172006;font-size:clamp(15px,2vw,29px);box-shadow:0 0 12px #caff38;pointer-events:none}
+.nuclear-waste-counter{position:absolute;right:-7px;top:-7px;min-width:18px;height:18px;padding:0 4px;display:grid;place-items:center;border:2px solid #dfff71;border-radius:50%;background:#172006;color:#efffc2;font:900 10px/1 Arial;box-shadow:0 2px 7px #000b}
 .winner-flux{min-height:1.3em;color:#e7c86e;font-weight:800;font-size:18px}.rematch-status{min-height:1.2em;color:#d7ccdc;font:700 11px Arial;letter-spacing:.4px}.doomsday-victory .winner-crest{animation:doomsdayPulse .65s ease-in-out infinite alternate;color:#ff9f43;text-shadow:0 0 18px #ff4c23}@keyframes doomsdayPulse{to{transform:scale(1.28) rotate(8deg);filter:brightness(1.7)}}
 .account-avatar img,.leaderboard-icon img,.lobby-profile-icon img,.match-profile-icon img,.profile-view-avatar img,.profile-icon-grid img{filter:var(--profile-icon-filter,brightness(0) invert(1))!important}
 
