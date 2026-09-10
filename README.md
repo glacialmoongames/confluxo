@@ -1,5 +1,7 @@
 # Confluxo — jogo de cartas tático
 
+Para continuar o desenvolvimento em uma nova sessão, leia primeiro [`HANDOFF-NOVO-CHAT.md`](HANDOFF-NOVO-CHAT.md). Ele reúne o estado atual, arquitetura, mecânicas, serviços, regras de desenvolvimento, testes e publicação.
+
 Para adicionar ou alterar cartas, consulte [`CATALOGO.md`](CATALOGO.md). As definições passam pelo registro central de `game-catalog.js`, que valida duplicatas e referências dos decks antes da partida iniciar.
 
 Protótipo web de um jogo tático para dois duelistas, com tabuleiro 6 × 8, turnos, combate, efeitos, arenas, Peões Combinados e modo online via WebRTC.
