@@ -7,11 +7,12 @@ function clearArenaFeatures(previous){
  if(previous==='nuclearWinter')state.obstacles=[];
 }
 function recordInsectArena(owner,key){
- if(!INSECT_ARENAS.includes(key))return;
+ if(!INSECT_ARENAS.includes(key))return false;
  state.insectArenasPlayed??={1:[],2:[]};let list=state.insectArenasPlayed[owner]??=[];
- if(!list.includes(key))list.push(key);state.insectArenasPlayed[owner]=list;
- state.players[owner].units.filter(u=>u.row!==null&&u.kind==='amberTragedy').forEach(u=>u.doomCounters=list.length);
+ if(list.includes(key))return false;list.push(key);state.insectArenasPlayed[owner]=list;
+ state.players[owner].units.filter(u=>u.row!==null&&u.kind==='amberTragedy').forEach(u=>{u.doomCounters=list.length;u.doomCounterPulse=(u.doomCounterPulse||0)+1;log(`${u.name} recebeu o contador ${list.length}/5 por ${effects[key].name}.`,'effect')});
  if(list.length>=5&&state.players[owner].units.some(u=>u.row!==null&&u.kind==='amberTragedy'))state.insectWinner=owner;
+ return true;
 }
 function applyArenaState(key,owner,{cancelDuplicate=true}={}){
  let previous=state.arena,xadriaPair=new Set(['roses','blackRoses']);
@@ -45,7 +46,8 @@ function nuclearWasteTurnsLeft(item){return Math.max(0,(Number.isFinite(item?.ex
 function mutantContactSpread(){
  let mutants=allUnits().filter(u=>u.row!==null&&u.types?.length===1&&u.types[0]==='MUTANTE');mutants.forEach(source=>allUnits().filter(u=>u.id!==source.id&&u.row!==null&&adjacent(source,u)&&!(u.types?.length===1&&u.types[0]==='MUTANTE')).forEach(u=>{u.types=['MUTANTE'];u.baseTypes=['MUTANTE'];log(`${u.name} tornou-se MUTANTE pelo contato.`,'effect')}));
 }
-function insectWaterUnit(u){return u?.types?.includes('ÁGUA')||u?.kind==='direAnt'&&allUnits().some(v=>v.owner===u.owner&&v.row!==null&&v.kind==='vastAnt')}
+function syncDireAntWaterTypes(){for(let owner of[1,2]){let active=state.players[owner].units.some(v=>v.row!==null&&v.kind==='vastAnt');state.players[owner].units.filter(u=>u.kind==='direAnt').forEach(u=>{u.types??=[];if(active&&!u.types.includes('ÁGUA')){u.types=[...u.types,'ÁGUA'];u.vastAntWater=true}else if(!active&&u.vastAntWater){u.types=u.types.filter(type=>type!=='ÁGUA');delete u.vastAntWater}})}}
+function insectWaterUnit(u){return u?.types?.includes('ÁGUA')}
 function decayRadiantAttack(u){let current=effectiveAtk(u,false),lost=Math.min(50,Math.max(0,current-100));if(!lost)return 0;u.bonusAtk=(u.bonusAtk||0)-lost;return lost}
 function resolveInsectEndTurn(){
  expireNuclearWaste();
@@ -70,6 +72,7 @@ onUnitDeployed=function(u){let result=baseInsectOnUnitDeployed(u);if(u?.kind==='
 
 const baseInsectEffectiveAtk=effectiveAtk;
 effectiveAtk=function(u,defending,dynamicDepth=0){
+ syncDireAntWaterTypes();
  let value=baseInsectEffectiveAtk(u,defending,dynamicDepth);
  (u?.equipment||[]).forEach(key=>value+=effects[key]?.atkBonus||0);
  if(u?.kind==='direAnt'&&allUnits().some(v=>v.owner===u.owner&&v.row!==null&&v.kind==='vastAnt'))value+=50;
@@ -96,10 +99,11 @@ destroy=function(u,scorer,reason='combate'){
 };
 const baseInsectResolveCombat=resolveCombat;
 function volcanicBlastScorer(attacker,victim){return victim.owner===attacker.owner?(attacker.owner===1?2:1):attacker.owner}
+function resolveVolcanicBlast(attacker,victims,name,version){let pending=victims.filter(u=>u.id!==attacker.id&&allUnits().some(v=>v.id===u.id)),before={1:state.players[1].score,2:state.players[2].score},casualties=[];if(!pending.length)return false;state.animating=true;let next=()=>{if(version!==gameVersion){state.animating=false;return}let victim=pending.shift();while(victim&&!allUnits().some(u=>u.id===victim.id))victim=pending.shift();if(!victim){if(casualties.length)logCombatResult(`A erupção de ${name} destruiu ${casualties.join(' e ')}.`,before);state.animating=false;resolveTyphoonPush();render();checkWin();if(onlineMode)syncOnlineState(true);return}victim.fireTarget=(victim.fireTarget||0)+1;render();hint(`A erupção de ${name} atingirá ${victim.name}.`);if(onlineMode)syncOnlineState(true);setTimeout(()=>{delete victim.fireTarget;if(allUnits().some(u=>u.id===victim.id)&&destroy(victim,volcanicBlastScorer(attacker,victim),'erupção vulcânica'))casualties.push(victim.name);render();next()},500)};next();return true}
 resolveCombat=function(attacker,defender,allies,atk,defAtk,tower,version){
- let volcanic=attacker?.kind==='volcanicLadybug',volcanicName=attacker?.name,blast=allUnits().filter(u=>u.id!==defender?.id&&u.row!==null&&adjacent(u,defender));
+ let volcanic=attacker?.kind==='volcanicLadybug',volcanicName=attacker?.name,blast=allUnits().filter(u=>u.id!==defender?.id&&u.id!==attacker?.id&&u.row!==null&&adjacent(u,defender));
  baseInsectResolveCombat(attacker,defender,allies,atk,defAtk,tower,version);
- if(volcanic&&!allUnits().some(u=>u.id===defender.id)){let before={1:state.players[1].score,2:state.players[2].score},casualties=[];blast.filter(u=>allUnits().some(v=>v.id===u.id)).forEach(u=>{let name=u.name;if(destroy(u,volcanicBlastScorer(attacker,u),'erupção vulcânica'))casualties.push(name)});if(casualties.length)logCombatResult(`A erupção de ${volcanicName} destruiu ${casualties.join(' e ')}.`,before)}
+ if(volcanic&&!allUnits().some(u=>u.id===defender.id)&&resolveVolcanicBlast(attacker,blast,volcanicName,version))return;
  resolveTyphoonPush();render();checkWin()
 };
 const baseInsectDoAttack=doAttack;
@@ -123,7 +127,7 @@ const baseInsectBotPlayEffect=botPlayEffect;
 botPlayEffect=function(){let p=state.players[botActor()],omen=p?.hand?.indexOf('badOmen');if(omen>=0&&p.units.some(u=>u.row!==null&&CALAMITY_FOR[u.kind])){playBadOmen(botActor(),omen);render();return true}let calamitiesBefore=new Map(allUnits().filter(u=>u.calamityOrigin).map(u=>[u.id,u]));let result=baseInsectBotPlayEffect();if(result){allUnits().forEach(u=>{let key=(u.equipment||[]).find(item=>effects[item]?.calamityTarget&&u.kind===effects[item].equipOnly);if(key){u.equipment=u.equipment.filter(item=>item!==key);transformCalamity(u,key)}});calamitiesBefore.forEach(u=>{if(allUnits().some(piece=>piece.id===u.id)&&u.calamityOrigin&&!u.equipment.some(key=>effects[key]?.calamityTarget))revertCalamity(u)})}return result};
 const baseInsectEndTurn=endTurn;
 function wildCageTurnKey(owner){return`${state.matchId||'local'}:${state.turn}:${owner}`}
-function resolveWildCagePenalty(owner){if(state.arena!=='wildCage')return false;let key=wildCageTurnKey(owner);if(state.wildCagePenaltyTurn===key)return false;state.wildCagePenaltyTurn=key;if(state.players[owner].deployed)return false;let rival=owner===1?2:1;awardPoints(rival,1,`${state.players[rival].name} ganhou 1 ponto porque o adversário não colocou um Peão na Jaula Selvagem.`);return true}
+function resolveWildCagePenalty(owner){if(state.arena!=='wildCage')return false;let key=wildCageTurnKey(owner);if(state.wildCagePenaltyTurn===key)return false;state.wildCagePenaltyTurn=key;let player=state.players[owner];if(player.deployed||!(player.reserve||[]).some(u=>u.row===null))return false;let rival=owner===1?2:1;awardPoints(rival,1,`${state.players[rival].name} ganhou 1 ponto porque o adversário não colocou um Peão na Jaula Selvagem.`);return true}
 endTurn=function(){
  let pointWon=state&&[1,2].some(n=>state.players[n].score>=(state.pointGoal||10)),valid=state&&!state.animating&&!state.placementPhase&&!state.awaitingDraw&&!pointWon&&!state.forfeitWinner&&!state.celestialWinner&&!state.insectWinner,owner=state?.current;
  if(valid){resolveInsectEndTurn();resolveWildCagePenalty(owner)}
@@ -132,12 +136,12 @@ endTurn=function(){
 const baseInsectRenderHeader=renderHeader;
 renderHeader=function(){baseInsectRenderHeader();for(let n=1;n<=2;n++){let record=$(`#p${n}-record`),account=state?.players?.[n]?.account;if(record)record.textContent=account?`${safeRating(account.rating)} FLUX`:''}};
 const baseInsectRenderBoard=renderBoard;
-renderBoard=function(){baseInsectRenderBoard();allUnits().filter(u=>u.row!==null).forEach(u=>$(`#board .cell[data-r="${u.row}"][data-c="${u.col}"] .piece`)?.classList.add(`kind-${u.kind}`));(state.obstacles||[]).filter(item=>item.type==='NUCLEAR').forEach(item=>{let cell=$(`#board .cell[data-r="${item.row}"][data-c="${item.col}"]`),mark=cell?.querySelector('.obstacle'),turns=nuclearWasteTurnsLeft(item);if(mark){mark.className='nuclear-waste';mark.textContent='☢';mark.title=`Lixo nuclear: destrói quem não seja RADIOATIVO e desaparece em ${turns} turno${turns===1?'':'s'}.`;let counter=document.createElement('b');counter.className='nuclear-waste-counter';counter.textContent=turns;counter.setAttribute('aria-label',`${turns} turno${turns===1?' restante':'s restantes'}`);mark.append(counter)}})};
+renderBoard=function(){syncDireAntWaterTypes();baseInsectRenderBoard();allUnits().filter(u=>u.row!==null).forEach(u=>{let piece=$(`#board .cell[data-r="${u.row}"][data-c="${u.col}"] .piece`);piece?.classList.add(`kind-${u.kind}`);if(piece&&u.kind==='amberTragedy'){let counter=document.createElement('b');counter.className=`doom-counter${playUnitAnimation(u,'doomCounterPulse')?' doom-counter-pulse':''}`;counter.textContent=u.doomCounters||0;counter.title=`Contadores de fim do mundo: ${u.doomCounters||0}/5`;counter.setAttribute('aria-label',`${u.doomCounters||0} de 5 contadores de fim do mundo`);piece.append(counter)}});(state.obstacles||[]).filter(item=>item.type==='NUCLEAR').forEach(item=>{let cell=$(`#board .cell[data-r="${item.row}"][data-c="${item.col}"]`),mark=cell?.querySelector('.obstacle'),turns=nuclearWasteTurnsLeft(item);if(mark){mark.className='nuclear-waste';mark.textContent='☢';mark.title=`Lixo nuclear: destrói quem não seja RADIOATIVO e desaparece em ${turns} turno${turns===1?'':'s'}.`;let counter=document.createElement('b');counter.className='nuclear-waste-counter';counter.textContent=turns;counter.setAttribute('aria-label',`${turns} turno${turns===1?' restante':'s restantes'}`);mark.append(counter)}})};
 const baseInsectBoardFeatureInspectionAt=boardFeatureInspectionAt;
 boardFeatureInspectionAt=function(r,c){let waste=nuclearWasteAt(r,c);if(waste){let turns=nuclearWasteTurnsLeft(waste);return{key:'nuclearWinter',boardFeature:true,row:r,col:c,detail:{name:'Lixo nuclear',type:'OBSTÁCULO MORTAL',icon:'☢',text:`Destrói qualquer peão que não seja RADIOATIVO. Desaparece em ${turns} turno${turns===1?'':'s'}.`}}}return baseInsectBoardFeatureInspectionAt(r,c)};
 const baseInsectCheckWin=checkWin;
 checkWin=function(){
- if(!state?.insectWinner){let won=baseInsectCheckWin();if(won){let flux=$('#winner-flux');if(flux)flux.textContent=state.onlineFluxDelta?`${state.onlineFluxDelta>0?'+':''}${state.onlineFluxDelta} FLUX`:onlineMode&&currentAccount?'Calculando variação de Flux…':'';updateRematchAvailability()}return won}let winner=state.insectWinner;if(typeof announceOnlineMatchResult==='function')announceOnlineMatchResult(winner,'doomsday');if(typeof reportOnlineMatchResult==='function')reportOnlineMatchResult(winner,'doomsday');let p=state.players[winner],dialog=$('#winner-dialog');dialog.classList.add('doomsday-victory');dialog.querySelector('.winner-crest').textContent='✺';$('#winner-name').textContent=`${p.name} · ${archetypes[p.archetype].name}`;$('#winner-score').textContent='Cinco calamidades convergiram: a Tragédia Ambar encerrou o duelo.';let flux=$('#winner-flux');if(flux)flux.textContent=state.onlineFluxDelta?`${state.onlineFluxDelta>0?'+':''}${state.onlineFluxDelta} FLUX`:onlineMode&&currentAccount?'Calculando variação de Flux…':'';if(typeof updateRematchAvailability==='function')updateRematchAvailability();if(!dialog.open)dialog.showModal();return true
+ if(!state?.insectWinner){let won=baseInsectCheckWin();if(won){let flux=$('#winner-flux');if(flux)flux.textContent=state.onlineFluxDelta?`${state.onlineFluxDelta>0?'+':''}${state.onlineFluxDelta} FLUX`:onlineMode&&currentAccount?'Calculando variação de Flux…':'';updateRematchAvailability()}return won}let winner=state.insectWinner;if(typeof announceOnlineMatchResult==='function')announceOnlineMatchResult(winner,'doomsday');if(typeof reportOnlineMatchResult==='function')reportOnlineMatchResult(winner,'doomsday');let p=state.players[winner],dialog=$('#winner-dialog');dialog.classList.add('doomsday-victory');dialog.querySelector('.winner-crest').textContent='✺';$('#winner-name').textContent=`${p.name} · ${archetypes[p.archetype].name}`;$('#winner-score').textContent='Cinco calamidades convergiram: a Tragédia Âmbar encerrou o duelo.';let flux=$('#winner-flux');if(flux)flux.textContent=state.onlineFluxDelta?`${state.onlineFluxDelta>0?'+':''}${state.onlineFluxDelta} FLUX`:onlineMode&&currentAccount?'Calculando variação de Flux…':'';if(typeof updateRematchAvailability==='function')updateRematchAvailability();if(!dialog.open)dialog.showModal();return true
 };
 function returnToMenuAfterMatch(){clearTimeout(botTimer);botTimer=null;clearTimeout(botWatchdogTimer);botWatchdogTimer=null;$('#winner-dialog')?.close();document.querySelectorAll('#turn-draw,#pass,#sword-transfer,#network-badge').forEach(element=>element.classList.add('hidden'));document.body.classList.remove('online-waiting','connection-lost');if(onlineMode)leaveOnlineRoom(true,'Você saiu da partida');selectGameMode('local');$('#setup').classList.remove('hidden')}
 $('#winner-restart').onclick=()=>{if($('#winner-restart').disabled)return;if(onlineMode)return requestOnlineRematch();$('#winner-dialog').close();$('#setup').classList.remove('hidden')};

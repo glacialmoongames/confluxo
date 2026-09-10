@@ -30,6 +30,29 @@ assert.match(styles,/\.deck-choice\[data-deck=insects\]\{--deck-color:#34373d/,'
 assert.match(styles,/--arc-insects-bg:#eee8dc/,'cartas e peões normais do arquétipo devem continuar claros');
 for(const kind of ['volcanicLadybug','radiantCockroach','stormButterfly','vastAnt','ruinCentipede'])assert.match(styles,new RegExp(`unit-card\\[data-deck=insects\\]\\.kind-${kind}\\{--calamity-card:`),`detalhes sem cor própria: ${kind}`);
 
+const amberLogs=[];
+const amber={kind:'amberTragedy',name:'Tragédia Âmbar',owner:1,row:4,doomCounters:0};
+const amberContext={INSECT_ARENAS:['volcanicHeat','nuclearWinter'],state:{players:{1:{units:[amber]},2:{units:[]}},insectArenasPlayed:{1:[],2:[]}},effects:{volcanicHeat:{name:'Calor Vulcânico'},nuclearWinter:{name:'Inverno Nuclear'}},log:message=>amberLogs.push(message)};
+vm.createContext(amberContext);
+vm.runInContext(insects.slice(insects.indexOf('function recordInsectArena'),insects.indexOf('function applyArenaState')),amberContext);
+assert.equal(amberContext.recordInsectArena(1,'volcanicHeat'),true);
+assert.equal(amber.doomCounters,1,'a primeira Arena única deve ativar o primeiro contador');
+assert.equal(amberContext.recordInsectArena(1,'volcanicHeat'),false);
+assert.equal(amber.doomCounters,1,'repetir a mesma Arena não deve aumentar o contador');
+assert.equal(amberContext.recordInsectArena(1,'nuclearWinter'),true);
+assert.equal(amber.doomCounters,2,'uma nova Arena do arquétipo deve aumentar o contador');
+assert.equal(amberLogs.length,2,'somente Arenas novas devem gerar indicação de contador');
+
+const direAnt={kind:'direAnt',owner:1,row:3,types:['INSETO']};
+const waterContext={state:{players:{1:{units:[direAnt,{kind:'vastAnt',owner:1,row:2,types:['INSETO','ÁGUA']}]},2:{units:[]}}}};
+vm.createContext(waterContext);
+vm.runInContext(insects.slice(insects.indexOf('function syncDireAntWaterTypes'),insects.indexOf('function insectWaterUnit')),waterContext);
+waterContext.syncDireAntWaterTypes();
+assert.deepEqual(Array.from(direAnt.types),['INSETO','ÁGUA']);
+waterContext.state.players[1].units=waterContext.state.players[1].units.filter(u=>u.kind!=='vastAnt');
+waterContext.syncDireAntWaterTypes();
+assert.deepEqual(Array.from(direAnt.types),['INSETO'],'o tipo ÁGUA deve sair quando a Formiga Calamitosa deixa o campo');
+
 const transformContext={
  effects:{calamityHurricane:{name:'Calamidade: Furacão',equipOnly:'direCaterpillar',calamityTarget:'stormButterfly'}},
  defs:{stormButterfly:{name:'Borboleta Calamitosa',atk:50,movement:[[0,1]],types:['INSETO','AR'],glyph:'B',fusion:1,text:'Arena Tufão'}},
@@ -64,7 +87,7 @@ typhoonContext.features=[{row:4,col:3,type:'NATURAL'}];pushed.types=['INSETO'];
 assert.deepEqual({...typhoonContext.typhoonDestination(pushed)},{row:3,col:3,hazard:null},'um obstáculo comum deve bloquear o empurrão');
 
 const cageMessages=[];
-const cageContext={state:{matchId:'test',turn:2,arena:'wildCage',players:{1:{name:'J1',deployed:false,score:0},2:{name:'J2',deployed:false,score:0}}}};
+const cageContext={state:{matchId:'test',turn:2,arena:'wildCage',players:{1:{name:'J1',deployed:false,score:0,reserve:[{fusion:0,row:null}]},2:{name:'J2',deployed:false,score:0,reserve:[]}}}};
 cageContext.awardPoints=(owner,count,message)=>{cageContext.state.players[owner].score+=count;cageMessages.push(message)};
 vm.createContext(cageContext);
 vm.runInContext(insects.slice(insects.indexOf('function wildCageTurnKey'),insects.indexOf('endTurn=function')),cageContext);
@@ -75,7 +98,13 @@ assert.equal(cageContext.state.players[2].score,1,'a penalidade não pode ser re
 cageContext.state.turn=3;cageContext.state.players[1].deployed=true;
 assert.equal(cageContext.resolveWildCagePenalty(1),false);
 assert.equal(cageContext.state.players[2].score,1,'quem colocou peão não deve sofrer a penalidade');
-assert.equal(cageMessages.length,1,'a penalidade deve produzir somente um registro de pontuação');
+cageContext.state.turn=4;cageContext.state.players[1].deployed=false;cageContext.state.players[1].reserve=[];
+assert.equal(cageContext.resolveWildCagePenalty(1),false);
+assert.equal(cageContext.state.players[2].score,1,'a Jaula não deve punir quem não possui nenhum peão na mão');
+cageContext.state.turn=5;cageContext.state.players[1].reserve=[{fusion:2,row:null}];
+assert.equal(cageContext.resolveWildCagePenalty(1),true);
+assert.equal(cageContext.state.players[2].score,2,'um peão combinado na mão também deve habilitar a penalidade da Jaula');
+assert.equal(cageMessages.length,2,'cada penalidade válida deve produzir somente um registro de pontuação');
 
 const radiantContext={effectiveAtk:u=>u.atk+(u.bonusAtk||0)+300};
 vm.createContext(radiantContext);
@@ -108,8 +137,29 @@ vm.createContext(blastContext);
 vm.runInContext(insects.match(/function volcanicBlastScorer\([^\n]+/)[0],blastContext);
 const ladybug={owner:1};
 assert.equal(blastContext.volcanicBlastScorer(ladybug,{owner:2}),1,'inimigos atingidos pela erupção devem pontuar para a Joaninha');
-assert.equal(blastContext.volcanicBlastScorer(ladybug,{owner:1}),2,'aliados e a própria Joaninha devem conceder pontos ao adversário');
-assert.match(insects,/logCombatResult\(`A erupção de \$\{volcanicName\} destruiu/,'as vítimas e os pontos da erupção devem aparecer na crônica');
+assert.equal(blastContext.volcanicBlastScorer(ladybug,{owner:1}),2,'aliados atingidos pela erupção devem conceder pontos ao adversário');
+const blastTimers=[],volcanic={id:'volcanic',owner:1,name:'Joaninha'},ally={id:'ally',owner:1,name:'Aliado'},enemy={id:'enemy',owner:2,name:'Inimigo'},blastUnits=[volcanic,ally,enemy];
+const sequenceContext={state:{players:{1:{score:0},2:{score:0}},animating:false},gameVersion:7,onlineMode:false,allUnits:()=>blastUnits,render(){},hint(){},resolveTyphoonPush(){},checkWin(){},logCombatResult(){},syncOnlineState(){},setTimeout:callback=>{blastTimers.push(callback)},volcanicBlastScorer:blastContext.volcanicBlastScorer,destroy:(victim,scorer)=>{let index=blastUnits.indexOf(victim);if(index<0)return false;blastUnits.splice(index,1);sequenceContext.state.players[scorer].score++;return true}};
+vm.createContext(sequenceContext);
+vm.runInContext(insects.match(/function resolveVolcanicBlast\([^\n]+/)[0],sequenceContext);
+assert.equal(sequenceContext.resolveVolcanicBlast(volcanic,[volcanic,ally,enemy],'Joaninha',7),true);
+assert.equal(sequenceContext.state.animating,true);
+assert.equal(blastTimers.length,1,'a primeira vítima deve aguardar meio segundo');
+blastTimers.shift()();blastTimers.shift()();
+assert.ok(blastUnits.includes(volcanic),'a própria Joaninha deve sobreviver à erupção');
+assert.deepEqual(blastUnits.map(u=>u.id),['volcanic']);
+assert.equal(sequenceContext.state.players[1].score,1,'destruir o inimigo deve pontuar para a Joaninha');
+assert.equal(sequenceContext.state.players[2].score,1,'destruir o aliado deve pontuar para o adversário');
+assert.equal(sequenceContext.state.animating,false,'a ação deve ser liberada somente após a última vítima');
+assert.match(insects,/u\.id!==defender\?\.id&&u\.id!==attacker\?\.id/,'a própria Joaninha deve ser excluída da erupção');
+assert.match(insects,/setTimeout\(\(\)=>\{[^\n]+\},500\)/,'a erupção deve resolver uma vítima a cada meio segundo');
+assert.match(insects,/logCombatResult\(`A erupção de \$\{name\} destruiu/,'as vítimas e os pontos da erupção devem aparecer na crônica');
+assert.match(insects,/function syncDireAntWaterTypes\(/,'o tipo ÁGUA da Formiga Funésta deve existir no estado real do peão');
+assert.match(insects,/u\.types=\[\.\.\.u\.types,'ÁGUA'\]/,'a Formiga Funésta deve receber ÁGUA enquanto a Vastidão estiver em campo');
+assert.match(insects,/delete u\.vastAntWater/,'o tipo temporário deve sair quando a Vastidão deixar o campo');
+assert.match(styles,/\.piece\.deck-insects\.kind-amberTragedy[^\n]+#d5aa27/,'a Tragédia Âmbar deve ter fundo amarelo');
+assert.match(insects,/counter\.className=`doom-counter/,'a Tragédia Âmbar deve mostrar seus contadores na Arena');
+assert.match(styles,/\.doom-counter\{/,'os contadores da Tragédia Âmbar devem possuir estilo visual');
 assert.match(expansion,/delete archetypes\.celestial/);
 assert.doesNotMatch(html,/data-deck="celestial"/);
 assert.equal((html.match(/data-deck="insects"/g)||[]).length,2);
