@@ -498,7 +498,7 @@ Alguns arquivos intencionalmente substituem funções anteriores. Não reorganiz
 
 ## 15. Estado conhecido no momento deste handoff
 
-- Versão 240 implementa separação entre o botão Confluxo e o código da sala.
+- Versão 241 corrige a confirmação de Flux/histórico com repetição segura e restaura animação e efeito do Zumbi na Terra Trêmula.
 - Clicar no código copia sem `#`.
 - Salas de Partida Rápida toleram atraso de registro para permitir entrada/espectador.
 - A função ativa `join_quick_match` do Supabase já foi corrigida para aceitar `egyptian` e `insects`.

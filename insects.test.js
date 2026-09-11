@@ -156,6 +156,12 @@ assert.match(insects,/u\.id!==defender\?\.id&&u\.id!==attacker\?\.id/,'a própri
 assert.match(insects,/setTimeout\(\(\)=>\{[^\n]+\},500\)/,'a erupção deve resolver uma vítima a cada meio segundo');
 assert.match(insects,/logCombatResult\(`A erupção de \$\{name\} destruiu/,'as vítimas e os pontos da erupção devem aparecer na crônica');
 assert.match(insects,/function syncDireAntWaterTypes\(/,'o tipo ÁGUA da Formiga Funésta deve existir no estado real do peão');
+assert.match(insects,/function resolveTremblingEarthCombat\(/,'a Terra Tremula deve possuir uma resolução de combate após a animação');
+assert.match(insects,/state\.animating=true;attackers\.forEach/,'a Terra Tremula deve marcar os participantes para a animação de combate');
+assert.match(insects,/defenders:defenders\.map\(u=>u\.id\)/,'a animação online deve incluir todos os defensores reunidos pela Arena');
+assert.match(insects,/setTimeout\(\(\)=>resolveTremblingEarthCombat\([^\n]+\),760\)/,'o resultado da Terra Tremula deve aguardar a animação');
+assert.match(insects,/if\(defeated\)resolveCandyZombieConversion\(u,defender\)/,'o Zombie derrotado na Terra Tremula deve converter quem o destruiu');
+assert.match(insects,/state\.onlineResultRecorded\?'RESULTADO REGISTRADO':'Calculando variação de Flux…'/,'um resultado confirmado não pode continuar aparecendo como cálculo infinito');
 assert.match(insects,/u\.types=\[\.\.\.u\.types,'ÁGUA'\]/,'a Formiga Funésta deve receber ÁGUA enquanto a Vastidão estiver em campo');
 assert.match(insects,/delete u\.vastAntWater/,'o tipo temporário deve sair quando a Vastidão deixar o campo');
 assert.match(styles,/\.piece\.deck-insects\.kind-amberTragedy[^\n]+#d5aa27/,'a Tragédia Âmbar deve ter fundo amarelo');
