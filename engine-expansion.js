@@ -119,7 +119,7 @@ validateGameCatalog();
 
 function archetypeVisual(key,extra=''){let a=archetypes[key];return `<img class="archetype-icon ${extra}" src="${a.emblemArt}" alt="Símbolo ${a.name}">`}
 function archetypeOfUnit(u){return state?.players?.[u?.owner]?.archetype||Object.keys(archetypes).find(key=>[...archetypes[key].pawns,...archetypes[key].fusions].includes(u?.kind))||'xadria'}
-function makePawnDeck(owner,key){let arc=archetypes[key];if(arc.pawnComposition)return shuffle([...arc.pawnComposition,...arc.pawnComposition].map(kind=>unit(kind,owner)));let fusionSlots=Math.min(12,arc.fusions.length*4),commonSlots=36-fusionSlots,cards=Array.from({length:commonSlots},(_,i)=>unit(arc.pawns[i%arc.pawns.length],owner));for(let i=0;i<fusionSlots;i++)cards.push(unit(arc.fusions[i%arc.fusions.length],owner));return shuffle(cards)}
+function makePawnDeck(owner,key){let arc=archetypes[key],normalKinds=[...new Set(arc.pawns||[])],combinedKinds=[...new Set(arc.fusions||[])],kinds=[...normalKinds,...combinedKinds];if(!normalKinds.length||kinds.length>20)throw new Error(`O arquétipo ${key} não cabe em uma pilha de 20 Peões.`);for(let i=0;kinds.length<20;i++)kinds.push(normalKinds[i%normalKinds.length]);return shuffle(kinds.map(kind=>unit(kind,owner)))}
 
 fusionRequirementVisual=function(card){
  if(!card?.fusion||card.calamityFrom)return'';

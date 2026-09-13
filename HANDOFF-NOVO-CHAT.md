@@ -18,7 +18,7 @@ Copie o bloco abaixo para o novo chat e anexe esta documentação quando possív
 - **Repositório GitHub:** <https://github.com/glacialmoongames/confluxo>.
 - **Branch de publicação:** `main`, raiz do repositório via GitHub Pages.
 - **Pasta local atual:** `C:\Users\Daniel\Documents\Codex\2026-08-10\referenced-chatgpt-conversation-this-is-an\outputs\xadria-site`.
-- **Versão atual exibida:** 240, em `index.html`.
+- **Versão atual exibida:** 242, em `index.html`.
 - **Idioma:** português do Brasil por padrão e inglês automático fora do Brasil ou quando escolhido manualmente.
 
 O símbolo do Confluxo é o ícone `flower-twirl`. O projeto usa principalmente ícones transparentes do Game-icons.net sob CC BY 3.0. Não gerar imagens por IA para as cartas: o usuário pediu expressamente imagens existentes e de uso livre.
@@ -498,6 +498,8 @@ Alguns arquivos intencionalmente substituem funções anteriores. Não reorganiz
 
 ## 15. Estado conhecido no momento deste handoff
 
+- Versão 242 torna o registro de Flux/histórico atômico e imediato, corrige a revanche online, faz lixo nuclear destruir peões empurrados e padroniza todas as pilhas em 20 cartas sem repetição consecutiva quando existe alternativa.
+- Migração correspondente: `supabase/migration-242-instant-results.sql`.
 - Versão 241 corrige a confirmação de Flux/histórico com repetição segura e restaura animação e efeito do Zumbi na Terra Trêmula.
 - Clicar no código copia sem `#`.
 - Salas de Partida Rápida toleram atraso de registro para permitir entrada/espectador.

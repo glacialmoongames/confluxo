@@ -75,7 +75,7 @@ async function runOnlineResultJob(job){
  if(!job||job.done||job.running)return false;job.running=true;job.attempts++;
  try{
   if(job.guest){let {data,error}=await accountRequestWithTimeout(accountClient.rpc('report_guest_match_result',{p_match_id:job.matchId,p_won:job.winner===job.player,p_guest_name:job.otherName,p_reason:job.reason,p_deck:job.deck}));if(error){scheduleOnlineResultRetry(job,Math.min(2400,500+job.attempts*180));return false}let delta=Number(data)||0;if(delta)return finishOnlineResultJob(job,delta);scheduleOnlineResultRetry(job);return false}
-  let winnerAccount=job.winner===job.player?job.mine:job.other,{data,error}=await accountRequestWithTimeout(accountClient.rpc('report_match_result',{p_match_id:job.matchId,p_opponent:job.other.id,p_winner:winnerAccount?.id||null,p_reason:job.reason,p_deck:job.deck}));if(error){scheduleOnlineResultRetry(job,Math.min(2400,500+job.attempts*180));return false}if(data)return finishOnlineResultJob(job);scheduleOnlineResultRetry(job);return false
+  let winnerAccount=job.winner===job.player?job.mine:job.other,{data,error}=await accountRequestWithTimeout(accountClient.rpc('report_match_result',{p_match_id:job.matchId,p_opponent:job.other.id,p_winner:winnerAccount?.id||null,p_reason:job.reason,p_deck:job.deck}));if(error){scheduleOnlineResultRetry(job,Math.min(2400,500+job.attempts*180));return false}if(data)return finishOnlineResultJob(job,typeof data==='number'?data:0);scheduleOnlineResultRetry(job);return false
  }finally{job.running=false}
 }
 async function reportOnlineMatchResult(winner,reason){

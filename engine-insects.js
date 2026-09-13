@@ -37,6 +37,8 @@ function revertCalamity(u){
  log(`${old} perdeu sua Calamidade e voltou a ser ${u.name}.`,'effect');return true
 }
 function nuclearWasteAt(r,c){return(state.obstacles||[]).find(item=>item.type==='NUCLEAR'&&item.row===r&&item.col===c)}
+function lethalNuclearWasteAt(u,r,c){let waste=nuclearWasteAt(r,c);return waste&&!u?.types?.includes('RADIOATIVO')?waste:null}
+function resolveNuclearWasteLanding(u,r,c,scorer=u?.owner===1?2:1){if(!u||!lethalNuclearWasteAt(u,r,c))return false;let name=u.name,removed=destroy(u,scorer,'lixo nuclear');if(removed)log(`${name} caiu no lixo nuclear em ${boardCoordinate(r,c)} e foi destruído; o lixo permaneceu na Arena.`,'arena');return removed}
 function createNuclearWaste(u){
  if(state.arena!=='nuclearWinter'||!u)return;state.obstacles??=[];
  rawMovementOffsets(u).forEach(([dr,dc])=>{let row=u.row+dr*(u.owner===2?-1:1),col=u.col+dc;if(row<0||row>=ROWS||col<0||col>=COLS||at(row,col)||pitAt(row,col)||flameTempleAt(row,col))return;if(!nuclearWasteAt(row,col))state.obstacles.push({row,col,type:'NUCLEAR',source:'nuclearWinter',expiresAfterStep:(state.insectEndStep||0)+2})});
@@ -68,7 +70,7 @@ function playBadOmen(player,index){
 }
 
 const baseInsectOnUnitDeployed=onUnitDeployed;
-onUnitDeployed=function(u){let result=baseInsectOnUnitDeployed(u);if(u?.kind==='amberTragedy'){let count=(state.insectArenasPlayed?.[u.owner]||[]).length;u.doomCounters=count;if(count>=5)state.insectWinner=u.owner}let waste=nuclearWasteAt(u?.row,u?.col);if(waste&&!u.types.includes('RADIOATIVO')){let name=u.name;destroy(u,u.owner===1?2:1,'lixo nuclear');log(`${name} entrou sobre lixo nuclear e foi destruído.`,'arena')}mutantContactSpread();return result};
+onUnitDeployed=function(u){let result=baseInsectOnUnitDeployed(u);if(u?.kind==='amberTragedy'){let count=(state.insectArenasPlayed?.[u.owner]||[]).length;u.doomCounters=count;if(count>=5)state.insectWinner=u.owner}resolveNuclearWasteLanding(u,u?.row,u?.col);mutantContactSpread();return result};
 
 const baseInsectEffectiveAtk=effectiveAtk;
 effectiveAtk=function(u,defending,dynamicDepth=0){
@@ -85,7 +87,7 @@ doMove=function(u,r,c){
  let waste=nuclearWasteAt(r,c),water=insectWaterUnit(u),name=u?.name,result=baseInsectDoMove(u,r,c);
  if(!state?.players?.[u?.owner]?.units?.some(piece=>piece.id===u.id))return result;
  if(state.arena==='endlessOcean'){if(water){u.bonusAtk=(u.bonusAtk||0)+50;log(`${name} ganhou 50 ATK ao se mover no Oceano sem fim.`,'arena')}else{let lost=reduceGoldAttack(u,50);if(lost)log(`${name} perdeu ${lost} ATK ao se mover no Oceano sem fim.`,'arena')}}
- if(waste&&!u.types.includes('RADIOATIVO')){destroy(u,u.owner===1?2:1,'lixo nuclear');log(`${name} pisou em lixo nuclear e foi destruído.`,'arena')}
+ if(waste)resolveNuclearWasteLanding(u,r,c)
  mutantContactSpread();return result
 };
 const baseInsectDestroy=destroy;
@@ -94,7 +96,7 @@ destroy=function(u,scorer,reason='combate'){
  let removed=baseInsectDestroy(u,scorer,reason);if(!removed)return false;
  if(snapshot.kind==='radiantCockroach'){adjacentUnits.filter(v=>allUnits().some(unit=>unit.id===v.id)).forEach(v=>{v.types=['MUTANTE'];v.baseTypes=['MUTANTE']});applyArenaState('nuclearWinter',snapshot.owner,{cancelDuplicate:false});log(`${snapshot.name} converteu os peões adjacentes em MUTANTE e trouxe o Inverno Nuclear.`,'arena')}
  createNuclearWaste({...snapshot});
- if(state.arena==='wildCage'&&reason==='combate'&&scorer){let player=state.players[scorer];if(player.effectDeck.length){player.hand.push(player.effectDeck.pop());log(`${player.name} comprou um Efeito por vencer um combate na Jaula Selvagem.`,'effect')}}
+ if(state.arena==='wildCage'&&reason==='combate'&&scorer){let player=state.players[scorer];if(player.effectDeck.length){player.hand.push(takeEffectFromDeck(player));log(`${player.name} comprou um Efeito por vencer um combate na Jaula Selvagem.`,'effect')}}
  return true
 };
 const baseInsectResolveCombat=resolveCombat;
