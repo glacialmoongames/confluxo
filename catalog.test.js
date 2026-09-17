@@ -22,7 +22,7 @@ const definitions = [catalogSource, coreSource.slice(0,coreSource.indexOf('let s
 const integrated = {console};
 vm.createContext(integrated);
 vm.runInContext(`${definitions}\nthis.summary=validateGameCatalog();this.defs=defs;this.effects=effects;this.archetypes=archetypes`, integrated);
-for (const name of ['uid','unit','shuffle','makePawnDeck','ownedFusionKinds','ownsEveryUniqueFusion','takePawnFromDeck','takeEffectFromDeck','makeEffectDeck']) {
+for (const name of ['uid','unit','shuffle','addNormalMaterial','fusionNormalMaterialCounts','makePawnDeck','ownedFusionKinds','ownsEveryUniqueFusion','takePawnFromDeck','takeEffectFromDeck','makeEffectDeck']) {
   vm.runInContext(coreSource.match(new RegExp(`function ${name}\\([^\\n]+`))[0], integrated);
 }
 
@@ -45,15 +45,18 @@ assert.equal(integrated.defs.candyZombie.atk,150);
 assert.equal(integrated.defs.cookieDemon.materials.type,'DOCE');
 assert.equal(integrated.defs.duck.text,'Não é destruída por combate. Pode se mover uma vez por turno sem nunca gastar a ação de movimento.');
 assert.match(integrated.effects.moon.text,/preenche continuamente seu raio até 3 casas/);
+const expectedNormalMaterials={xadria:15,wild:7,abyss:5,candy:8,gold:5,egyptian:7,insects:6};
 
 for (const [key,deck] of Object.entries(integrated.archetypes)) {
   const pawnDeck = integrated.makePawnDeck(1,key);
   const effectDeck = integrated.makeEffectDeck(key);
-  assert.equal(pawnDeck.length,20,`${key} deve ter exatamente 20 Peões`);
-  assert.equal(effectDeck.length,20,`${key} deve ter exatamente 20 Efeitos`);
+  assert.equal(pawnDeck.length,25,`${key} deve ter exatamente 25 Peões`);
+  assert.equal(effectDeck.length,25,`${key} deve ter exatamente 25 Efeitos`);
   for (const kind of [...new Set([...deck.pawns,...deck.fusions])]) assert.ok(pawnDeck.some(card=>card.kind===kind),`${key} deve conter ${kind}`);
   for (const effect of [...new Set(deck.effects.filter(effect=>!integrated.effects[effect]?.undrawable))]) assert.ok(effectDeck.includes(effect),`${key} deve conter ${effect}`);
-  assert.ok(pawnDeck.filter(card=>!card.fusion).length>=Math.max(0,...deck.fusions.map(kind=>integrated.defs[kind].fusion||0)),`${key} deve ter materiais normais suficientes para combinar`);
+  const required=integrated.fusionNormalMaterialCounts(key),actual=pawnDeck.filter(card=>!card.fusion).reduce((counts,card)=>(counts[card.kind]=(counts[card.kind]||0)+1,counts),{});
+  assert.equal(Object.values(required).reduce((sum,count)=>sum+count,0),expectedNormalMaterials[key],`${key} deve reservar a quantidade correta de materiais normais`);
+  for(const [kind,count] of Object.entries(required))assert.ok((actual[kind]||0)>=count,`${key} deve conter ${count} cópia(s) normal(is) de ${kind} para suas combinações`);
 }
 const variedEffects={effectDeck:['pit','pit','push'],lastEffectDrawKey:'pit'};
 assert.equal(integrated.takeEffectFromDeck(variedEffects),'push','a compra não deve repetir o último Efeito quando há alternativa');

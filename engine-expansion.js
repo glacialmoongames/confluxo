@@ -119,8 +119,6 @@ validateGameCatalog();
 
 function archetypeVisual(key,extra=''){let a=archetypes[key];return `<img class="archetype-icon ${extra}" src="${a.emblemArt}" alt="Símbolo ${a.name}">`}
 function archetypeOfUnit(u){return state?.players?.[u?.owner]?.archetype||Object.keys(archetypes).find(key=>[...archetypes[key].pawns,...archetypes[key].fusions].includes(u?.kind))||'xadria'}
-function makePawnDeck(owner,key){let arc=archetypes[key],normalKinds=[...new Set(arc.pawns||[])],combinedKinds=[...new Set(arc.fusions||[])],kinds=[...normalKinds,...combinedKinds];if(!normalKinds.length||kinds.length>20)throw new Error(`O arquétipo ${key} não cabe em uma pilha de 20 Peões.`);for(let i=0;kinds.length<20;i++)kinds.push(normalKinds[i%normalKinds.length]);return shuffle(kinds.map(kind=>unit(kind,owner)))}
-
 fusionRequirementVisual=function(card){
  if(!card?.fusion||card.calamityFrom)return'';
  let field=state?.players?.[card.owner]?.units?.filter(u=>u.row!==null)||[],requirements=card.materials?.requirements||null;

@@ -18,7 +18,7 @@ Copie o bloco abaixo para o novo chat e anexe esta documentação quando possív
 - **Repositório GitHub:** <https://github.com/glacialmoongames/confluxo>.
 - **Branch de publicação:** `main`, raiz do repositório via GitHub Pages.
 - **Pasta local atual:** `C:\Users\Daniel\Documents\Codex\2026-08-10\referenced-chatgpt-conversation-this-is-an\outputs\xadria-site`.
-- **Versão atual exibida:** 245, em `index.html`. Revisão visual em `styles-identity.css`; decisões e referências em `DESIGN.md`. Log estruturado em `renderLogEntry`, sem mudar regras. Os créditos de arte permanecem em `CREDITOS.md`, mas não são exibidos nos detalhes das cartas.
+- **Versão atual exibida:** 246, em `index.html`. Revisão visual em `styles-identity.css`; decisões e referências em `DESIGN.md`. Cada pilha possui 25 cartas; a pilha de Peões inclui todos os combinados e reserva materiais normais suficientes para todas as combinações. Os créditos de arte permanecem em `CREDITOS.md`, mas não são exibidos nos detalhes das cartas.
 - **Idioma:** português do Brasil por padrão e inglês automático fora do Brasil ou quando escolhido manualmente.
 
 O símbolo do Confluxo é o ícone `flower-twirl`. O projeto usa principalmente ícones transparentes do Game-icons.net sob CC BY 3.0. Não gerar imagens por IA para as cartas: o usuário pediu expressamente imagens existentes e de uso livre.
