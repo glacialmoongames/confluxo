@@ -499,8 +499,8 @@ assert.doesNotMatch(page, /data-deck="celestial"/);
 assert.match(page, /data-deck="insects"/);
 assert.match(page, /engine-celestial\.js\?v=11/);
 assert.match(page, /engine-actions-b\.js\?v=35/);
-assert.match(page, /engine-actions-a\.js\?v=44/);
-assert.match(page, /VERSÃO 244/);
+assert.match(page, /engine-actions-a\.js\?v=45/);
+assert.match(page, /VERSÃO 245/);
 assert.match(page, /game-catalog\.js\?v=1/);
 assert.match(source, /function registerPawns/);
 assert.match(source, /function registerEffects/);
@@ -537,7 +537,7 @@ assert.match(styles,/@media\(max-width:760px\)\{\.topbar\{grid-template-columns:
 assert.match(source, /confirm\('Voltar ao menu inicial\? A partida atual será encerrada\.'\)/);
 assert.match(page, /engine-core\.js\?v=37/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
-assert.match(page, /engine-actions-a\.js\?v=44/);
+assert.match(page, /engine-actions-a\.js\?v=45/);
 assert.match(page, /engine-actions-b\.js\?v=35/);
 assert.match(page, /i18n\.js\?v=23/);
 assert.match(source, /function boardFeatureInspectionAt\(r,c\)/, 'obstáculos do tabuleiro devem poder ser inspecionados');
@@ -757,7 +757,7 @@ for (const [key, effect] of Object.entries(context.effects)) {
   assert.ok(fs.existsSync(effect.art), `arquivo de arte ausente para a carta ${key}`);
 }
 assert.match(source, /effect-hand-art/);
-assert.match(source, /Imagem: \$\{e\.artCredit\}/);
+assert.doesNotMatch(source, /<small class="art-credit">Imagem:/, 'créditos não devem ocupar os detalhes das cartas');
 assert.match(styles, /effect-card \.effect-hand-art/);
 assert.ok(fs.existsSync('CREDITOS.md'));
 assert.match(styles, /data-arena=project/);

@@ -24,7 +24,6 @@ assert.match(source, /function translateRules\(/, 'o guia de regras deve possuir
 assert.match(source, /MutationObserver/, 'conteúdo criado durante a partida também deve ser traduzido');
 for (const label of ["['Peão','Pawn']","['Peões','Pawns']","['PONTO','POINT']","['PONTOS','POINTS']","['ALCANCE','RANGE']","['EQUIPAMENTOS','EQUIPMENT']"]) assert.ok(source.includes(label), `rótulo dinâmico sem tradução: ${label}`);
 assert.match(source, /point=trimmed\.match\(\/\^\(\\d\+\) PONTO\(S\)\?\$\//, 'a pontuação numérica nos detalhes deve usar singular e plural em inglês');
-assert.match(source, /replace\(\/\^Imagem: \/,'Image: '\)/, 'os créditos de arte nos detalhes devem ser traduzidos');
 assert.match(source, /replace\('NECESSÁRIOS:','REQUIRED:'\)/, 'o resumo de materiais na mão deve ser traduzido');
 assert.match(source, /'alt'/, 'descrições acessíveis de imagens também devem ser traduzidas');
 assert.match(source, /function translatedCardNames\(/, 'nomes de cartas dentro de descrições acessíveis também devem ser traduzidos');
