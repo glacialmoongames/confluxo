@@ -411,3 +411,10 @@
 
 /* Versão 202: seletor de idioma no rodapé. */
 .setup-footer .language-toggle{min-width:54px;padding:7px 9px;border:1px solid #514758;background:#211a25;color:#f4eadc;font:800 8px Arial;letter-spacing:1px;cursor:pointer}.setup-footer .language-toggle:hover{border-color:#d6b65e}@media(max-width:760px){.setup-footer .language-toggle{justify-self:center}}
+
+/* Versão 247: identidade azul do Baralho Aleatório. */
+.deck-random,[data-deck=random]{--archetype-bg:var(--arc-random-bg);--archetype-border:var(--arc-random-border);--archetype-label:var(--arc-random-label)}
+.deck-choice[data-deck=random]{--deck-color:hsl(207 48% 25%);--selection-bg:linear-gradient(145deg,hsl(207 48% 30%),hsl(207 45% 14%));--selection-border:hsl(207 78% 65%);--selection-glow:hsl(207 85% 62%/35%)}
+.board[data-p1=random]{--p1-zone:linear-gradient(145deg,hsl(207 16% 34%),hsl(207 10% 25%));--p1-zone-overlay:hsl(207 72% 48%/30%);--p1-zone-edge:var(--arc-random-border)}.board[data-p2=random]{--p2-zone:linear-gradient(145deg,hsl(207 16% 34%),hsl(207 10% 25%));--p2-zone-overlay:hsl(207 72% 48%/30%);--p2-zone-edge:var(--arc-random-border)}
+.piece.deck-random,.reserve-piece.deck-random{background:var(--arc-random-bg);border-color:var(--arc-random-border);color:#f3fbff}.piece.deck-random .art-crop,.reserve-piece.deck-random .art-crop,.unit-card[data-deck=random] .art-crop{background:var(--arc-random-bg)!important}.reserve-hand-panel .reserve-piece.deck-random .reserve-label{background:inherit;color:#f3fbff}.reserve-hand-panel .reserve-piece.deck-random .reserve-label small{color:var(--arc-random-label)}
+.unit-card:not(.combined-detail)[data-deck=random]{background:#f5efe2;color:#251f27;border-color:var(--arc-random-bg)}.unit-card:not(.combined-detail)[data-deck=random] .detail-art{background:var(--arc-random-bg)!important}.unit-card.combined-detail[data-deck=random],.reserve-piece.fusion-card.deck-random{background:linear-gradient(145deg,#1769aa,#0b2740);border-color:#73c4ff;box-shadow:inset 0 0 0 2px #73c4ff55,0 0 12px #49a9eebb!important}

@@ -372,6 +372,7 @@ const amalgamContext = {
   fusionLinked: (a, b) => Math.abs(a.row - b.row) + Math.abs(a.col - b.col) === 1,
   fusionSetConnected: () => true,
   archetypeOfUnit: unit => unit.archetype,
+  nativeArchetypeOfUnit: unit => unit.archetype,
   renderBoard: () => {},
   hint: () => {},
   completeFusion: (_card, parts) => { completedAmalgamParts = parts; }
@@ -500,20 +501,20 @@ assert.match(page, /data-deck="insects"/);
 assert.match(page, /engine-celestial\.js\?v=11/);
 assert.match(page, /engine-actions-b\.js\?v=35/);
 assert.match(page, /engine-actions-a\.js\?v=45/);
-assert.match(page, /VERSÃO 246/);
+assert.match(page, /VERSÃO 247/);
 assert.match(page, /game-catalog\.js\?v=1/);
 assert.match(source, /function registerPawns/);
 assert.match(source, /function registerEffects/);
 assert.match(source, /function registerArchetype/);
 assert.match(source, /function validateGameCatalog/);
 assert.match(page, /network\.js\?v=51/);
-assert.match(page, /engine-ui\.js\?v=61/);
+assert.match(page, /engine-ui\.js\?v=62/);
 assert.match(source, /function botCombinationWinsNow/);
 assert.match(source, /usesCombined:parts\.some\(u=>u\.fusion\)/);
 assert.match(source, /normalOptions\.length\?normalOptions:winningExceptions/);
 assert.match(source, /applyArenaState\(k,state\.current\)/);
 assert.match(page, /styles-core\.css\?v=11/);
-assert.match(page, /styles-responsive\.css\?v=84/);
+assert.match(page, /styles-responsive\.css\?v=85/);
 assert.match(source, /function renderInspectedMovementRange\(\)/);
 assert.match(source, /function playerHeaderEmblem\(player,number\)/, 'partidas online devem renderizar a identidade de perfil no cabeçalho');
 assert.match(source, /if\(!onlineMode\)return archetypeVisual\(player\.archetype\)/, 'modos locais devem continuar mostrando o ícone do deck');
@@ -535,11 +536,11 @@ assert.match(network,/navigator\.clipboard\.writeText\(code\)/,'o código deve s
 assert.match(styles,/\.match-room-code\{[^}]+font:800 9px\/1 monospace/,'o código da sala deve ter um selo legível ao lado do nome');
 assert.match(styles,/@media\(max-width:760px\)\{\.topbar\{grid-template-columns:minmax\(112px,auto\)/,'o cabeçalho mobile deve reservar espaço para nome e código');
 assert.match(source, /confirm\('Voltar ao menu inicial\? A partida atual será encerrada\.'\)/);
-assert.match(page, /engine-core\.js\?v=38/);
+assert.match(page, /engine-core\.js\?v=39/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
 assert.match(page, /engine-actions-a\.js\?v=45/);
 assert.match(page, /engine-actions-b\.js\?v=35/);
-assert.match(page, /i18n\.js\?v=23/);
+assert.match(page, /i18n\.js\?v=24/);
 assert.match(source, /function boardFeatureInspectionAt\(r,c\)/, 'obstáculos do tabuleiro devem poder ser inspecionados');
 assert.match(source, /key:'pit',boardFeature:true/, 'Poço sem Fundo deve abrir os detalhes da carta que o criou');
 assert.match(source, /key:'blackHole',boardFeature:true/, 'Buraco Negro deve abrir os detalhes da carta que o criou');
@@ -601,7 +602,7 @@ assert.equal(context.effects.camouflage, undefined, 'Camuflar-se deve sair do jo
 assert.doesNotMatch(source, /function flipSelected|function botSetFaceDown/, 'jogadores e bots não devem mais virar peões');
 assert.match(source, /hasEffect\(attacker,'jaguar'\)[^\n]+bonusAtk=.*\+100/, 'a Onça deve ganhar 100 ATK quando derrota um adversário');
 assert.match(source, /selectedEffect=\{key:k,index:i,owner,arena:false\}/, 'os detalhes devem manter o dono da carta inspecionada');
-assert.match(page, /styles-responsive\.css\?v=84/);
+assert.match(page, /styles-responsive\.css\?v=85/);
 assert.match(page, /<small>CONFLUXO<\/small>/,'a abertura deve exibir somente o nome Confluxo');
 assert.doesNotMatch(page, /DUELO DO CONFLUXO/,'o subtítulo antigo deve ser removido da abertura');
 assert.match(styles, /\.setup-card>small\{color:#fff\}/,'o nome Confluxo da abertura deve ser branco');
