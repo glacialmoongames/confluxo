@@ -11,7 +11,7 @@ function attackExplanation(u){
  return{total,rows};
 }
 const explainBaseRenderCard=renderCard;
-renderCard=function(){explainBaseRenderCard();const u=detailSelectedUnit();if(!u||detailSelectedEffect())return;const box=document.querySelector('#unit-card .statline');if(!box)return;const data=attackExplanation(u);box.insertAdjacentHTML('afterend',`<details class="attack-explanation"><summary>${combatText('Como chegou a este ATK?','How is this ATK calculated?')}</summary>${data.rows.map((row,i)=>`<div><span>${escapeLogText(row.label)}</span><b>${i&&row.value>0?'+':''}${row.value}</b></div>`).join('')}<div><strong>${combatText('ATK atual','Current ATK')}</strong><b>${data.total}</b></div><small>${combatText('O saldo reúne efeitos que somam, reduzem ou substituem o ataque. Valores podem mudar durante o combate.','The net includes effects that add, reduce or replace attack. Values may change during combat.')}</small></details>`)};
+renderCard=function(){explainBaseRenderCard();const u=detailSelectedUnit();if(!u||detailSelectedEffect())return;const box=document.querySelector('#unit-card .statline');if(!box)return;const data=attackExplanation(u);box.insertAdjacentHTML('afterend',`<details class="attack-explanation"><summary>${combatText('Como chegou a este ATK?','How is this ATK calculated?')}</summary>${data.rows.map((row,i)=>`<div><span>${escapeLogText(row.label)}</span><b>${i&&row.value>0?'+':''}${row.value}</b></div>`).join('')}<div><strong>${combatText('ATK atual','Current ATK')}</strong><b>${data.total}</b></div></details>`)};
 function combatPreviewData(attacker,defender){
  const arena=calamityArenaFromAttack(attacker)||state.arena,trembling=arena==='tremblingEarth';
  const unique=list=>[...new Map(list.map(u=>[u.id,u])).values()];

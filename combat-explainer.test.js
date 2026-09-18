@@ -23,4 +23,5 @@ assert.equal(combatLogs.length,1,'o combate deve gerar uma única explicação c
 assert.match(combatLogs[0].message,/Infantaria 200 ATK \+ Cavalo 250 ATK \+ Infantaria 250 ATK = 700 ATK contra .*400 ATK/);
 assert.doesNotMatch(combatLogs[0].message,/\(700 × 400\)/,'a comparação numérica antiga não deve ser repetida');
 assert.doesNotMatch(source,/showModal|combatPreviewDialog|destroy=function/,'não deve haver prompt prévio nem log duplicado por destruição');
+assert.doesNotMatch(source,/O saldo reúne efeitos|The net includes effects/,'os detalhes de ATK não devem exibir a observação removida');
 console.log('Combat explanation tests passed');
