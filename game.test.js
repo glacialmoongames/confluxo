@@ -874,4 +874,3 @@ assert.match(styles, /\.reserve-piece\.fusion-card\.deck-celestial\{background:l
 assert.match(styles, /\.unit-card\.combined-detail\[data-deck=abyss\]\{background:linear-gradient/);
 
 console.log('game card tests passed');
-

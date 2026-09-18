@@ -44,4 +44,3 @@ logCombatResult=function(message,before){
  }
  return explainBaseLogCombatResult(message,before);
 };
-

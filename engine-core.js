@@ -112,4 +112,3 @@ function viewPlayerNumber(){return spectatingMatch()?spectatorViewPlayer:botMode
 function perspectivePlayer(){return spectatingMatch()?spectatorViewPlayer:botMode?1:onlineMode&&localPlayer?localPlayer:state.current}
 function setSpectatorView(player){if(!spectatingMatch()||!state)return;spectatorViewPlayer=player===2?2:1;spectatorSelected=null;spectatorEffect=null;rangeSelectedUnitId=null;render()}
 function canLocalAct(){if(state?.animating||botVsBot)return false;if(botMode)return state.swordQueue?.length?state.swordQueue[0]!==botPlayer:state.current!==botPlayer;return !onlineMode||(state.swordQueue?.length?state.swordQueue[0]===localPlayer:state.current===localPlayer)}
-

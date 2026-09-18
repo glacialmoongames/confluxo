@@ -150,4 +150,3 @@ $$('.deck-choice').forEach(button=>button.onclick=()=>{let row=button.closest('.
 $('#start-game').onclick=()=>{if(onlineMode)return startOnlineGame();$('#setup').classList.add('hidden');newGame()};
 $('#point-goal').onchange=()=>{setPointGoal($('#point-goal').value);if(onlineMode&&onlineRole==='host')sendDeckChoice()};
 newGame();
-

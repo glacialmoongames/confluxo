@@ -65,4 +65,3 @@ assert.equal(ra.mummyTransformPending,undefined,'Rá não deve ser marcado para 
 assert.equal(mummyContext.transform(ra),false,'Rá é imune a qualquer transformação em Múmia Cinzenta');
 
 console.log('Egyptian Flames tests passed');
-

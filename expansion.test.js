@@ -106,4 +106,3 @@ assert.doesNotMatch(expansion, /Peões virados para baixo são destruídos/);
 for (const icon of ['caveman','feline']) assert.ok(fs.existsSync(`assets/icons/${icon}.svg`), `ícone ausente: ${icon}`);
 
 console.log('Expansion tests passed.');
-

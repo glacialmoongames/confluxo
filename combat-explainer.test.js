@@ -24,4 +24,3 @@ assert.match(combatLogs[0].message,/Infantaria 200 ATK \+ Cavalo 250 ATK \+ Infa
 assert.doesNotMatch(combatLogs[0].message,/\(700 × 400\)/,'a comparação numérica antiga não deve ser repetida');
 assert.doesNotMatch(source,/showModal|combatPreviewDialog|destroy=function/,'não deve haver prompt prévio nem log duplicado por destruição');
 console.log('Combat explanation tests passed');
-
