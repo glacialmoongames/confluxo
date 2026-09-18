@@ -22,7 +22,7 @@ const definitions = [catalogSource, coreSource.slice(0,coreSource.indexOf('let s
 const integrated = {console};
 vm.createContext(integrated);
 vm.runInContext(`${definitions}\nthis.summary=validateGameCatalog();this.defs=defs;this.effects=effects;this.archetypes=archetypes`, integrated);
-for (const name of ['uid','unit','shuffle','addNormalMaterial','nativeArchetypeForKind','fusionNormalMaterialCountsFor','fusionNormalMaterialCounts','randomCombinedSetValid','randomEffectHasPawnTarget','createRandomDeckRecipe','randomVisualArchetype','makePawnDeck','ownedFusionKinds','ownsEveryUniqueFusion','takePawnFromDeck','takeEffectFromDeck','makeEffectDeck']) {
+for (const name of ['uid','unit','shuffle','addNormalMaterial','nativeArchetypeForKind','fusionNormalMaterialCountsFor','fusionNormalMaterialCounts','randomCombinedSetValid','randomEffectHasPawnTarget','ensureRandomConditionMaterials','createRandomDeckRecipe','randomVisualArchetype','makePawnDeck','ownedFusionKinds','ownsEveryUniqueFusion','takePawnFromDeck','takeEffectFromDeck','makeEffectDeck']) {
   vm.runInContext(coreSource.match(new RegExp(`function ${name}\\([^\\n]+`))[0], integrated);
 }
 
@@ -50,6 +50,8 @@ assert.equal(integrated.randomEffectHasPawnTarget('moon',['horse']),false,'Lua e
 assert.equal(integrated.randomEffectHasPawnTarget('moon',['earth']),true,'Lua em Órbita pode entrar quando há uma Terra');
 assert.equal(integrated.randomEffectHasPawnTarget('badOmen',['horse']),false,'Mal preságio exige um Peão Funesto compatível');
 assert.equal(integrated.randomEffectHasPawnTarget('badOmen',['direAnt']),true,'Mal preságio pode entrar quando há um Peão Funesto');
+assert.equal(integrated.ensureRandomConditionMaterials(['anubis'],{}).fireSlave,1,'Anúbis no Aleatório deve reservar um Escravo das Chamas');
+assert.equal(integrated.ensureRandomConditionMaterials(['ammit'],{}).fireSlave,undefined,'outros Combinados não devem forçar o Escravo das Chamas');
 const expectedNormalMaterials={xadria:15,wild:7,abyss:5,candy:8,gold:5,egyptian:7,insects:6};
 
 for (const [key,deck] of Object.entries(integrated.archetypes)) {
@@ -87,6 +89,7 @@ for(let attempt=0;attempt<250;attempt++){
   assert.equal(effectDeck.length,25,`sorteio ${attempt} deve caber em 25 Efeitos`);
   assert.equal(new Set(effectDeck.filter(kind=>integrated.effects[kind].type==='ARENA')).size,2,`sorteio ${attempt} deve manter exatamente 2 tipos de Arena`);
   const pawnKinds=pawns.map(card=>card.kind);
+  if(recipe.fusions.includes('anubis'))assert.ok(pawnKinds.includes('fireSlave'),`sorteio ${attempt} com Anúbis precisa conter Escravo das Chamas`);
   assert.ok(effectDeck.every(kind=>integrated.effects[kind].type==='ARENA'||integrated.randomEffectHasPawnTarget(kind,pawnKinds)),`sorteio ${attempt} não deve conter Efeito sem alvo possível na pilha de Peões`);
   for(const [kind,count] of Object.entries(recipe.materialCounts))assert.ok(pawns.filter(card=>card.kind===kind).length>=count,`sorteio ${attempt} precisa dos materiais de ${kind}`);
 }

@@ -15,6 +15,8 @@ assert.match(ui,/hasEffect\(selected,'rider'\)[^\n]+u\.types\.includes\('NATURAL
 assert.match(ui,/function mountRider[^\n]+target\.owner!==rider\.owner[^\n]+target\.types\.includes\('NATURAL'\)/,'a montagem deve validar aliado e tipo NATURAL');
 assert.match(actionsA,/if\(mobile&&u\)hideMobileDetails\(\)/,'o primeiro toque mobile em um peão deve manter detalhes ocultos');
 assert.match(actionsA,/repeated&&toggleMobileDetails\(\)/,'o segundo toque mobile deve alternar os detalhes');
+assert.doesNotMatch(ui,/descartou uma jogada inválida|retomou o turno após uma jogada automática|% de prioridade por possuir|procurando materiais para combinar|protegendo a formação/,'a crônica não deve revelar decisões internas do bot');
+assert.match(ui,/ativou a Arena.*,'arena'/,'a Arena jogada pelo bot deve entrar explicitamente na crônica');
 
 for (const card of ['divinissimo','terror','atra','impoluto','monkey','jaguar','crocodile','creature','devotee','raven','amalgam','repugnium','anssiedium']) {
   assert.match(expansion, new RegExp(`${card}:\\{`), `definição ausente: ${card}`);
@@ -42,7 +44,7 @@ assert.match(ui, /sacrificeForAtra/);
 assert.match(page, /id="setup-rules-btn"/);
 assert.match(page, /engine-expansion\.js\?v=45/);
 assert.doesNotMatch(expansion, /Object\.assign\((?:defs|effects|archetypes)/, 'o catálogo não deve ser alterado diretamente');
-assert.match(page, /VERSÃO 255/);
+assert.match(page, /VERSÃO 256/);
 assert.match(runtime, /playUnitAnimation\(u,'goldPriestPulse'\)/, 'efeito do Sacerdote não deve reiniciar a cada renderização');
 assert.match(runtime, /playUnitAnimation\(u,'goldDrainTo'\)/, 'partículas de Tudo ou Nada não devem reiniciar a cada renderização');
 assert.match(expansion, /impoluto:\{[^\n]+types:\['LUZ'\]/, 'Impoluto deve ser do tipo LUZ conforme Cartas.md');

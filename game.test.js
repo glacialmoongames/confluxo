@@ -501,14 +501,14 @@ assert.match(page, /data-deck="insects"/);
 assert.match(page, /engine-celestial\.js\?v=11/);
 assert.match(page, /engine-actions-b\.js\?v=36/);
 assert.match(page, /engine-actions-a\.js\?v=47/);
-assert.match(page, /VERSÃO 255/);
+assert.match(page, /VERSÃO 256/);
 assert.match(page, /game-catalog\.js\?v=1/);
 assert.match(source, /function registerPawns/);
 assert.match(source, /function registerEffects/);
 assert.match(source, /function registerArchetype/);
 assert.match(source, /function validateGameCatalog/);
 assert.match(page, /network\.js\?v=51/);
-assert.match(page, /engine-ui\.js\?v=64/);
+assert.match(page, /engine-ui\.js\?v=65/);
 assert.match(source, /function botCombinationWinsNow/);
 assert.match(source, /usesCombined:parts\.some\(u=>u\.fusion\)/);
 assert.match(source, /normalOptions\.length\?normalOptions:winningExceptions/);
@@ -536,7 +536,7 @@ assert.match(network,/navigator\.clipboard\.writeText\(code\)/,'o código deve s
 assert.match(styles,/\.match-room-code\{[^}]+font:800 9px\/1 monospace/,'o código da sala deve ter um selo legível ao lado do nome');
 assert.match(styles,/@media\(max-width:760px\)\{\.topbar\{grid-template-columns:minmax\(112px,auto\)/,'o cabeçalho mobile deve reservar espaço para nome e código');
 assert.match(source, /confirm\('Voltar ao menu inicial\? A partida atual será encerrada\.'\)/);
-assert.match(page, /engine-core\.js\?v=43/);
+assert.match(page, /engine-core\.js\?v=44/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
 assert.match(page, /engine-actions-a\.js\?v=47/);
 assert.match(page, /engine-actions-b\.js\?v=36/);
@@ -708,13 +708,14 @@ assert.match(source, /function botUsePushEffect\(player,p,requirePit=false\)/);
 assert.match(source, /function botUseRetreatEffect\(player,p\)/);
 assert.doesNotMatch(source, /function botUseCamouflageEffect\(player,p\)/);
 assert.match(source, /played<2&&botPlayEffect\(\)/);
+const arenaBotLogs=[];
 const arenaBotContext = {
   state: {arena: 'roses', defeatedCount: 0, players: {1: {units: []}, 2: {name: 'Bot', hand: ['blackRoses'], units: []}}},
   effects: {roses: {name: 'Campo das Rosas Pálidas', type: 'ARENA'}, blackRoses: {name: 'Colina das Rosas Negras', type: 'ARENA'}, kingdom: {name: 'Reino de Xadria', type: 'ARENA'}},
   botActor: () => 2, botOpponent: () => 1,
   botUsePushEffect: () => false, botUseCastleEffect: () => false, botUseGoldEffects: () => false, botUsePitEffect: () => false, botUseEyesEffect: () => false,
   botUseRetreatEffect: () => false,
-  clearJungleFeatures() {}, allUnits: () => [], destroy() {}, render() {}, log() {},
+  clearJungleFeatures() {}, allUnits: () => [], destroy() {}, render() {}, log(message,type) {arenaBotLogs.push({message,type})},
   equipmentTargetAllowed: () => false, effectiveAtk: () => 0, copyEquipmentForRavens() {},
   botAttackChoices: () => [], playerAttackedThisTurn: () => false, playPeaceTreaty: () => false
 };
@@ -723,6 +724,8 @@ vm.runInContext(source.match(/function botPlayEffect\(\)\{[\s\S]*?\n\}/)[0], are
 assert.equal(arenaBotContext.botPlayEffect(), true);
 assert.equal(arenaBotContext.state.arena, 'kingdom', 'o bot deve convergir as duas Arenas de Xadria');
 assert.deepEqual(arenaBotContext.state.players[2].hand, []);
+assert.match(arenaBotLogs[0].message,/convergiram no Reino de Xadria/,'a Arena jogada pelo bot deve ser registrada como uma jogada');
+assert.equal(arenaBotLogs[0].type,'arena');
 arenaBotContext.state.players[2].hand = ['roses'];
 assert.equal(arenaBotContext.botPlayEffect(), false, 'o bot não deve gastar outra Arena de Xadria enquanto o Reino estiver ativo');
 assert.deepEqual(arenaBotContext.state.players[2].hand, ['roses']);

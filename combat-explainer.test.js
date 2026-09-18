@@ -4,7 +4,7 @@ const vm=require('node:vm');
 const source=fs.readFileSync(`${__dirname}/combat-explainer.js`,'utf8');
 const combatLogs=[];
 const state={arena:null,animating:false,players:{1:{units:[]},2:{units:[]}}};
-const context={document:{documentElement:{lang:'pt-BR'},querySelector:()=>null},renderCard(){},doAttack(){state.animating=true},logCombatResult(message,before){combatLogs.push({message,before})},effects:{moon:{name:'Lua'},goldArmor:{name:'Armadura'}},defs:{rider:{name:'Montador',atk:150},infantry:{name:'Infantaria'}},effectiveAtk:u=>u.total??u.atk,state,allUnits:()=>[],adjacent:()=>true,hasEffect:(u,k)=>u.kind===k,egyptianJointAttack:()=>null,calamityArenaFromAttack:()=>null,inMovementRadius:()=>true,escapeLogText:String};
+const context={document:{documentElement:{lang:'pt-BR'},querySelector:()=>null},renderCard(){},doAttack(){state.animating=true},logCombatResult(message,before){combatLogs.push({message,before})},effects:{moon:{name:'Lua'},goldArmor:{name:'Armadura'},kingdom:{name:'Reino de Xadria'},tremblingEarth:{name:'Terra Tremula'}},defs:{rider:{name:'Montador',atk:150},infantry:{name:'Infantaria'}},effectiveAtk:u=>u.total??u.atk,state,allUnits:()=>[],adjacent:()=>true,hasEffect:(u,k)=>u.kind===k,egyptianJointAttack:()=>null,calamityArenaFromAttack:()=>null,inMovementRadius:()=>true,escapeLogText:String};
 vm.createContext(context);vm.runInContext(source,context);
 const atk=context.attackExplanation({atk:250,bonusAtk:100,equipment:['moon'],total:225});
 assert.equal(atk.total,225);
@@ -18,6 +18,8 @@ context.state.arena='tremblingEarth';context.allUnits=()=>[a,b,d];preview=contex
 assert.equal(preview.attack,450,'Terra Tremula usa sua própria soma, sem bônus da rotina normal');
 context.state.arena='volcanicHeat';assert.equal(context.combatPreviewData(a,d).changing,true,'não prometer resultado exato antes de efeitos de arena');
 assert.equal(a.atk,200,'prévia não altera peões');assert.equal(b.atk,250);
+context.state.arena='kingdom';preview=context.combatPreviewData(a,d);assert.equal(context.arenaRelevantToCombat(a,d,preview),false,'Reino de Xadria não deve ser citado quando não alterar o cálculo');
+context.state.arena='tremblingEarth';preview=context.combatPreviewData(a,d);assert.equal(context.arenaRelevantToCombat(a,d,preview),true,'Arena que muda participantes deve ser citada');
 assert.equal(context.combatSideSummary([{name:'Cavalo',atk:250}],250),'Cavalo 250 ATK','combate individual não deve repetir o mesmo ATK como total');
 assert.equal(context.combatSideSummary([{name:'Infantaria',atk:200},{name:'Cavalo',atk:250}],700,'Infantaria',250),'Infantaria 200 ATK + Cavalo 250 ATK + Infantaria 250 ATK = 700 ATK','ataque conjunto deve manter a soma explicada');
 context.state.arena=null;context.state.animating=false;context.doAttack(a,d);context.logCombatResult('Infantaria venceu (700 × 400).',{1:0,2:0});

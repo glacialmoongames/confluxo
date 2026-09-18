@@ -23,10 +23,11 @@ function combatPreviewData(attacker,defender){
  const defense=defenders.reduce((s,u)=>s+effectiveAtk(u,true),0);
  return{attackers,defenders,attackerValues:attackers.map(u=>({name:u.name,atk:effectiveAtk(u,false)})),defenderValues:defenders.map(u=>({name:u.name,atk:effectiveAtk(u,true)})),attack,defense,infantry,arena,changing:arena!==state.arena||state.arena==='volcanicHeat'};
 }
+function arenaRelevantToCombat(attacker,defender,preview){const arena=preview.arena;if(!arena)return false;if(arena!==state.arena||arena==='volcanicHeat'||arena==='tremblingEarth')return true;if(arena==='project'&&state.players[defender.owner].units.some(u=>u.id!==defender.id&&hasEffect(u,'tower')&&!adjacent(u,defender)&&inMovementRadius(u,defender)))return true;const active=state.arena;try{state.arena=null;const neutral=combatPreviewData(attacker,defender),ids=values=>values.map(u=>u.id).sort().join(',');return neutral.attack!==preview.attack||neutral.defense!==preview.defense||ids(neutral.attackers)!==ids(preview.attackers)||ids(neutral.defenders)!==ids(preview.defenders)}finally{state.arena=active}}
 const explainBaseDoAttack=doAttack;
 let pendingCombatExplanation=null;
 doAttack=function(attacker,defender){
- if(attacker&&defender&&attacker.row!==null&&defender.row!==null){try{pendingCombatExplanation=combatPreviewData(attacker,defender)}catch(_){pendingCombatExplanation=null}}
+ if(attacker&&defender&&attacker.row!==null&&defender.row!==null){try{pendingCombatExplanation=combatPreviewData(attacker,defender);pendingCombatExplanation.arenaRelevant=arenaRelevantToCombat(attacker,defender,pendingCombatExplanation)}catch(_){pendingCombatExplanation=null}}
  const result=explainBaseDoAttack(attacker,defender);
  if(!state?.animating)pendingCombatExplanation=null;
  return result;
@@ -37,7 +38,7 @@ const explainBaseLogCombatResult=logCombatResult;
 logCombatResult=function(message,before){
  const preview=pendingCombatExplanation;pendingCombatExplanation=null;
  if(preview){
-  const arena=preview.arena&&effects[preview.arena]?` · ${combatText('Arena','Arena')}: ${effects[preview.arena].name}`:'';
+  const arena=preview.arenaRelevant&&preview.arena&&effects[preview.arena]?` · ${combatText('Arena','Arena')}: ${effects[preview.arena].name}`:'';
   const attackers=combatSideSummary(preview.attackerValues,preview.attack,defs.infantry.name,preview.infantry),defenders=combatSideSummary(preview.defenderValues,preview.defense);
   const breakdown=`${combatText('Combate','Combat')}: ${attackers} ${combatText('contra','vs')} ${defenders}${arena}`;
   const outcome=String(message).replace(/\s*\(\d+\s*×\s*\d+\)/g,'').replace(/^\s+|\s+$/g,'');
