@@ -32,13 +32,14 @@ doAttack=function(attacker,defender){
  return result;
 };
 function combatSideText(values){return values.map(item=>`${item.name} ${item.atk} ATK`).join(' + ')}
+function combatSideSummary(values,total,bonusName='',bonus=0){const parts=`${combatSideText(values)}${bonus?` + ${bonusName} ${bonus} ATK`:''}`,sum=values.reduce((value,item)=>value+item.atk,0)+bonus;return values.length>1||bonus||sum!==total?`${parts} = ${total} ATK`:parts}
 const explainBaseLogCombatResult=logCombatResult;
 logCombatResult=function(message,before){
  const preview=pendingCombatExplanation;pendingCombatExplanation=null;
  if(preview){
-  const infantry=preview.infantry?` + ${defs.infantry.name} ${preview.infantry} ATK`:'';
   const arena=preview.arena&&effects[preview.arena]?` · ${combatText('Arena','Arena')}: ${effects[preview.arena].name}`:'';
-  const breakdown=`${combatText('Combate','Combat')}: ${combatSideText(preview.attackerValues)}${infantry} = ${preview.attack} ATK ${combatText('contra','vs')} ${combatSideText(preview.defenderValues)} = ${preview.defense} ATK${arena}`;
+  const attackers=combatSideSummary(preview.attackerValues,preview.attack,defs.infantry.name,preview.infantry),defenders=combatSideSummary(preview.defenderValues,preview.defense);
+  const breakdown=`${combatText('Combate','Combat')}: ${attackers} ${combatText('contra','vs')} ${defenders}${arena}`;
   const outcome=String(message).replace(/\s*\(\d+\s*×\s*\d+\)/g,'').replace(/^\s+|\s+$/g,'');
   message=`${breakdown}. ${outcome}`;
  }

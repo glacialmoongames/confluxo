@@ -18,9 +18,11 @@ context.state.arena='tremblingEarth';context.allUnits=()=>[a,b,d];preview=contex
 assert.equal(preview.attack,450,'Terra Tremula usa sua própria soma, sem bônus da rotina normal');
 context.state.arena='volcanicHeat';assert.equal(context.combatPreviewData(a,d).changing,true,'não prometer resultado exato antes de efeitos de arena');
 assert.equal(a.atk,200,'prévia não altera peões');assert.equal(b.atk,250);
+assert.equal(context.combatSideSummary([{name:'Cavalo',atk:250}],250),'Cavalo 250 ATK','combate individual não deve repetir o mesmo ATK como total');
+assert.equal(context.combatSideSummary([{name:'Infantaria',atk:200},{name:'Cavalo',atk:250}],700,'Infantaria',250),'Infantaria 200 ATK + Cavalo 250 ATK + Infantaria 250 ATK = 700 ATK','ataque conjunto deve manter a soma explicada');
 context.state.arena=null;context.state.animating=false;context.doAttack(a,d);context.logCombatResult('Infantaria venceu (700 × 400).',{1:0,2:0});
 assert.equal(combatLogs.length,1,'o combate deve gerar uma única explicação consolidada');
-assert.match(combatLogs[0].message,/Infantaria 200 ATK \+ Cavalo 250 ATK \+ Infantaria 250 ATK = 700 ATK contra .*400 ATK/);
+assert.match(combatLogs[0].message,/Infantaria 200 ATK \+ Cavalo 250 ATK \+ Infantaria 250 ATK = 700 ATK contra Torre 400 ATK/);
 assert.doesNotMatch(combatLogs[0].message,/\(700 × 400\)/,'a comparação numérica antiga não deve ser repetida');
 assert.doesNotMatch(source,/showModal|combatPreviewDialog|destroy=function/,'não deve haver prompt prévio nem log duplicado por destruição');
 assert.doesNotMatch(source,/O saldo reúne efeitos|The net includes effects/,'os detalhes de ATK não devem exibir a observação removida');
