@@ -7,6 +7,7 @@ const page=fs.readFileSync('index.html','utf8');
 const expansion=fs.readFileSync('engine-expansion.js','utf8');
 const egypt=fs.readFileSync('engine-egypt.js','utf8');
 const actions=fs.readFileSync('engine-actions-b.js','utf8');
+const ui=fs.readFileSync('engine-ui.js','utf8');
 const styles=fs.readFileSync('styles-responsive.css','utf8');
 const migration=fs.readFileSync('supabase/migration-212-egyptian-flames.sql','utf8');
 
@@ -14,7 +15,8 @@ for(const key of ['fireScarab','fireSlave','firePrince','grayMummy','ammit','anu
 for(const key of ['burningDesert','emberMummify','flameTemple','quickHands'])assert.match(expansion,new RegExp(`${key}:\\{`));
 assert.match(page,/data-deck="egyptian"/);
 assert.match(page,/engine-egypt\.js\?v=4/);
-assert.match(page,/VERSÃO 249/);
+assert.match(page,/VERSÃO 250/);
+assert.match(page,/engine-ui\.js\?v=63/);
 assert.match(page,/data-deck="egyptian"><img src="assets\/icons\/hills\.svg\?v=2"/);
 assert.match(expansion,/registerArchetype\('egyptian',\{[^\n]+emblemArt:icon\('hills'\)/);
 assert.match(egypt,/v\.owner===u\.owner[^\n]+hasEffect\(v,'ra'\)/, 'Rá deve igualar somente o ATK de peões aliados adjacentes');
@@ -24,6 +26,7 @@ assert.match(expansion,/ra:\{[^\n]+não pode se tornar Múmia Cinzenta/);
 assert.match(egypt,/u\.kind==='ra'/);
 assert.match(egypt,/u\.mummyTransformPending=true/);
 assert.match(egypt,/u\.row!==null&&u\.mummyTransformPending/);
+assert.match(ui,/!\['eyes','emberMummify'\]\.includes\(k\)/,'Mumificar em Brasas não pode cair na rotina genérica que apenas equipa a carta');
 assert.match(styles,/\.board\[data-arena=burningDesert\] \.cell\.light\{background:#a84c18\}/);
 assert.match(styles,/\.board\[data-arena=burningDesert\] \.cell\.dark\{background:#612509\}/);
 assert.match(styles,/\.cell\.flame-temple-range::after/);
