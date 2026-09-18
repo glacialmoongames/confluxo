@@ -499,16 +499,16 @@ assert.match(source, /<p>\$\{e\.text\}<\/p>/);
 assert.doesNotMatch(page, /data-deck="celestial"/);
 assert.match(page, /data-deck="insects"/);
 assert.match(page, /engine-celestial\.js\?v=11/);
-assert.match(page, /engine-actions-b\.js\?v=35/);
-assert.match(page, /engine-actions-a\.js\?v=46/);
-assert.match(page, /VERSÃO 252/);
+assert.match(page, /engine-actions-b\.js\?v=36/);
+assert.match(page, /engine-actions-a\.js\?v=47/);
+assert.match(page, /VERSÃO 253/);
 assert.match(page, /game-catalog\.js\?v=1/);
 assert.match(source, /function registerPawns/);
 assert.match(source, /function registerEffects/);
 assert.match(source, /function registerArchetype/);
 assert.match(source, /function validateGameCatalog/);
 assert.match(page, /network\.js\?v=51/);
-assert.match(page, /engine-ui\.js\?v=63/);
+assert.match(page, /engine-ui\.js\?v=64/);
 assert.match(source, /function botCombinationWinsNow/);
 assert.match(source, /usesCombined:parts\.some\(u=>u\.fusion\)/);
 assert.match(source, /normalOptions\.length\?normalOptions:winningExceptions/);
@@ -536,10 +536,10 @@ assert.match(network,/navigator\.clipboard\.writeText\(code\)/,'o código deve s
 assert.match(styles,/\.match-room-code\{[^}]+font:800 9px\/1 monospace/,'o código da sala deve ter um selo legível ao lado do nome');
 assert.match(styles,/@media\(max-width:760px\)\{\.topbar\{grid-template-columns:minmax\(112px,auto\)/,'o cabeçalho mobile deve reservar espaço para nome e código');
 assert.match(source, /confirm\('Voltar ao menu inicial\? A partida atual será encerrada\.'\)/);
-assert.match(page, /engine-core\.js\?v=42/);
+assert.match(page, /engine-core\.js\?v=43/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
-assert.match(page, /engine-actions-a\.js\?v=46/);
-assert.match(page, /engine-actions-b\.js\?v=35/);
+assert.match(page, /engine-actions-a\.js\?v=47/);
+assert.match(page, /engine-actions-b\.js\?v=36/);
 assert.match(page, /i18n\.js\?v=25/);
 assert.match(page, /class="rules-chapters"/,'o Como Jogar deve organizar as regras por capítulos');
 assert.match(source, /visualArchetype=key==='random'\?randomVisualArchetype\(opponentColor\):key/,'o Aleatório deve sortear uma identidade visual diferente da cor adversária');
@@ -874,3 +874,4 @@ assert.match(styles, /\.reserve-piece\.fusion-card\.deck-celestial\{background:l
 assert.match(styles, /\.unit-card\.combined-detail\[data-deck=abyss\]\{background:linear-gradient/);
 
 console.log('game card tests passed');
+

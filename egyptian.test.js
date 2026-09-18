@@ -15,8 +15,8 @@ for(const key of ['fireScarab','fireSlave','firePrince','grayMummy','ammit','anu
 for(const key of ['burningDesert','emberMummify','flameTemple','quickHands'])assert.match(expansion,new RegExp(`${key}:\\{`));
 assert.match(page,/data-deck="egyptian"/);
 assert.match(page,/engine-egypt\.js\?v=4/);
-assert.match(page,/VERSÃO 252/);
-assert.match(page,/engine-ui\.js\?v=63/);
+assert.match(page,/VERSÃO 253/);
+assert.match(page,/engine-ui\.js\?v=64/);
 assert.match(page,/data-deck="egyptian"><img src="assets\/icons\/hills\.svg\?v=2"/);
 assert.match(expansion,/registerArchetype\('egyptian',\{[^\n]+emblemArt:icon\('hills'\)/);
 assert.match(egypt,/v\.owner===u\.owner[^\n]+hasEffect\(v,'ra'\)/, 'Rá deve igualar somente o ATK de peões aliados adjacentes');
@@ -65,3 +65,4 @@ assert.equal(ra.mummyTransformPending,undefined,'Rá não deve ser marcado para 
 assert.equal(mummyContext.transform(ra),false,'Rá é imune a qualquer transformação em Múmia Cinzenta');
 
 console.log('Egyptian Flames tests passed');
+
