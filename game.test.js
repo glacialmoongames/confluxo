@@ -501,7 +501,7 @@ assert.match(page, /data-deck="insects"/);
 assert.match(page, /engine-celestial\.js\?v=11/);
 assert.match(page, /engine-actions-b\.js\?v=35/);
 assert.match(page, /engine-actions-a\.js\?v=46/);
-assert.match(page, /VERSÃO 251/);
+assert.match(page, /VERSÃO 252/);
 assert.match(page, /game-catalog\.js\?v=1/);
 assert.match(source, /function registerPawns/);
 assert.match(source, /function registerEffects/);
