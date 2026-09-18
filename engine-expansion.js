@@ -119,7 +119,7 @@ Object.values(archetypes).forEach(deck=>{if(!deck.effects.includes('quickHands')
 validateGameCatalog();
 
 function archetypeVisual(key,extra=''){let a=archetypes[key];return `<img class="archetype-icon ${extra}" src="${a.emblemArt}" alt="Símbolo ${a.name}">`}
-function archetypeOfUnit(u){return state?.players?.[u?.owner]?.archetype||Object.keys(archetypes).find(key=>[...archetypes[key].pawns,...archetypes[key].fusions].includes(u?.kind))||'xadria'}
+function archetypeOfUnit(u){let player=state?.players?.[u?.owner];return player?.visualArchetype||player?.archetype||Object.keys(archetypes).find(key=>[...archetypes[key].pawns,...archetypes[key].fusions].includes(u?.kind))||'xadria'}
 function nativeArchetypeOfUnit(u){return nativeArchetypeForKind(u?.kind)||'xadria'}
 fusionRequirementVisual=function(card){
  if(!card?.fusion||card.calamityFrom)return'';

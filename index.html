@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="styles-core.css?v=11">
   <link rel="stylesheet" href="styles-game.css?v=16">
   <link rel="stylesheet" href="styles-responsive.css?v=85">
-  <link rel="stylesheet" href="styles-identity.css?v=2">
+  <link rel="stylesheet" href="styles-identity.css?v=3">
 </head>
 <body>
   <div id="setup" class="setup">
@@ -97,7 +97,7 @@
       <div class="setup-actions"><button id="setup-rules-btn" class="secondary">COMO JOGAR</button><button id="start-game" class="primary">INICIAR DUELO LOCAL</button></div>
       </div>
     </div>
-    <footer class="setup-footer"><span><img src="assets/icons/flower-twirl.svg" alt="">CONFLUXO</span><small class="game-version">VERSÃO 247</small><button id="language-toggle" class="language-toggle" type="button">EN</button></footer>
+    <footer class="setup-footer"><span><img src="assets/icons/flower-twirl.svg" alt="">CONFLUXO</span><small class="game-version">VERSÃO 248</small><button id="language-toggle" class="language-toggle" type="button">EN</button></footer>
   </div>
   <div id="turn-draw" class="turn-draw hidden">
     <div class="draw-choice-card">
@@ -213,17 +213,63 @@
 
   <dialog id="rules-dialog">
     <button class="dialog-close" aria-label="Fechar">×</button>
-    <div class="rules-hero"><img src="assets/icons/flower-twirl.svg" alt="Símbolo do Confluxo"><div><small>GUIA VISUAL</small><h2>Como jogar Confluxo</h2><p>O objetivo é alcançar a meta de pontos destruindo peões. Cada turno segue quatro decisões simples.</p></div></div>
-    <ol class="rules-quickstart"><li><b>1</b> Escolha uma pilha</li><li><b>2</b> Posicione um peão</li><li><b>3</b> Mova e ataque</li><li><b>4</b> Encerre o turno</li></ol>
-    <div class="rules-grid">
-      <section><div class="rule-picture draw"><span>⬢</span><b>OU</b><span>✦</span></div><h3>Comece comprando</h3><p>Na primeira rodada ninguém compra. Nos turnos seguintes, escolha <b>uma</b> pilha: Peão ou Efeito.</p></section>
-      <section><div class="rule-picture deploy"><i></i><i class="unit"></i></div><h3>2 · Posicione</h3><p>Clique no peão em sua mão e depois numa casa destacada do seu polo. Não há limite de peões em campo.</p></section>
-      <section><div class="rule-picture move"><i class="origin"></i><i class="arrow">→</i><i class="target"></i></div><h3>3 · Mova</h3><p>Cada carta mostra seu alcance. Selecione o peão e clique numa das casas iluminadas.</p></section>
-      <section><div class="rule-picture fight"><b>250</b><span>⚔</span><b>200</b></div><h3>4 · Ataque</h3><p>Clique no símbolo de ataque sobre um inimigo. Maior ATK vence; no empate, defensor e todos os atacantes participantes são destruídos.</p></section>
-      <section><div class="rule-picture joint-attack"><i>150</i><span>＋</span><i>200</i><b>350</b><em>⚔</em><strong>300</strong></div><h3>Ataque em conjunto</h3><p>Ao atacar, seus outros peões <b>em contato com o alvo</b> participam automaticamente. Seus ATKs são somados, mas somente o peão selecionado gasta seu ataque; os participantes ainda podem iniciar seus próprios ataques. Se a soma empatar com o ATK do alvo, todos os participantes e o defensor são destruídos.</p></section>
-      <section><div class="rule-picture combine"><span>●</span><span>＋</span><span>●</span><b>✦</b></div><h3>5 · Combine</h3><p>Tenha o Peão Combinado na mão e selecione os materiais indicados em contato. A carta mostra exatamente quais faltam.</p></section>
-      <section><div class="rule-picture arena-rule"><img src="assets/icons/rose.svg" alt=""></div><h3>Efeitos e Arena</h3><p>Leia e ative habilidades nos detalhes da carta. A carta de Arena ocupa o slot global e afeta os dois lados.</p></section>
-      <section><div class="rule-picture victory"><span>♛</span><b id="rules-goal">10</b></div><h3>Como vencer</h3><p>Alcance a meta destruindo peões. Peões normais valem 1 ponto; um Peão Combinado vale a quantidade de cartas usadas para criá-lo.</p></section>
+    <header class="rules-hero">
+      <span class="rules-mark"><img src="assets/icons/flower-twirl.svg" alt="Símbolo do Confluxo"></span>
+      <div><small>MANUAL DE DUELO</small><h2>Aprenda Confluxo em poucos minutos</h2><p>Veja primeiro o objetivo, depois siga o turno da esquerda para a direita.</p></div>
+    </header>
+    <section class="rules-objective">
+      <div class="rules-goal"><span>♛</span><b id="rules-goal">10</b><small>PONTOS PARA VENCER</small></div>
+      <div><small>OBJETIVO</small><h3>Alcance a meta antes do rival.</h3><p>Destrua peões, proteja seu campo e use as habilidades das cartas para mudar o combate.</p></div>
+    </section>
+    <section class="rules-turn">
+      <div class="rules-section-heading"><small>O FLUXO DO TURNO</small><h3>Quatro passos para jogar</h3></div>
+      <ol class="rules-quickstart">
+        <li><b>1</b><span><strong>Compre</strong><small>Escolha Peão ou Efeito.</small></span></li>
+        <li><b>2</b><span><strong>Posicione</strong><small>Use sua zona colorida.</small></span></li>
+        <li><b>3</b><span><strong>Aja</strong><small>Mova, use cartas e ataque.</small></span></li>
+        <li><b>4</b><span><strong>Encerre</strong><small>Passe a vez ao rival.</small></span></li>
+      </ol>
+      <p class="rules-note"><b>Primeira rodada:</b> os dois jogadores posicionam três peões iniciais e não compram cartas.</p>
+    </section>
+    <div class="rules-chapters">
+      <section class="rules-chapter">
+        <header><span>01</span><div><small>CAMPO</small><h3>Posicione e mova</h3></div></header>
+        <div class="rules-card-row">
+          <article><div class="rule-visual deploy"><i></i><i class="unit"></i></div><h4>Posicionamento</h4><p>Selecione um peão da mão e clique numa casa destacada do seu polo. Não há limite de peões em campo.</p></article>
+          <article><div class="rule-visual move"><i class="origin"></i><span>•••</span><i class="target"></i></div><h4>Movimento e alcance</h4><p>Selecione qualquer peão para ver seu alcance. As bolinhas marcam as casas onde seus peões podem se mover.</p></article>
+        </div>
+      </section>
+      <section class="rules-chapter combat-chapter">
+        <header><span>02</span><div><small>COMBATE</small><h3>Compare o ATK</h3></div></header>
+        <div class="rules-card-row">
+          <article><div class="rule-visual fight"><b>350</b><span>⚔</span><b>300</b></div><h4>Ataque</h4><p>Selecione seu peão e clique no ícone de ataque sobre o alvo. O maior ATK vence. Cada peão pode iniciar um ataque por turno.</p></article>
+          <article><div class="rule-visual joint"><i>150</i><span>＋</span><i>200</i><b>350</b><em>⚔</em><strong>300</strong></div><h4>Ataque em conjunto</h4><p>Seus outros peões em contato com o alvo somam ATK automaticamente. Só o atacante selecionado gasta seu ataque.</p></article>
+        </div>
+        <p class="rules-callout"><b>Empate:</b> sem um efeito de proteção, o defensor e todos os atacantes participantes são destruídos.</p>
+      </section>
+      <section class="rules-chapter">
+        <header><span>03</span><div><small>CARTAS</small><h3>Efeitos, equipamentos e arenas</h3></div></header>
+        <div class="rules-card-row three">
+          <article class="rule-type utility"><i>✦</i><h4>Utilidade</h4><p>Use e escolha os alvos pedidos pela carta.</p></article>
+          <article class="rule-type equipment"><i>◆</i><h4>Equipamento</h4><p>Pode ser equipado em qualquer peão em campo, aliado ou adversário.</p></article>
+          <article class="rule-type arena"><i>⬢</i><h4>Arena</h4><p>Ocupa o espaço global e afeta os dois lados. Duas Arenas iguais se anulam.</p></article>
+        </div>
+      </section>
+      <section class="rules-chapter">
+        <header><span>04</span><div><small>PEÕES COMBINADOS</small><h3>Reúna os materiais</h3></div></header>
+        <div class="rules-card-row">
+          <article><div class="rule-visual combine"><span>●</span><span>＋</span><span>●</span><b>✦</b></div><h4>Como combinar</h4><p>Tenha o Peão Combinado na mão. Abra seus detalhes, escolha Combinar e selecione no campo os materiais indicados que estejam em contato.</p></article>
+          <article><div class="rule-visual points"><b>1</b><span>→</span><b>3</b></div><h4>Valor em pontos</h4><p>Peões normais valem 1 ponto. Um Peão Combinado vale a quantidade de cartas usadas em sua combinação.</p></article>
+        </div>
+      </section>
+      <section class="rules-chapter rules-finish">
+        <header><span>05</span><div><small>FIM DA PARTIDA</small><h3>Conquiste a soberania</h3></div></header>
+        <div class="rules-card-row">
+          <article><h4>Vitória por pontos</h4><p>Alcance a meta definida para a partida antes do adversário.</p></article>
+          <article><h4>Vitória por esgotamento</h4><p>Você também vence se o adversário ficar sem peões normais válidos para jogar.</p></article>
+        </div>
+        <p class="rules-priority"><b>Lembre-se:</b> quando o texto de uma carta altera uma regra geral, siga o texto da carta.</p>
+      </section>
     </div>
   </dialog>
 
@@ -276,16 +322,16 @@
   <script src="account.js?v=22"></script>
   <script src="game-catalog.js?v=1"></script>
   <script src="network.js?v=51"></script>
-  <script src="engine-core.js?v=39"></script>
-  <script src="engine-expansion.js?v=43"></script>
+  <script src="engine-core.js?v=40"></script>
+  <script src="engine-expansion.js?v=44"></script>
   <script src="engine-celestial.js?v=11"></script>
   <script src="engine-gold.js?v=8"></script>
   <script src="engine-egypt.js?v=4"></script>
-  <script src="engine-actions-a.js?v=45"></script>
+  <script src="engine-actions-a.js?v=46"></script>
   <script src="engine-actions-b.js?v=35"></script>
   <script src="engine-expansion-runtime.js?v=11"></script>
   <script src="engine-ui.js?v=62"></script>
-  <script src="i18n.js?v=24"></script>
+  <script src="i18n.js?v=25"></script>
   <script src="engine-insects.js?v=13"></script>
 </body>
 </html>
