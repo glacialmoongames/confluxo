@@ -95,7 +95,7 @@ registerEffects({
  ,unstableTyphoon:{name:'Tufão Instavel',type:'ARENA',icon:'↻',undrawable:true,text:'Não pode ser comprada. É ativada pela Borboleta Calamitosa ao atacar. Ao fim de um combate, todos os peões que não sejam AR são empurrados o mais para trás possível, parando antes de uma casa ocupada. Se alcançarem um Poço sem Fundo ou obstáculo mortal, caem nele.'}
  ,endlessOcean:{name:'Oceano sem fim',type:'ARENA',icon:'≋',undrawable:true,text:'Não pode ser comprada. É ativada pela Formiga Calamitosa ao atacar. Peões que não sejam ÁGUA perdem 50 ATK ao se mover; peões ÁGUA ganham 50 ATK ao se mover.'}
  ,tremblingEarth:{name:'Terra Tremula',type:'ARENA',icon:'⌁',undrawable:true,text:'Não pode ser comprada. É ativada pela Centopeia Calamitosa ao atacar. Quando um peão ataca, todos os peões em seu raio participam do ataque conjunto, aliados ou adversários.'}
- ,badOmen:{name:'Mal preságio',type:'UTILIDADE',icon:'☠',instant:true,text:'Adiciona à mão uma Calamidade compatível com um Peão Funesto aliado em campo. Sem um Peão Funesto compatível em campo, a carta não encontra uma Calamidade.'}
+ ,badOmen:{name:'Mal preságio',type:'UTILIDADE',icon:'☠',instant:true,requiresPawnKinds:['direLadybug','direCockroach','direCaterpillar','direAnt','direCentipede'],text:'Adiciona à mão uma Calamidade compatível com um Peão Funesto aliado em campo. Sem um Peão Funesto compatível em campo, a carta não encontra uma Calamidade.'}
 });
 updateEffect('roses',{text:'Sempre que um jogador perde um peão, compra uma carta aleatória entre as pilhas de Peões e Efeitos.'});
 updateEffect('bow',{name:'Arco Primitivo',text:'O equipado pode atacar peões nas casas do seu próprio alcance de movimento, sem precisar estar em contato.'});

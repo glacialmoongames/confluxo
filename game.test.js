@@ -501,7 +501,7 @@ assert.match(page, /data-deck="insects"/);
 assert.match(page, /engine-celestial\.js\?v=11/);
 assert.match(page, /engine-actions-b\.js\?v=35/);
 assert.match(page, /engine-actions-a\.js\?v=46/);
-assert.match(page, /VERSÃO 250/);
+assert.match(page, /VERSÃO 251/);
 assert.match(page, /game-catalog\.js\?v=1/);
 assert.match(source, /function registerPawns/);
 assert.match(source, /function registerEffects/);
@@ -536,7 +536,7 @@ assert.match(network,/navigator\.clipboard\.writeText\(code\)/,'o código deve s
 assert.match(styles,/\.match-room-code\{[^}]+font:800 9px\/1 monospace/,'o código da sala deve ter um selo legível ao lado do nome');
 assert.match(styles,/@media\(max-width:760px\)\{\.topbar\{grid-template-columns:minmax\(112px,auto\)/,'o cabeçalho mobile deve reservar espaço para nome e código');
 assert.match(source, /confirm\('Voltar ao menu inicial\? A partida atual será encerrada\.'\)/);
-assert.match(page, /engine-core\.js\?v=41/);
+assert.match(page, /engine-core\.js\?v=42/);
 assert.doesNotMatch(source, /cartas\.png/, 'nenhuma carta deve continuar usando a antiga folha de artes desenhadas');
 assert.match(page, /engine-actions-a\.js\?v=46/);
 assert.match(page, /engine-actions-b\.js\?v=35/);
