@@ -22,7 +22,7 @@ const definitions = [catalogSource, coreSource.slice(0,coreSource.indexOf('let s
 const integrated = {console};
 vm.createContext(integrated);
 vm.runInContext(`${definitions}\nthis.summary=validateGameCatalog();this.defs=defs;this.effects=effects;this.archetypes=archetypes`, integrated);
-for (const name of ['uid','unit','shuffle','addNormalMaterial','nativeArchetypeForKind','fusionNormalMaterialCountsFor','fusionNormalMaterialCounts','randomCombinedSetValid','createRandomDeckRecipe','makePawnDeck','ownedFusionKinds','ownsEveryUniqueFusion','takePawnFromDeck','takeEffectFromDeck','makeEffectDeck']) {
+for (const name of ['uid','unit','shuffle','addNormalMaterial','nativeArchetypeForKind','fusionNormalMaterialCountsFor','fusionNormalMaterialCounts','randomCombinedSetValid','createRandomDeckRecipe','randomVisualArchetype','makePawnDeck','ownedFusionKinds','ownsEveryUniqueFusion','takePawnFromDeck','takeEffectFromDeck','makeEffectDeck']) {
   vm.runInContext(coreSource.match(new RegExp(`function ${name}\\([^\\n]+`))[0], integrated);
 }
 
@@ -73,6 +73,8 @@ const variedEffects={effectDeck:['pit','pit','push'],lastEffectDrawKey:'pit'};
 assert.equal(integrated.takeEffectFromDeck(variedEffects),'push','a compra não deve repetir o último Efeito quando há alternativa');
 const variedPawns={archetype:'xadria',pawnDeck:[{kind:'tower'},{kind:'tower'},{kind:'infantry'}],lastPawnDrawKind:'tower',reserve:[],units:[],initialUnits:[]};
 assert.equal(integrated.takePawnFromDeck(variedPawns).kind,'infantry','a compra não deve repetir o último Peão quando há alternativa');
+
+for(const forbidden of Object.keys(integrated.archetypes))for(let attempt=0;attempt<100;attempt++)assert.notEqual(integrated.randomVisualArchetype(forbidden),forbidden,'a cor sorteada nunca pode repetir a cor adversária');
 
 for(let attempt=0;attempt<250;attempt++){
   const recipe=integrated.createRandomDeckRecipe(),pawns=integrated.makePawnDeck(1,'random',recipe),effectDeck=integrated.makeEffectDeck('random',recipe);
